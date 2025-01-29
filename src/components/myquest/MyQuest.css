@@ -1,0 +1,181 @@
+/* Overall Page Styling */
+.my-quest-page {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+/* Sidebar and Section Styling */
+.quests,
+.quest-hunter,
+.inbox {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    border-radius: 8px;
+    margin: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quests {
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+}
+
+.quest-hunter {
+    background-color: #fdfdfd;
+    border-right: 1px solid #e0e0e0;
+}
+
+.inbox {
+    background-color: #fafafa;
+}
+
+/* Heading Styling */
+h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #007bff;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+}
+
+/* List Styling */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+li.active {
+    background-color: #e6f7ff;
+    border: 1px solid #007bff;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+li:hover {
+    background-color: #f7faff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Chat Message Styling */
+.inbox ul {
+    max-height: calc(100% - 80px);
+    /* Leave space for input */
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.inbox ul li {
+    margin-bottom: 12px;
+    padding: 8px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.inbox ul li strong {
+    color: #007bff;
+    margin-right: 4px;
+}
+
+/* Message Input Section */
+.message-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 12px;
+}
+
+.message-input input {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message-input input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.message-input button {
+    padding: 10px 16px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message-input button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .my-quest-page {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .quests,
+    .quest-hunter,
+    .inbox {
+        margin: 8px 0;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    li {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .message-input input,
+    .message-input button {
+        font-size: 12px;
+    }
+}
