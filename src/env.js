@@ -1,1 +1,1 @@
-export const BACKEND_API_URL = 'http://backend-production-ddfc.up.railway.app';
+export const BACKEND_API_URL = 'https://backend-production-ddfc.up.railway.app';
