@@ -1,4 +1,5 @@
 # https://nixpacks.com/docs/configuration/file
+
 # set up some variables to minimize annoyance
 [variables]
     NPM_CONFIG_UPDATE_NOTIFIER = 'false' # the update notification is relatively useless in a production environment
