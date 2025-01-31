@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import { Card, CardContent, Chip, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,16 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import React, { useState } from 'react';
 import './PostList.css';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
-const Post = ({ postData, onAccept }) => {
+const Post = ({ postData, allIds, onAccept }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [questMessage, setQuestMessage] = useState("");
   const toggleDescription = () => {
@@ -43,20 +35,24 @@ const Post = ({ postData, onAccept }) => {
   };
 
   return (
-    <div>
-      <div>
-        <div>
-          <div>
-            {postData.questInstructions}
-          </div>
-          <div>
-            {postData.questReward} rupee
-            <br />
-            {postData.questValidity}
-          </div>
-          <div>{postData.questLabel}</div>
-        </div>
-      </div>
+    <Card variant="outlined" sx={{ maxWidth: 400, padding: 2, margin: 2, textAlign: 'center' }}>
+      <CardContent>
+        {/* <Typography variant="h6" gutterBottom>
+          Creator ID: {postData.questCreatorId}
+          {allIds[postData?.questCreatorId]?.email || "Email not found"}
+        </Typography> */}
+
+        <Typography variant="body1" gutterBottom>
+          {postData.questInstructions}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Reward: {postData.questReward} rupees
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Validity: {postData.questValidity} days
+        </Typography>
+        <Chip label={postData.questLabel} variant="outlined" sx={{ mt: 1 }} />
+      </CardContent>
 
       <Button onClick={openInterestedDialog} >Interested</Button>
 
@@ -79,8 +75,7 @@ const Post = ({ postData, onAccept }) => {
           <Button onClick={closeInterestedDialog}>Close</Button>
         </DialogActions>
       </Dialog>
-
-    </div >
+    </Card>
   );
 };
 

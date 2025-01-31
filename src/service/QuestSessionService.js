@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { BACKEND_API_URL } from '../env';
 
-const API_URL = 'http://localhost:8080/api/quests/sessions';
+
+const API_URL = `${BACKEND_API_URL}/api/quests/sessions`;
 
 class QuestSession {
 
