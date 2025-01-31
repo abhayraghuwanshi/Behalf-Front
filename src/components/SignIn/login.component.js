@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { BACKEND_API_URL } from "../../env";
 import './loginComponent.css';
+
 
 const LoginPage = ({ onLogin }) => {
     const [username, setUsername] = useState("");
@@ -7,7 +9,7 @@ const LoginPage = ({ onLogin }) => {
     const [error, setError] = useState("");
 
     const handleLoginGoogle = () => {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = `${BACKEND_API_URL}/oauth2/authorization/google`;
     };
 
     const handleLogin = async (e) => {
