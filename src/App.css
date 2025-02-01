@@ -33,3 +33,22 @@
     transform: rotate(360deg);
   }
 }
+
+.find-button {
+  width: 8vw;
+}
+
+.signup-button {
+  width: 8vw;
+  --button-primary-color: #6e00f5;
+  --button-primary-color-dark: #4c00a8;
+  --button-primary-color-light: #ffffff;
+  --button-primary-color-hover: #6e00f5;
+  --button-primary-color-active: #4c00a8;
+  --button-primary-border: none;
+}
+
+.swirl {
+  filter: blur(10rem);
+
+}

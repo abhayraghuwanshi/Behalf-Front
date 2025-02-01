@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import { AwesomeButton } from "react-awesome-button";
 import { useNavigate } from 'react-router-dom';
 import CreatePost from '../postcreation/CreatePost';
 import { useAuth } from '../SignIn/AuthContext';
@@ -52,7 +53,7 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
+      <AppBar position="static" sx={{ backgroundColor: 'black' }} >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography
@@ -101,23 +102,16 @@ function Navbar() {
 
             <Box sx={{ display: 'flex', gap: 1 }}>
               {actionButtons.map((button) => (
-                <Button
-                  key={button.name}
-                  onClick={() => handleClick(button)}
-                  sx={{
-                    my: 2,
-                    color: 'white',
-                    backgroundColor: '#1565c0',
-                    '&:hover': { backgroundColor: '#0d47a1' },
-                  }}
+                <AwesomeButton
+                  className='loginbutton'
                 >
                   {button.name}
-                </Button>
+                </AwesomeButton>
               ))}
             </Box>
           </Toolbar>
         </Container>
-      </AppBar>
+      </AppBar >
 
       <Dialog open={isCreatingPost} onClose={closeCreation} fullWidth maxWidth="sm">
         <DialogContent>

@@ -1,158 +1,78 @@
 import { Typography } from '@mui/joy';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Grid from '@mui/joy/Grid';
-import { Button } from '@mui/material';
 import React from 'react';
+import { AwesomeButton } from 'react-awesome-button';
 import '../../App.css';
 
 function Home() {
-
   return (
     <div>
-      <Grid container spacing={1} sx={{ flexGrow: 1, height: '50vh', alignItems: 'center' }}>
+      {/* Section 1 */}
+      <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2, px: 3 }}>
         <Grid xs={12} md={2} />
-        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <AspectRatio ratio="4/3" sx={{ width: '100%', height: '100%' }}>
-            <img
-              src="static/helping.jpg"
-              alt="Description of the image"
-              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            />
+        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <AspectRatio ratio="4/3" sx={{ width: '100%', maxWidth: 400 }}>
+            <img src="static/helping.jpg" alt="Helping" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
           </AspectRatio>
         </Grid>
-        <Grid
-          xs={12}
-          md={4}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            height: '100%',
-            padding: 0, // Remove padding if any
-          }}
-        >
-          <Typography level="h1" component="h1" sx={{ mb: 2 }}>
-            Do a Side Hustle or, create one
-          </Typography>
-          <Button variant="contained" color="primary" sx={{ mb: 1 }}>
-            Sign up
-          </Button>
-          <Typography>
-            or <a href="/signin">Sign in</a>
-          </Typography>
+        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <Typography level="h1" sx={{ mb: 2, color: 'white' }}>Do a Side Hustle or Create One</Typography>
+          <AwesomeButton className='signup-button'>Sign Up</AwesomeButton>
+          <Typography sx={{ mt: 1, color: 'white' }}>or <a href="/signin" style={{ color: 'white' }}>Sign in</a></Typography>
         </Grid>
         <Grid xs={12} md={2} />
       </Grid>
 
-
-      <Grid container spacing={1} sx={{ flexGrow: 1, height: '80vh', alignItems: 'center', marginTop: 1 }}>
+      {/* Section 2 */}
+      <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '80vh', alignItems: 'center', mt: 2, px: 3 }}>
         <Grid xs={12} md={2} />
-        <Grid
-          xs={12}
-          md={4}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            height: '100%',
-          }}
-        >
-          <Typography level="h1" component="h1" sx={{ mb: 2 }}>
-            Opportunities
+        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <Typography level="h1" sx={{ mb: 2, color: 'white' }}>
+            Opportunities, <br /> From job applications to house hunting, we find you assistance
           </Typography>
-          <Typography>
-            From Job applications to house hunting we find you an assistance
-          </Typography>
-          <button>Find</button>
+          <AwesomeButton className='find-button' type='secondary'>Find</AwesomeButton>
         </Grid>
-        <Grid xs={12} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <AspectRatio ratio="4/3" sx={{ width: '100%', height: '100%' }}>
-            <img
-              src="static/todo2.jpg"
-              alt="Description of the image"
-              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            />
+        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <AspectRatio ratio="4/3" sx={{ width: '100%', maxWidth: 400 }}>
+            <img src="static/todo2.jpg" alt="Tasks" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
           </AspectRatio>
         </Grid>
         <Grid xs={12} md={2} />
       </Grid>
 
-
-
-
-      <Grid container spacing={1} sx={{ flexGrow: 1, height: '80vh', alignItems: 'center', marginTop: 1 }}>
+      {/* Section 3 */}
+      <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '80vh', alignItems: 'center', mt: 2, px: 3 }}>
         <Grid xs={12} md={2} />
-        <Grid xs={12} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <AspectRatio ratio="4/3" sx={{ width: '100%', height: '100%' }}>
-            <img
-              src="static/timesaving-1.png"
-              alt="Description of the image"
-              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            />
+        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <AspectRatio ratio="4/3" sx={{ width: '100%', maxWidth: 400 }}>
+            <img src="static/timesaving-1.png" alt="Time Saving" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
           </AspectRatio>
         </Grid>
-        <Grid
-          xs={12}
-          md={4}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            height: '100%',
-          }}
-        >
-          <Typography level="h1" component="h1" sx={{ mb: 2 }}>
-            Earn money
+        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <Typography level="h1" sx={{ mb: 2, color: 'white' }}>
+            Earn Money <br /> Let us assist you in earning extra bucks.
           </Typography>
-          <Typography>
-            Let us assist you in the earning extra bugs.
-          </Typography>
-        </Grid>
-
-        <Grid xs={12} md={2} />
-      </Grid>
-
-      <Grid container spacing={1} sx={{ flexGrow: 1, height: '80vh', alignItems: 'center', marginTop: 1 }}>
-        <Grid xs={12} md={2} />
-        <Grid
-          xs={12}
-          md={4}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            height: '100%',
-          }}
-        >
-          <Typography level="h1" component="h1" sx={{ mb: 2 }}>
-            Stay Informed
-          </Typography>
-          <Typography>
-            Receive regular update so that you remain in control
-          </Typography>
-        </Grid>
-        <Grid xs={12} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
-          <AspectRatio sx={{ width: '100%', height: '100%' }}>
-            <img
-              src="static/rules1.jpg"
-              alt="Description of the image"
-              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            />
-          </AspectRatio>
         </Grid>
         <Grid xs={12} md={2} />
       </Grid>
 
-    </div>
-
+      {/* Section 4 */}
+      <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '80vh', alignItems: 'center', mt: 2, px: 3 }}>
+        <Grid xs={12} md={2} />
+        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <Typography level="h1" sx={{ mb: 2, color: 'white' }}>
+            Stay Informed, <br /> Receive regular updates to remain in control
+          </Typography>
+        </Grid>
+        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <AspectRatio ratio="4/3" sx={{ width: '100%', maxWidth: 400 }}>
+            <img src="static/rules1.jpg" alt="Updates" style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+          </AspectRatio>
+        </Grid>
+        <Grid xs={12} md={2} />
+      </Grid>
+    </div >
   );
 }
 
