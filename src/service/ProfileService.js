@@ -15,8 +15,8 @@ class ProfileService {
         return response.data; // Only return the relevant data
     }
 
-    async fetchUserByEmail(ids) {
-        const response = await axios.post(`${API_URL}/info`, ids, {
+    async fetchUserByEmail() {
+        const response = await axios.get(`${API_URL}/info`, {
             withCredentials: true, // Important: needed for cookies
             headers: {
                 'Accept': 'application/json'

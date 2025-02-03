@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
 import ProfileService from "../../service/ProfileService";
 import { useAuth } from "../SignIn/AuthContext";
-import Post from "./PostCard"; // Assuming you have a Post component for displaying individual posts
+import Post from "./PostCard";
 import FilterControls from "./PostFilter";
 import "./PostList.css";
 
@@ -10,12 +10,14 @@ const PostList = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
-  const [allIds, setAllIds] = useState({}); // Initially empty
-  const [userMap, setUserMap] = useState({}); // Initially empty
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(10000);
-  const [dateFilter, setDateFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [userMap, setUserMap] = useState({});
+  const [filters, setFilters] = useState({
+    minPrice: 0,
+    maxPrice: 10000,
+    dateFilter: "",
+    categoryFilter: "",
+  });
+
 
   const dropDownOptions = [
     "PHOTOGRAPHY",
@@ -28,29 +30,20 @@ const PostList = () => {
     "ONLINE_TUTORIAL",
   ];
 
-  const handleAccept = async (post, message) => {
-    if (!user || !user.id) {
+  // Handle accepting a post
+  const handleAccept = async (postSession) => {
+    if (!user?.id) {
+      alert("Sign in to share");
       return;
     }
 
-    console.log("Post data:", post); // ✅ Debugging step
-
-    if (!post.questCreatorId || !post.id) {
-      console.error("Missing questCreatorId or questId", post);
+    if (!postSession.questCreatorId || !postSession.id) {
       alert("Error: Missing required fields");
       return;
     }
 
-    const postAgreement = {
-      questCreatorId: post.questCreatorId,
-      questId: post.id,
-      questStatus: "PENDING",
-      questAcceptorId: user.id,
-      questRequestMsg: message,
-    };
-
     try {
-      const response = await PostService.agreePost(postAgreement);
+      const response = await PostService.agreePost(postSession);
       if (response.status === 200 || response.status === 201) {
         alert("Agreement created!");
       }
@@ -60,92 +53,86 @@ const PostList = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await PostService.getPosts();
-        if (response.status === 200) {
-          console.log("API Data:", response.data); // Debugging
-          setPosts(response.data);
-          setFilteredPosts(response.data);
-
-          // Extract all unique questCreatorIds
-          const creatorIds = [...new Set(response.data.map((post) => post.questCreatorId))];
-          setAllIds(creatorIds); // ✅ Store only unique IDs
-        } else {
-          console.error("Failed to fetch posts. Status:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
+  // Fetch posts from the API
+  const fetchPosts = async () => {
+    try {
+      const response = await PostService.getPosts();
+      if (response.status === 200) {
+        setPosts(response.data);
+        setFilteredPosts(response.data);
+        fetchUserInfo();
       }
-    };
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
+  // Fetch user information for post creators
+  const fetchUserInfo = async () => {
+    try {
+      const response = await ProfileService.fetchUserByEmail();
+      if (response.status === 200) {
+        setUserMap(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  // Apply filters to posts
+  const applyFilters = () => {
+    const filtered = posts.filter(
+      (post) =>
+        post.questReward >= filters.minPrice &&
+        post.questReward <= filters.maxPrice &&
+        (!filters.dateFilter || new Date(post.date) >= new Date(filters.dateFilter)) &&
+        (!filters.categoryFilter || post.questLabel === filters.categoryFilter)
+    );
+    setFilteredPosts(filtered);
+  };
+
+  // Fetch posts on component mount
+  useEffect(() => {
     fetchPosts();
   }, []);
 
-
+  // Apply filters when filters or posts change
   useEffect(() => {
-    const l = Object.keys(allIds).length;
-    if (l === 0) return; // Skip if no IDs available
-
-    const fetchPostByEmail = async () => {
-      console.log("User userid:", allIds); // Debugging
-      try {
-        if (l === 0) return;
-        const response = await ProfileService.fetchUserByEmail(allIds);
-        if (response.status === 200) {
-          console.log("User Info:", response); // Debugging
-
-          setUserMap(response.data); // ✅ Now `allIds` is { questCreatorId: UserInformation }
-          console.log("User map - ", response.data);
-        } else {
-          console.error("Failed to fetch user info. Status:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    fetchPostByEmail();
-  }, [allIds]); // Fetch only when `allIds` updates
-
-
-  useEffect(() => {
-    const filtered = posts.filter(
-      (post) =>
-        post.questReward >= minPrice &&
-        post.questReward <= maxPrice &&
-        (!dateFilter || new Date(post.date) >= new Date(dateFilter)) &&
-        (!categoryFilter || post.questLabel === categoryFilter)
-    );
-    setFilteredPosts(filtered);
-  }, [posts, minPrice, maxPrice, dateFilter, categoryFilter]);
+    applyFilters();
+  }, [posts, filters]);
 
   return (
     <div>
       <FilterControls
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        dateFilter={dateFilter}
-        categoryFilter={categoryFilter}
-        setMinPrice={setMinPrice}
-        setMaxPrice={setMaxPrice}
-        setDateFilter={setDateFilter}
-        setCategoryFilter={setCategoryFilter}
+        minPrice={filters.minPrice}
+        maxPrice={filters.maxPrice}
+        dateFilter={filters.dateFilter}
+        categoryFilter={filters.categoryFilter}
+        setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
+        setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
+        setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
+        setCategoryFilter={(value) => setFilters({ ...filters, categoryFilter: value })}
         dropDownOptions={dropDownOptions}
       />
 
       <div className="post-grid">
         {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
-            <div key={post.id}>
+          filteredPosts.map((post) =>
+            post ? (
               <Post
+                key={post.id}
                 postData={post}
-                ids={userMap}
-                onAccept={(postData, message) => handleAccept(postData, message)}
+                allIds={userMap}
+                onAccept={handleAccept}
+                user={user}
+                postSession={{
+                  questCreatorId: post.questCreatorId,
+                  questId: post.id,
+                }}
+
               />
-            </div>
-          ))
+            ) : null
+          )
         ) : (
           <p>No posts found.</p>
         )}

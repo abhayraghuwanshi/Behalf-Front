@@ -35,6 +35,19 @@ class PostService {
     });
   }
 
+  async updatePost(postAgreement) {
+    return await axios.post(API_URL + "/update", postAgreement, {
+      withCredentials: true,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+  }
+
+
+
+
+
 }
 
 export default new PostService();

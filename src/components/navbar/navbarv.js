@@ -39,6 +39,7 @@ function Navbar() {
   };
 
   const handleClick = (page) => {
+    console.log(page);
     if (page.action === 'openPostCreation') {
       openCreation();
     } else {
@@ -104,6 +105,7 @@ function Navbar() {
               {actionButtons.map((button) => (
                 <AwesomeButton
                   className='loginbutton'
+                  onReleased={() => handleClick(button)}
                 >
                   {button.name}
                 </AwesomeButton>
