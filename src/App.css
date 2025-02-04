@@ -52,3 +52,14 @@
   filter: blur(10rem);
 
 }
+
+.transparent-container {
+  background-color: transparent !important;
+  background-color: transparent;
+  width: '100%';
+  max-width: 400;
+}
+
+.transparent-container-image {
+  height: 600px;
+}

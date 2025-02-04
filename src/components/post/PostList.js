@@ -20,14 +20,14 @@ const PostList = () => {
 
 
   const dropDownOptions = [
-    "PHOTOGRAPHY",
-    "GRAPHIC_DESIGN",
-    "PET_SITTING",
-    "SEWING",
-    "HANDIWORK",
+    // "PHOTOGRAPHY",
+    // "GRAPHIC_DESIGN",
+    // "PET_SITTING",
+    // "SEWING",
+    // "HANDIWORK",
     "PICKUP_DELIVERY",
-    "BOOK_KEEPING",
-    "ONLINE_TUTORIAL",
+    // "BOOK_KEEPING",
+    // "ONLINE_TUTORIAL",
   ];
 
   // Handle accepting a post

@@ -10,14 +10,14 @@ const CreatePost = ({ onPostCreated }) => {
   const [questLabel, setQuestLabel] = useState(""); // Default empty category
 
   const dropDownOptions = [
-    "PHOTOGRAPHY",
-    "GRAPHIC_DESIGN",
-    "PET_SITTING",
-    "SEWING",
-    "HANDIWORK",
+    // "PHOTOGRAPHY",
+    // "GRAPHIC_DESIGN",
+    // "PET_SITTING",
+    // "SEWING",
+    // "HANDIWORK",
     "PICKUP_DELIVERY",
-    "BOOK_KEEPING",
-    "ONLINE_TUTORIAL",
+    // "BOOK_KEEPING",
+    // "ONLINE_TUTORIAL",
   ];
 
   const handleSubmit = async (event) => {
