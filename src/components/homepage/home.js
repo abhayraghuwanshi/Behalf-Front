@@ -24,7 +24,7 @@ function Home() {
           </div>
         </Grid>
         <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Do a Delivery quest, and Earn rewards</Typography>
+          <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn through quests</Typography>
           <AwesomeButton className='signup-button' onReleased={() => handleClick()}>Sign Up</AwesomeButton>
           <Typography sx={{ mt: 1, color: 'white' }}>or <a href="/login" style={{ color: 'white' }}>Sign in</a></Typography>
         </Grid>

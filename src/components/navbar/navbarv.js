@@ -12,7 +12,7 @@ import { AwesomeButton } from "react-awesome-button";
 import { useNavigate } from 'react-router-dom';
 import CreatePost from '../postcreation/CreatePost';
 import { useAuth } from '../SignIn/AuthContext';
-
+import logo from './dropquest2.png';
 const pages = [
   { name: 'Home', path: '/' },
   { name: 'Quest', path: '/post' },
@@ -71,7 +71,7 @@ function Navbar() {
               }}
               onClick={() => navigate('/')}
             >
-              LOGO
+              <img src={logo} alt="Logo" style={{ width: '120px', height: '80px' }} />
             </Typography>
 
             <Box
