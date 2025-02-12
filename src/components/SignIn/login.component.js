@@ -75,7 +75,7 @@ const LoginPage = ({ onLogin }) => {
                     <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
                         {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Login"}
                     </Button>
-                    <Button variant="contained" color="secondary" fullWidth onClick={handleLoginGoogle}>
+                    <Button variant="contained" fullWidth onClick={handleLoginGoogle}>
                         Login with Google
                     </Button>
                 </form>

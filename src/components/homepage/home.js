@@ -4,10 +4,14 @@ import React from 'react';
 import { AwesomeButton } from 'react-awesome-button';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
+import { useAuth } from '../SignIn/AuthContext';
 import img from './travelbyplane3.png';
+
 
 function Home() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
 
   const handleClick = () => {
     navigate("/login");
@@ -16,20 +20,31 @@ function Home() {
   return (
     <div>
       {/* Section 1 */}
-      <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2, px: 3 }}>
-        <Grid xs={12} md={2} />
-        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-          <div className="transparent-container">
-            <img src={img} alt="Helping" className="transparent-container-image" />
-          </div>
+      <div>
+        {/* Section 1 */}
+        <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2, px: 3 }}>
+          <Grid xs={12} md={2} />
+          <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="transparent-container">
+              <img src={img} alt="Helping" className="transparent-container-image" />
+            </div>
+          </Grid>
+          <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn through quests</Typography>
+            <div>
+              {/* Conditionally render the Sign Up button if the user is not signed in */}
+              {!user && (
+                <AwesomeButton className='signup-button' onReleased={() => handleClick()}>Sign Up</AwesomeButton>
+              )}
+              <Typography sx={{ mt: 1, color: 'white' }}>
+                {user ? 'You are signed in' : 'or '}
+                <a href="/login" style={{ color: 'white' }}>Sign in</a>
+              </Typography>
+            </div>
+          </Grid>
+          <Grid xs={12} md={2} />
         </Grid>
-        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn through quests</Typography>
-          <AwesomeButton className='signup-button' onReleased={() => handleClick()}>Sign Up</AwesomeButton>
-          <Typography sx={{ mt: 1, color: 'white' }}>or <a href="/login" style={{ color: 'white' }}>Sign in</a></Typography>
-        </Grid>
-        <Grid xs={12} md={2} />
-      </Grid>
+      </div>
 
       {/* Section 2 */}
       {/* <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '80vh', alignItems: 'center', mt: 2, px: 3 }}>
@@ -82,5 +97,6 @@ function Home() {
     </div >
   );
 }
+
 
 export default Home;

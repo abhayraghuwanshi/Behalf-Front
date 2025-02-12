@@ -24,6 +24,17 @@ class ProfileService {
         });
         return response; // Only return the relevant data
     }
+
+
+    async logout() {
+        const response = await axios.post(`${API_URL}/logout`, {
+            withCredentials: true, // Important: needed for cookies
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response; // Only return the relevant data
+    }
 }
 
 

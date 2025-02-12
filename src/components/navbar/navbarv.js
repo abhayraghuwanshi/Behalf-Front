@@ -13,16 +13,13 @@ import { useNavigate } from 'react-router-dom';
 import CreatePost from '../postcreation/CreatePost';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest2.png';
+
+import ProfileService from '../../service/ProfileService';
+
 const pages = [
   { name: 'Home', path: '/' },
-  { name: 'Quest', path: '/post' },
-  { name: 'MyQuests', path: '/viewQuest' },
-  { name: 'Profile', path: '/profile' }, // Add Profile page
-];
-const actionButtons = [
-  { name: 'Create', action: 'openPostCreation' },
-  { name: 'Login', path: '/login' },
-  { name: 'Logout', path: '/logout' },
+  { name: 'Delivery-Quest', path: '/post' },
+  { name: 'People-Quest', path: '/people' },
 ];
 
 function Navbar() {
@@ -38,14 +35,32 @@ function Navbar() {
     setIsCreatingPost(false);
   };
 
-  const handleClick = (page) => {
+  const handleClick = async (page) => {
     console.log(page);
     if (page.action === 'openPostCreation') {
       openCreation();
+
+    } else if (page.name === 'Logout') {
+      try {
+        const res = await ProfileService.logout();
+        if (res.data === 'Success') {
+          navigate('/post');
+        } else {
+          // Handle logout failure case
+          console.error('Logout failed:', res.data);
+        }
+      } catch (error) {
+        console.error('An error occurred during logout:', error);
+      }
     } else {
       navigate(page.path);
     }
   };
+
+  // Filter pages based on authentication
+  const filteredPages = user
+    ? [...pages, { name: 'My-Quest', path: '/viewQuest' }, { name: 'Profile', path: '/profile' }]
+    : pages;
 
   // Dynamically determine action buttons based on authentication
   const actionButtons = user
@@ -82,7 +97,7 @@ function Navbar() {
                 gap: 1,
               }}
             >
-              {pages.map((page) => (
+              {filteredPages.map((page) => (
                 <Box
                   key={page.name}
                   onClick={() => handleClick(page)}
@@ -93,6 +108,7 @@ function Navbar() {
                     padding: '8px 16px',
                     borderRadius: '4px',
                     '&:hover': { backgroundColor: '#1565c0' },
+                    '&:active': { cursor: 'default' },  // Changes cursor to default when button is clicked
                     textTransform: 'uppercase',
                   }}
                 >
@@ -101,16 +117,20 @@ function Navbar() {
               ))}
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 1 }}>
+
+            <div sx={{ display: 'flex', gap: 1 }}>
               {actionButtons.map((button) => (
                 <AwesomeButton
-                  className='loginbutton'
+                  key={button.name}
+                  className="loginbutton"
                   onReleased={() => handleClick(button)}
+
                 >
                   {button.name}
                 </AwesomeButton>
               ))}
-            </Box>
+            </div>
+
           </Toolbar>
         </Container>
       </AppBar >
