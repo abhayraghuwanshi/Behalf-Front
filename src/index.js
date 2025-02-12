@@ -1,15 +1,20 @@
+import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './components/SignIn/AuthContext';
+import theme from './components/theme';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <AuthProvider>
-    <App />
-  </AuthProvider>
+  <ThemeProvider theme={theme}>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </ThemeProvider>
+
   // </React.StrictMode >
 );
 

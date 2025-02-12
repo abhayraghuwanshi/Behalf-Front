@@ -102,7 +102,7 @@ const PostList = () => {
   }, [posts, filters]);
 
   return (
-    <div>
+    <div style={{ marginTop: '100px' }}>
       <FilterControls
         minPrice={filters.minPrice}
         maxPrice={filters.maxPrice}
