@@ -135,7 +135,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
 const pages = [
   { name: 'Home', path: '/' },
   { name: 'Delivery-Quest', path: '/post' },
-  { name: 'People-Quest', path: '/people' },
+  { name: 'People-Search', path: '/people' },
 ];
 
 function Navbar() {
