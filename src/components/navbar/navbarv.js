@@ -16,7 +16,6 @@ import CreatePost from '../postcreation/CreatePost';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest2.png';
 
-
 const pages = [
   { name: 'Home', path: '/' },
   { name: 'Delivery-Quest', path: '/post' },
@@ -32,9 +31,9 @@ function Navbar() {
 
   const openCreation = () => {
     if (location.pathname === '/post') {
-      setIsCreatingPost(true); // Open Delivery Quest creation
+      setIsCreatingPost(true);
     } else if (location.pathname === '/people') {
-      setIsCreatingPeopleQuest(true); // Open People Quest creation
+      setIsCreatingPeopleQuest(true);
     }
   };
 
@@ -62,33 +61,30 @@ function Navbar() {
     }
   };
 
-  // Filter pages based on authentication
   const filteredPages = user
     ? [...pages, { name: 'My-Quest', path: '/viewQuest' }, { name: 'Profile', path: '/profile' }]
     : pages;
 
-  // Dynamically determine action buttons based on authentication and current page
   const actionButtons = user
     ? [
       ...(location.pathname === '/post' || location.pathname === '/people'
-        ? [{ name: 'Create', action: 'openPostCreation' }]
+        ? [{ name: 'Create', action: 'openPostCreation', color: '#8e24aa' }]
         : []),
-      { name: 'Logout', path: '/logout' },
+      { name: 'Logout', path: '/logout', color: '#d32f2f' },
     ]
-    : [{ name: 'Login', path: '/login' }];
-
+    : [{ name: 'Login', path: '/login', color: '#1976d2' }];
 
   const handleTravelCreation = async (payload) => {
     try {
       const response = await TravelRequestService.createTravelRequest({
         ...payload,
-        creatorId: user?.id // Ensure user ID is attached
+        creatorId: user?.id
       });
 
       if (response) {
         console.log("Travel request created successfully:", response);
-        alert("Travel request created successfully!"); // Show confirmation
-        closeCreation(); // Close the modal
+        alert("Travel request created successfully!");
+        closeCreation();
       } else {
         console.error("Failed to create travel request");
         alert("Failed to create travel request.");
@@ -101,9 +97,9 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: 'black' }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
+      <AppBar position="fixed" sx={{ backgroundColor: 'black', maxWidth: '90vw', left: '50%', transform: 'translateX(-50%)', borderRadius: '8px' }}>
+        <Container maxWidth="lg"> {/* ✅ Reduced width */}
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: '40px' }}>
             <Typography
               variant="h6"
               noWrap
@@ -118,47 +114,46 @@ function Navbar() {
               }}
               onClick={() => navigate('/')}
             >
-              <img src={logo} alt="Logo" style={{ width: '120px', height: '80px' }} />
+              <img src={logo} alt="Logo" style={{ width: '100px', height: '60px' }} />
             </Typography>
 
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex',
-                justifyContent: 'flex-start',
-                gap: 1,
-              }}
-            >
+            <Box sx={{ display: 'flex', gap: 1 }}>
               {filteredPages.map((page) => (
-                <Box
+                <Button
                   key={page.name}
                   onClick={() => handleClick(page)}
                   sx={{
-                    my: 2,
                     color: 'white',
-                    cursor: 'pointer',
-                    padding: '8px 16px',
+                    fontSize: '14px',
+                    textTransform: 'uppercase',
+                    padding: '6px 12px',
                     borderRadius: '4px',
                     '&:hover': { backgroundColor: '#1565c0' },
-                    textTransform: 'uppercase',
                   }}
                 >
                   {page.name.trim()}
-                </Box>
+                </Button>
               ))}
             </Box>
 
-            <div sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               {actionButtons.map((button) => (
-                <button
+                <Button
                   key={button.name}
-                  className="loginbutton"
                   onClick={() => handleClick(button)}
+                  sx={{
+                    color: 'white',
+                    fontSize: '14px',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    backgroundColor: button.color,
+                    '&:hover': { backgroundColor: '#7b1fa2' },
+                  }}
                 >
                   {button.name}
-                </button>
+                </Button>
               ))}
-            </div>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>

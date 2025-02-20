@@ -24,11 +24,6 @@ function Home() {
         {/* Section 1 */}
         <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2, px: 3 }}>
           <Grid xs={12} md={2} />
-          <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="transparent-container">
-              <img src={img} alt="Helping" className="transparent-container-image" />
-            </div>
-          </Grid>
           <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn through quests</Typography>
             <div>
@@ -37,11 +32,17 @@ function Home() {
                 <AwesomeButton className='signup-button' onReleased={() => handleClick()}>Sign Up</AwesomeButton>
               )}
               <Typography sx={{ mt: 1, color: 'white' }}>
-                {user ? 'You are signed in' : 'or '}
+                {user ? 'You are signed in ' : 'or '}
                 <a href="/login" style={{ color: 'white' }}>Sign in</a>
               </Typography>
             </div>
           </Grid>
+          <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="transparent-container">
+              <img src={img} alt="Helping" className="transparent-container-image" />
+            </div>
+          </Grid>
+
           <Grid xs={12} md={2} />
         </Grid>
       </div>
