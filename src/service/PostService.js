@@ -36,7 +36,8 @@ class PostService {
   }
 
   async updatePost(postAgreement) {
-    return await axios.post(API_URL + "/update", postAgreement, {
+    console.log(postAgreement);
+    return await axios.post(API_URL + "/update/" + postAgreement?.questId, postAgreement, {
       withCredentials: true,
       headers: {
         'Accept': 'application/json'

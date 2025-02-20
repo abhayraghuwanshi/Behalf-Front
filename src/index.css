@@ -3,7 +3,8 @@ body {
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   overflow: hidden;
-  font-family: 'Montserrat sans-serif'
+  font-family: 'Montserrat sans-serif';
+  background-color: black;
 
 }
 

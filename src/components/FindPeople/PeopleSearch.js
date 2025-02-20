@@ -1,4 +1,5 @@
 import {
+    Button,
     List,
     ListItem,
     ListItemText,
@@ -92,12 +93,24 @@ const TravelRequestPage = () => {
 
             <List>
                 {filteredRequests.map((request, index) => (
-                    <ListItem key={index}>
+                    <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
                         <ListItemText
                             primary={`${request.category} from ${request.fromLocation} to ${request.toLocation}`}
                             secondary={`Date: ${request.travelDate}, Price: $${request.price}`}
-                            sx={{ color: 'white' }}
+                            primaryTypographyProps={{ color: "white" }}
+                            secondaryTypographyProps={{ color: "white" }} // Fix for black secondary text
                         />
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                color: "white",
+                                borderColor: "white",
+                                "&:hover": { borderColor: "gray" },
+                            }}
+                            onClick={() => setOpen(true)}
+                        >
+                            Interested
+                        </Button>
                     </ListItem>
                 ))}
             </List>

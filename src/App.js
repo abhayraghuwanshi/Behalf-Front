@@ -1,4 +1,3 @@
-import { Swirl } from 'ambient-cbg';
 import React from 'react';
 import "react-awesome-button/dist/styles.css";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
@@ -19,9 +18,9 @@ function App() {
       {/* <div style={{ filter: 'blur(5px)' }}>
         <Swirl className="swirl" />
       </div> */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, filter: 'blur(5px)' }}>
+      {/* <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, filter: 'blur(5px)' }}>
         <Swirl className="swirl" />
-      </div>
+      </div> */}
       <Router>
         <ResponsiveAppBar />
         <Routes>

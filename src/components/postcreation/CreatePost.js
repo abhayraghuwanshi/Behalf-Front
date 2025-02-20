@@ -10,14 +10,7 @@ const CreatePost = ({ onPostCreated }) => {
   const [questLabel, setQuestLabel] = useState(""); // Default empty category
 
   const dropDownOptions = [
-    // "PHOTOGRAPHY",
-    // "GRAPHIC_DESIGN",
-    // "PET_SITTING",
-    // "SEWING",
-    // "HANDIWORK",
     "PICKUP_DELIVERY",
-    // "BOOK_KEEPING",
-    // "ONLINE_TUTORIAL",
   ];
 
   const handleSubmit = async (event) => {
@@ -55,7 +48,6 @@ const CreatePost = ({ onPostCreated }) => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Create Quest</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
 
         {/* Quest Instructions Field */}
@@ -132,7 +124,8 @@ const styles = {
     padding: "20px",
     borderRadius: "8px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#fff",
+    backgroundColor: "#000", // Match TravelRequestForm background color
+    color: "#fff", // Match TravelRequestForm text color
   },
   title: {
     textAlign: "center",
@@ -153,27 +146,32 @@ const styles = {
     fontSize: "14px",
     fontWeight: "bold",
     marginBottom: "5px",
-    color: "#333",
+    color: "#fff", // Match TravelRequestForm label color
   },
   input: {
     padding: "10px",
     borderRadius: "4px",
-    border: "1px solid #ccc",
+    border: "1px solid #fff", // Match TravelRequestForm border color
     fontSize: "16px",
+    backgroundColor: "#000", // Match TravelRequestForm input background color
+    color: "#fff", // Match TravelRequestForm input text color
   },
   textarea: {
     padding: "10px",
     borderRadius: "4px",
-    border: "1px solid #ccc",
+    border: "1px solid #fff", // Match TravelRequestForm border color
     fontSize: "16px",
     resize: "vertical",
+    backgroundColor: "#000", // Match TravelRequestForm textarea background color
+    color: "#fff", // Match TravelRequestForm textarea text color
   },
   select: {
     padding: "10px",
     borderRadius: "4px",
-    border: "1px solid #ccc",
+    border: "1px solid #fff", // Match TravelRequestForm border color
     fontSize: "16px",
-    backgroundColor: "#fff",
+    backgroundColor: "#000", // Match TravelRequestForm select background color
+    color: "#fff", // Match TravelRequestForm select text color
   },
   button: {
     padding: "10px 20px",

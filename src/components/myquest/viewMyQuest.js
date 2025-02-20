@@ -18,7 +18,15 @@ const MyQuestPage = () => {
     const [userMap, setUserMap] = useState({});
     const [questFilter, setQuestFilter] = useState("ALL");
     const [loading, setLoading] = useState(true); // Loading state
-    const labels = ["PENDING", "REFERRED", "REJECTED", "SUCCESS"];
+    const labels = ["PENDING", "REJECTED", "SUCCESS"];
+    const [selectedStatus, setSelectedStatus] = useState('PENDING');
+    const handleChange = (e) => {
+        setSelectedStatus(e.target.value);
+    };
+
+    const handleSubmit = (session) => {
+        handleUpdateStatus(session, selectedStatus);
+    };
 
     // Fetch user info and populate userMap
     const fetchUserInfo = async () => {
@@ -142,7 +150,7 @@ const MyQuestPage = () => {
 
     return (
         <div>
-            <div className="my-quest-page">
+            <div className="my-quest-page" style={{ marginTop: "100px" }}>
                 {/* Quest List */}
                 <div className="quests">
                     <h2>Quests</h2>
@@ -170,7 +178,6 @@ const MyQuestPage = () => {
                                 .map((session) => (
                                     <li
                                         key={session.id}
-                                        onClick={() => fetchMessages(session.id)}
                                         className={`chat-session ${selectedSession === session.id ? "active" : ""}`}
                                         style={{
                                             color: "white",
@@ -185,28 +192,61 @@ const MyQuestPage = () => {
                                         onMouseEnter={(e) => (e.currentTarget.style.background = "#333")}
                                         onMouseLeave={(e) => (e.currentTarget.style.background = selectedSession === session.id ? "#444" : "transparent")}
                                     >
-                                        Chat with: {getChatRecipientName(session)} - Status: {session.questStatus}
+                                        Chat with: {getChatRecipientName(session)} - Status: {session.questStatus} <br />
 
                                         {/* Dropdown for status update (only for quest creator) */}
                                         {user.id === selectedQuest.questCreatorId && (
-                                            <select
-                                                value={session.questStatus}
-                                                onChange={(e) => handleUpdateStatus(session, e.target.value)}
-                                                style={{
+                                            <>
+                                                <select
+                                                    value={selectedQuest.questStatus}
+                                                    onChange={handleChange}
+                                                    style={{
+                                                        marginLeft: "10px",
+                                                        padding: "5px",
+                                                        borderRadius: "4px",
+                                                        background: "#222",
+                                                        color: "white",
+                                                        border: "1px solid white",
+                                                    }}
+                                                >
+                                                    {labels.map((label) => (
+                                                        <option key={label} value={label}>
+                                                            {label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+
+                                                <button
+                                                    type="submit"
+                                                    onClick={(session) => handleSubmit(session)}
+                                                    style={{
+                                                        marginLeft: "10px",
+                                                        padding: "8px 12px",
+                                                        borderRadius: "6px",
+                                                        background: "#444",
+                                                        color: "white",
+                                                        border: "1px solid white",
+                                                        cursor: "pointer",
+                                                        transition: "background 0.3s ease",
+                                                    }}
+                                                    onMouseOver={(e) => (e.target.style.background = "#555")}
+                                                    onMouseOut={(e) => (e.target.style.background = "#444")}
+                                                >
+                                                    Submit
+                                                </button>
+                                                <button onClick={() => fetchMessages(session.id)} style={{
                                                     marginLeft: "10px",
-                                                    padding: "5px",
-                                                    borderRadius: "4px",
-                                                    background: "#222",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "6px",
+                                                    background: "#444",
                                                     color: "white",
                                                     border: "1px solid white",
-                                                }}
-                                            >
-                                                {labels.map((label) => (
-                                                    <option key={label} value={label}>
-                                                        {label}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                    cursor: "pointer",
+                                                    transition: "background 0.3s ease",
+                                                }}>
+                                                    Inbox
+                                                </button>
+                                            </>
                                         )}
                                     </li>
 
@@ -244,7 +284,7 @@ const MyQuestPage = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

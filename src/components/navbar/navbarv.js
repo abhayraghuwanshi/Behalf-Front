@@ -13,7 +13,6 @@ import DialogContent from '@mui/material/DialogContent';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
-import { AwesomeButton } from "react-awesome-button";
 import { useLocation, useNavigate } from 'react-router-dom';
 import ProfileService from '../../service/ProfileService';
 import CreatePost from '../postcreation/CreatePost';
@@ -39,7 +38,9 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} style={{ margin: '10px 10px 10px 10px' }}>
+    <Dialog open={open} onClose={handleClose} style={{ margin: '10px 10px 10px 10px' }} sx={{
+      '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' }, // Sets background color to black
+    }}>
       <DialogTitle sx={{ color: 'white' }}>Create Travel Request</DialogTitle>
       <DialogContent>
         <TextField
@@ -61,7 +62,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
         </TextField>
         <TextField
           fullWidth
-          label="From Location (Lat,Lng)"
+          label="From Location"
           name="fromLocation"
           value={formData.fromLocation}
           onChange={handleChange}
@@ -73,7 +74,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
         />
         <TextField
           fullWidth
-          label="To Location (Lat,Lng)"
+          label="To Location"
           name="toLocation"
           value={formData.toLocation}
           onChange={handleChange}
@@ -99,17 +100,23 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
         />
         <TextField
           fullWidth
-          type="number"
-          label="Price"
-          name="price"
-          value={formData.price}
+          type="date"
+          label="Travel Date"
+          name="travelDate"
+          value={formData.travelDate}
           onChange={handleChange}
           margin="dense"
+          InputLabelProps={{ shrink: true }}
           sx={{
-            '& .MuiInputLabel-root': { color: 'white' },
-            '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' }, color: 'white' },
+            '& .MuiInputLabel-root': { color: 'white' }, // Label color
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: 'white' }, // Border color
+              color: 'white', // Text color
+            },
+            '& .MuiSvgIcon-root': { color: 'white' }, // Change date icon color to white
           }}
         />
+
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary" sx={{ color: 'white' }}>
@@ -120,6 +127,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
         </Button>
       </DialogActions>
     </Dialog>
+
   );
 };
 
@@ -186,7 +194,7 @@ function Navbar() {
 
   return (
     <>
-      <AppBar sx={{ backgroundColor: 'black' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'black' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography
@@ -225,24 +233,23 @@ function Navbar() {
                     padding: '8px 16px',
                     borderRadius: '4px',
                     '&:hover': { backgroundColor: '#1565c0' },
-                    '&:active': { cursor: 'default' },
                     textTransform: 'uppercase',
                   }}
                 >
-                  {page.name}
+                  {page.name.trim()}
                 </Box>
               ))}
             </Box>
 
             <div sx={{ display: 'flex', gap: 1 }}>
               {actionButtons.map((button) => (
-                <AwesomeButton
+                <button
                   key={button.name}
                   className="loginbutton"
-                  onReleased={() => handleClick(button)}
+                  onClick={() => handleClick(button)}
                 >
                   {button.name}
-                </AwesomeButton>
+                </button>
               ))}
             </div>
           </Toolbar>

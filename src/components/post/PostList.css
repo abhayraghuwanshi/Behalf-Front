@@ -123,18 +123,15 @@
 }
 
 /* Dialog Styling */
-.MuiDialog-paper {
-  border-radius: 12px !important;
-  padding: 16px;
-}
 
-.MuiDialogContent-root {
+
+/* .MuiDialogContent-root {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
+} */
 
-.MuiInput-root {
+/* .MuiInput-root {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
@@ -166,11 +163,7 @@
   background-color: #0056b3;
 }
 
-.MuiButton-sizeSmall {
-  padding: 6px 12px;
-  font-size: 0.8rem;
-}
-
+*/
 /* Responsive Layout */
 @media (max-width: 768px) {
   .post-card {
