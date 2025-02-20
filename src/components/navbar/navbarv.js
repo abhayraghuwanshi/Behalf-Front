@@ -1,8 +1,3 @@
-import {
-  DialogTitle,
-  MenuItem,
-  TextField
-} from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,121 +10,11 @@ import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ProfileService from '../../service/ProfileService';
+import TravelRequestService from '../../service/TravelRequestService';
+import TravelRequestForm from "../FindPeople/TravelRequestForm";
 import CreatePost from '../postcreation/CreatePost';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest2.png';
-
-const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
-  const [formData, setFormData] = useState({
-    category: "traveler",
-    fromLocation: "",
-    toLocation: "",
-    travelDate: "",
-    price: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = () => {
-    handleSubmit(formData);
-    handleClose();
-  };
-
-  return (
-    <Dialog open={open} onClose={handleClose} style={{ margin: '10px 10px 10px 10px' }} sx={{
-      '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' }, // Sets background color to black
-    }}>
-      <DialogTitle sx={{ color: 'white' }}>Create Travel Request</DialogTitle>
-      <DialogContent>
-        <TextField
-          select
-          fullWidth
-          label="Category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          margin="dense"
-          sx={{
-            '& .MuiInputLabel-root': { color: 'white' },
-            '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' }, color: 'white' },
-            '& .MuiSvgIcon-root': { color: 'white' },
-          }}
-        >
-          <MenuItem value="traveler" sx={{ color: 'white' }}>I am traveling</MenuItem>
-          <MenuItem value="seeker" sx={{ color: 'white' }}>I need someone traveling</MenuItem>
-        </TextField>
-        <TextField
-          fullWidth
-          label="From Location"
-          name="fromLocation"
-          value={formData.fromLocation}
-          onChange={handleChange}
-          margin="dense"
-          sx={{
-            '& .MuiInputLabel-root': { color: 'white' },
-            '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' }, color: 'white' },
-          }}
-        />
-        <TextField
-          fullWidth
-          label="To Location"
-          name="toLocation"
-          value={formData.toLocation}
-          onChange={handleChange}
-          margin="dense"
-          sx={{
-            '& .MuiInputLabel-root': { color: 'white' },
-            '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' }, color: 'white' },
-          }}
-        />
-        <TextField
-          fullWidth
-          type="date"
-          label="Travel Date"
-          name="travelDate"
-          value={formData.travelDate}
-          onChange={handleChange}
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          sx={{
-            '& .MuiInputLabel-root': { color: 'white' },
-            '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'white' }, color: 'white' },
-          }}
-        />
-        <TextField
-          fullWidth
-          type="date"
-          label="Travel Date"
-          name="travelDate"
-          value={formData.travelDate}
-          onChange={handleChange}
-          margin="dense"
-          InputLabelProps={{ shrink: true }}
-          sx={{
-            '& .MuiInputLabel-root': { color: 'white' }, // Label color
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: 'white' }, // Border color
-              color: 'white', // Text color
-            },
-            '& .MuiSvgIcon-root': { color: 'white' }, // Change date icon color to white
-          }}
-        />
-
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="secondary" sx={{ color: 'white' }}>
-          Cancel
-        </Button>
-        <Button onClick={onSubmit} color="primary" sx={{ color: 'white' }}>
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
-
-  );
-};
 
 
 const pages = [
@@ -191,6 +76,28 @@ function Navbar() {
       { name: 'Logout', path: '/logout' },
     ]
     : [{ name: 'Login', path: '/login' }];
+
+
+  const handleTravelCreation = async (payload) => {
+    try {
+      const response = await TravelRequestService.createTravelRequest({
+        ...payload,
+        creatorId: user?.id // Ensure user ID is attached
+      });
+
+      if (response) {
+        console.log("Travel request created successfully:", response);
+        alert("Travel request created successfully!"); // Show confirmation
+        closeCreation(); // Close the modal
+      } else {
+        console.error("Failed to create travel request");
+        alert("Failed to create travel request.");
+      }
+    } catch (error) {
+      console.error("An error occurred during travel request creation:", error);
+      alert("Error creating travel request. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -274,10 +181,7 @@ function Navbar() {
           <TravelRequestForm
             open={isCreatingPeopleQuest}
             handleClose={closeCreation}
-            handleSubmit={(data) => {
-              console.log('New People Quest:', data);
-              closeCreation();
-            }}
+            handleSubmit={(data) => handleTravelCreation(data)}
           />
         </DialogContent>
       </Dialog>

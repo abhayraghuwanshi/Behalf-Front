@@ -1,49 +1,44 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Collapse, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useAuth } from "../SignIn/AuthContext";
 
-// Recursive Comment Component
-const Comment = ({ comment, addReply, level = 0, isLast }) => {
+const Comment = ({ comment, addReply, level = 0, user }) => {
     const [replyText, setReplyText] = useState("");
     const [showReplyInput, setShowReplyInput] = useState(false);
+    const [showReplies, setShowReplies] = useState(true);
 
     const handleReply = () => {
-        if (replyText.trim()) {
-            addReply(comment.id, replyText);
-            setReplyText("");
-            setShowReplyInput(false);
-        }
+        if (!replyText.trim()) return;
+        addReply(comment.id, replyText);
+        setReplyText("");
+        setShowReplyInput(false);
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", marginLeft: level > 0 ? "20px" : "0px" }}>
+        <Box sx={{ marginLeft: `${level * 20}px`, marginTop: 1, paddingLeft: "10px", borderLeft: level > 0 ? "2px solid #90caf9" : "none" }}>
+            {/* ✅ Ensure Username is Displayed */}
             <Box sx={{ display: "flex", alignItems: "center" }}>
-                {/* Tree line for replies */}
-                {level > 0 && (
-                    <Box
-                        sx={{
-                            width: "10px",
-                            height: "100%",
-                            borderLeft: "2px solid #90caf9",
-                            marginRight: "8px",
-                            marginTop: level > 1 ? "-12px" : "0",
-                        }}
-                    />
-                )}
-
-                {/* Comment Text */}
-                <Typography variant="body1" sx={{ color: "white" }}>
+                <Typography variant="body1" sx={{ color: "white", fontWeight: level === 0 ? "bold" : "normal" }}>
+                    <span style={{ color: "#90caf9", fontWeight: "bold", marginRight: "8px" }}>
+                        {comment.username || "Anonymous"} {/* ✅ Display the username */}
+                    </span>
                     {comment.text}
                 </Typography>
-
-                {/* Reply Button */}
-                <Button size="small" sx={{ color: "#90caf9", marginLeft: "10px" }} onClick={() => setShowReplyInput(!showReplyInput)}>
-                    Reply
-                </Button>
+                {user && (
+                    <Button size="small" sx={{ color: "#90caf9", marginLeft: "10px" }} onClick={() => setShowReplyInput(!showReplyInput)}>
+                        Reply
+                    </Button>
+                )}
+                {comment.replies.length > 0 && (
+                    <Button size="small" sx={{ color: "#90caf9", marginLeft: "10px" }} onClick={() => setShowReplies(!showReplies)}>
+                        {showReplies ? "Hide Replies" : "Show Replies"}
+                    </Button>
+                )}
             </Box>
 
-            {/* Reply Input Box */}
-            {showReplyInput && (
-                <Box sx={{ marginLeft: "20px", marginTop: "5px" }}>
+            {/* Reply Input - Only show if user is logged in */}
+            {showReplyInput && user && (
+                <Box sx={{ marginTop: 1 }}>
                     <TextField
                         fullWidth
                         label="Reply"
@@ -58,42 +53,70 @@ const Comment = ({ comment, addReply, level = 0, isLast }) => {
                 </Box>
             )}
 
-            {/* Render Replies with Proper Tree Line Alignment */}
-            <div style={{ marginLeft: "20px", paddingLeft: "10px", borderLeft: comment.replies.length ? "2px solid #90caf9" : "none" }}>
-                {comment.replies.map((reply, index) => (
-                    <Comment key={reply.id} comment={reply} addReply={addReply} level={level + 1} isLast={index === comment.replies.length - 1} />
-                ))}
-            </div>
-        </div>
+            {/* Nested Replies */}
+            {comment.replies.length > 0 && (
+                <Collapse in={showReplies}>
+                    <Box>
+                        {comment.replies.map((reply) => (
+                            <Comment key={reply.id} comment={reply} addReply={addReply} level={level + 1} user={user} />
+                        ))}
+                    </Box>
+                </Collapse>
+            )}
+        </Box>
     );
 };
 
 // Main Comment Section
 const CommentSection = ({ comments, addComment, addReply }) => {
     const [newComment, setNewComment] = useState("");
+    const { user, loading } = useAuth(); // ✅ Get user authentication state
+
+    const handleAddComment = async () => {
+        if (!newComment.trim()) return;
+
+        try {
+            await addComment(newComment);
+            setNewComment("");
+        } catch (error) {
+            console.error("Failed to add comment:", error);
+        }
+    };
 
     return (
-        <div style={{ paddingTop: "10px" }}>
-            {/* Add New Comment */}
-            <TextField
-                fullWidth
-                label="Add a comment"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                margin="dense"
-                sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, color: "white" } }}
-            />
-            <Button onClick={() => { addComment(newComment); setNewComment(""); }} variant="contained" sx={{ marginTop: 1, backgroundColor: "#90caf9" }}>
-                Add Comment
-            </Button>
+        <Box sx={{ paddingTop: "10px" }}>
+            {/* Add New Comment - Only for Logged-In Users */}
+            {user ? (
+                <>
+                    <TextField
+                        fullWidth
+                        label="Add a comment"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        margin="dense"
+                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, color: "white" } }}
+                    />
+                    <Button
+                        onClick={handleAddComment} // ✅ Fix Button Click
+                        variant="contained"
+                        sx={{ marginTop: 1, backgroundColor: "#90caf9" }}
+                    >
+                        Add Comment
+                    </Button>
+                </>
+            ) : (
+                <Typography sx={{ color: "#90caf9", textAlign: "center", fontSize: "16px", marginBottom: "10px" }}>
+                    🔒 Log in to post a comment
+                </Typography>
+            )}
 
             {/* Show Comments */}
-            <div style={{ marginTop: "10px" }}>
-                {comments.map((comment, index) => (
-                    <Comment key={comment.id} comment={comment} addReply={addReply} isLast={index === comments.length - 1} />
+            <Box sx={{ marginTop: "10px" }}>
+                {comments.map((comment) => (
+                    <Comment key={comment.id} comment={comment} addReply={addReply} user={user} />
                 ))}
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
