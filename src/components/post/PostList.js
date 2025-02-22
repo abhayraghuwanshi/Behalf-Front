@@ -17,6 +17,7 @@ const PostList = () => {
     dateFilter: "",
     categoryFilter: "",
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
   const dropDownOptions = [
     "PICKUP_DELIVERY",
@@ -74,7 +75,9 @@ const PostList = () => {
         post.questReward >= filters.minPrice &&
         post.questReward <= filters.maxPrice &&
         (!filters.dateFilter || new Date(post.date) >= new Date(filters.dateFilter)) &&
-        (!filters.categoryFilter || post.questLabel === filters.categoryFilter)
+        (!filters.categoryFilter || post.questLabel === filters.categoryFilter) &&
+        (post.questInstructions.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.id.toString().includes(searchTerm))
     );
     setFilteredPosts(filtered);
   };
@@ -85,7 +88,7 @@ const PostList = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [posts, filters]);
+  }, [posts, filters, searchTerm]);
 
   return (
     <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px' }}>
@@ -93,12 +96,11 @@ const PostList = () => {
         minPrice={filters.minPrice}
         maxPrice={filters.maxPrice}
         dateFilter={filters.dateFilter}
-        categoryFilter={filters.categoryFilter}
+        searchTerm={searchTerm}
         setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
         setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
         setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
-        setCategoryFilter={(value) => setFilters({ ...filters, categoryFilter: value })}
-        dropDownOptions={dropDownOptions}
+        setSearchTerm={setSearchTerm}
       />
 
       <div className="post-grid">

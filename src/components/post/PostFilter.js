@@ -1,4 +1,4 @@
-import { Box, Grid, MenuItem, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -9,17 +9,31 @@ const FilterControls = ({
     minPrice,
     maxPrice,
     dateFilter,
-    categoryFilter,
+    searchTerm,
     setMinPrice,
     setMaxPrice,
     setDateFilter,
-    setCategoryFilter,
-    dropDownOptions
+    setSearchTerm,
 }) => {
     return (
         <Box sx={{ padding: 2, border: 1, margin: 2, color: 'white', borderColor: "white" }}>
             <h3 style={{ color: "white" }}>Filters</h3>
             <Grid container spacing={2}>
+                {/* Search Term */}
+                <Grid item xs={12}>
+                    <TextField
+                        label="Search"
+                        type="text"
+                        fullWidth
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+                    />
+                </Grid>
+
                 {/* Min Price */}
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -72,31 +86,6 @@ const FilterControls = ({
                     </LocalizationProvider>
                 </Grid>
 
-
-                {/* Category */}
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        select
-                        label="Category"
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{ sx: { color: "white" } }}
-                        InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{
-                            "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } },
-                            "& .MuiSvgIcon-root": { color: "white" }, // Dropdown arrow color
-                        }}
-                    >
-                        <MenuItem value="">All Categories</MenuItem>
-                        {dropDownOptions.map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
             </Grid>
         </Box>
     );
