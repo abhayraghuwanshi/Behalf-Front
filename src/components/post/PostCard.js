@@ -59,7 +59,7 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
 
   const handleShare = () => {
     const shareUrl = `${window.location.origin}/post/${postData.id}`;
-    navigator.writeText(shareUrl).then(() => {
+    navigator.clipboard.writeText(shareUrl).then(() => {
       alert("Share link copied to clipboard!");
     });
   };
