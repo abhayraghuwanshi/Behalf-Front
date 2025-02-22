@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -157,18 +156,10 @@ function Navbar() {
       </AppBar>
 
       {/* Dialog for Delivery Quest Creation */}
-      <Dialog open={isCreatingPost} onClose={closeCreation} fullWidth maxWidth="sm" sx={{ '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' } }}>
+      <Dialog open={isCreatingPost} onClose={closeCreation} fullWidth maxWidth="sm">
         <DialogContent>
-          <CreatePost />
+          <CreatePost open={isCreatingPost} handleClose={closeCreation} />
         </DialogContent>
-        <DialogActions>
-          <Button sx={{ color: '#1976d2' }}>
-            Create
-          </Button>
-          <Button onClick={closeCreation} sx={{ color: '#1976d2' }}>
-            Close
-          </Button>
-        </DialogActions>
       </Dialog>
 
       {/* Dialog for People Quest Creation */}

@@ -1,4 +1,5 @@
 import TruckIcon from '@mui/icons-material/LocalShipping'; // Import a truck icon
+import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Box, Card, MenuItem, Select, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -56,9 +57,16 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
     closeReferDialog();
   };
 
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}/post/${postData.id}`;
+    navigator.writeText(shareUrl).then(() => {
+      alert("Share link copied to clipboard!");
+    });
+  };
+
   return (
     <Card sx={{
-      maxWidth: 400,
+      width: '42vw',
       padding: 2,
       margin: 2,
       border: '1px white solid',
@@ -76,23 +84,23 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
 
       {/* Right side: Content */}
       <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
-        <Typography variant="body1" gutterBottom sx={{ color: "white", fontWeight: 'bold' }}>
+        <Typography variant="body1" gutterBottom sx={{ color: "white", cursor: "auto", fontWeight: 'bold' }}>
           {postData.questInstructions}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white" }}>
+        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
           Author: {postData.questCreatorId}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white" }}>
+        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
           Created: {new Date(postData.creationTimestamp).toLocaleDateString()}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white" }}>
+        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
           Reward: {postData.questReward} rupees
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white" }}>
+        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
           {/* <AccessTimeIcon sx={{ color: "white", fontSize: 'inherit', marginRight: '4px' }} /> */}
           Valid for: {postData.questValidity} days
         </Typography>
@@ -101,13 +109,23 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
           <Button
             variant="outlined"
             sx={{
-              color: "white",
-              borderColor: "white",
+              color: "purple",
+              borderColor: "purple",
               "&:hover": { borderColor: "gray" },
             }}
             onClick={openInterestedDialog}
           >
             Interested
+          </Button>
+          <Button onClick={handleShare} variant="outlined"
+            sx={{
+              color: "purple",
+              borderColor: "purple",
+              "&:hover": { borderColor: "gray" },
+            }}>
+
+            Share
+            <ShareIcon sx={{ marginLeft: '5px' }} />
           </Button>
         </Box>
       </Box>
@@ -192,7 +210,7 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
           <Button onClick={closeReferDialog} sx={{ color: "white" }}>Close</Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Card >
   );
 };
 

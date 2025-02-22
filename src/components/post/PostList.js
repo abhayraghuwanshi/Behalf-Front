@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
 import ProfileService from "../../service/ProfileService";
 import { useAuth } from "../SignIn/AuthContext";
-import Post from "./PostCard";
+import PostCard from "./PostCard";
 import FilterControls from "./PostFilter";
 import "./PostList.css";
 
@@ -18,19 +18,10 @@ const PostList = () => {
     categoryFilter: "",
   });
 
-
   const dropDownOptions = [
-    // "PHOTOGRAPHY",
-    // "GRAPHIC_DESIGN",
-    // "PET_SITTING",
-    // "SEWING",
-    // "HANDIWORK",
     "PICKUP_DELIVERY",
-    // "BOOK_KEEPING",
-    // "ONLINE_TUTORIAL",
   ];
 
-  // Handle accepting a post
   const handleAccept = async (postSession) => {
     if (!user?.id) {
       alert("Sign in to share");
@@ -53,7 +44,6 @@ const PostList = () => {
     }
   };
 
-  // Fetch posts from the API
   const fetchPosts = async () => {
     try {
       const response = await PostService.getPosts();
@@ -67,7 +57,6 @@ const PostList = () => {
     }
   };
 
-  // Fetch user information for post creators
   const fetchUserInfo = async () => {
     try {
       const response = await ProfileService.fetchUserByEmail();
@@ -79,7 +68,6 @@ const PostList = () => {
     }
   };
 
-  // Apply filters to posts
   const applyFilters = () => {
     const filtered = posts.filter(
       (post) =>
@@ -91,18 +79,16 @@ const PostList = () => {
     setFilteredPosts(filtered);
   };
 
-  // Fetch posts on component mount
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  // Apply filters when filters or posts change
   useEffect(() => {
     applyFilters();
   }, [posts, filters]);
 
   return (
-    <div style={{ marginTop: '100px' }}>
+    <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px' }}>
       <FilterControls
         minPrice={filters.minPrice}
         maxPrice={filters.maxPrice}
@@ -119,7 +105,7 @@ const PostList = () => {
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) =>
             post ? (
-              <Post
+              <PostCard
                 key={post.id}
                 postData={post}
                 allIds={userMap}
@@ -129,7 +115,6 @@ const PostList = () => {
                   questCreatorId: post.questCreatorId,
                   questId: post.id,
                 }}
-
               />
             ) : null
           )
