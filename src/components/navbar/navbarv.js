@@ -47,19 +47,15 @@ function Navbar() {
       openCreation();
     } else if (page.name === 'Logout') {
       try {
-        const res = await ProfileService.logout();
-        if (res.data === 'Success') {
-          navigate('/post');
-        } else {
-          console.error('Logout failed:', res.data);
-        }
+        await ProfileService.logout(); // ✅ Call logout function directly
       } catch (error) {
-        console.error('An error occurred during logout:', error);
+        console.error("Logout failed:", error);
       }
     } else {
       navigate(page.path);
     }
   };
+
 
   const filteredPages = user
     ? [...pages, { name: 'My-Quest', path: '/viewQuest' }, { name: 'Profile', path: '/profile' }]
@@ -73,6 +69,8 @@ function Navbar() {
       { name: 'Logout', path: '/logout', color: '#d32f2f' },
     ]
     : [{ name: 'Login', path: '/login', color: '#1976d2' }];
+
+
 
   const handleTravelCreation = async (payload) => {
     try {
@@ -159,11 +157,14 @@ function Navbar() {
       </AppBar>
 
       {/* Dialog for Delivery Quest Creation */}
-      <Dialog open={isCreatingPost} onClose={closeCreation} fullWidth maxWidth="sm">
+      <Dialog open={isCreatingPost} onClose={closeCreation} fullWidth maxWidth="sm" sx={{ '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' } }}>
         <DialogContent>
           <CreatePost />
         </DialogContent>
         <DialogActions>
+          <Button sx={{ color: '#1976d2' }}>
+            Create
+          </Button>
           <Button onClick={closeCreation} sx={{ color: '#1976d2' }}>
             Close
           </Button>

@@ -27,14 +27,19 @@ class ProfileService {
 
 
     async logout() {
-        const response = await axios.post(`${API_URL}/logout`, {
-            withCredentials: true, // Important: needed for cookies
-            headers: {
-                'Accept': 'application/json'
+        try {
+            const response = await axios.post(`${BACKEND_API_URL}/api/logout`, {}, { withCredentials: true });
+
+            if (response.data.startsWith("http")) {
+                window.location.href = response.data; // ✅ Redirect to OIDC logout
+            } else {
+                console.log("Logged out successfully.");
             }
-        });
-        return response; // Only return the relevant data
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     }
+
 }
 
 

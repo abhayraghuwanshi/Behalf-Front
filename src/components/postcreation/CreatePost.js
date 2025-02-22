@@ -91,7 +91,7 @@ const CreatePost = ({ onPostCreated }) => {
         </div>
 
         {/* Quest Category Dropdown */}
-        <div style={styles.formGroup}>
+        {/* <div style={styles.formGroup}>
           <label style={styles.label}>Quest Category</label>
           <select
             value={questLabel}
@@ -106,7 +106,7 @@ const CreatePost = ({ onPostCreated }) => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <button type="submit" style={styles.button}>
