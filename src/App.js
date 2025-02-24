@@ -3,6 +3,7 @@ import "react-awesome-button/dist/styles.css";
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import TravelRequestPage from './components/FindPeople/TravelRequestPage.js';
+import Footer from './components/Footer/Footer.js';
 import Home from './components/homepage/home.js';
 import MyQuestPage from './components/myquest/viewMyQuest.js';
 import ResponsiveAppBar from './components/navbar/navbarv.js';
@@ -30,6 +31,7 @@ function App() {
           <Route path="/profile" element={<UserProfile />} /> {/* Profile Route */}
           <Route path="/people" element={<TravelRequestPage />} /> {/* Profile Route */}
         </Routes>
+        <Footer />
       </Router>
     </div>
 
