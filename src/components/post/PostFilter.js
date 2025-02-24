@@ -35,7 +35,7 @@ const FilterControls = ({
                 </Grid>
 
                 {/* Min Price */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         label="Min Price"
                         type="number"
@@ -50,7 +50,7 @@ const FilterControls = ({
                 </Grid>
 
                 {/* Max Price */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         label="Max Price"
                         type="number"
@@ -65,7 +65,7 @@ const FilterControls = ({
                 </Grid>
 
                 {/* Post Date */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Post Date"

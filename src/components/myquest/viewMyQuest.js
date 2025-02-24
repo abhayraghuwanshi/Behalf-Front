@@ -1,4 +1,5 @@
 import { Email } from "@mui/icons-material";
+import { Chip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import '../../service/PostService';
 import PostService from '../../service/PostService';
@@ -152,19 +153,31 @@ const MyQuestPage = () => {
     return (
         <div>
             <div className="my-quest-page" style={{ marginTop: "100px" }}>
-                {/* Quest List */}
+
                 <div className="quests">
-                    <h2>Quests</h2>
+                    <h2 style={{ color: '#90caf9' }}> Quests</h2>
                     <ul>
                         {quests.map((quest) => (
                             <li
+                                style={{
+                                    border: "1px #90caf9 solid", padding: "10px", marginBottom: "8px", borderRadius: "8px",
+                                    cursor: "pointer", background: selectedQuest?.id === quest.id ? "#444" :
+                                        "transparent", transition: "background 0.3s",
+                                    lineHeight: '24px'
+                                }}
                                 key={quest.id}
                                 onClick={() => setSelectedQuest(quest)}
                                 className={selectedQuest?.id === quest.id ? "active" : ""}
                             >
                                 Instruction: {quest.questInstructions} <br />
                                 Reward: ${quest.questReward} <br />
-                                Author: {userMap && quest.questCreatorId && userMap[quest.questCreatorId] ? `${userMap[quest.questCreatorId].firstName} ${userMap[quest.questCreatorId].lastName}` : "Unknown"}
+                                Author: {userMap && quest.questCreatorId && userMap[quest.questCreatorId] ? `${userMap[quest.questCreatorId].firstName} ${userMap[quest.questCreatorId].lastName}` : "Unknown"} <br />
+                                Created: {new Date(quest.creationTimestamp).toLocaleDateString()} <br />
+                                Quest Progress: {quest.questStatus == null ? 'PENDING' : quest.questStatus} <br />
+                                <Chip sx={{
+                                    borderRadius: "4px",
+                                    margin: "4px",
+                                }} label={user.id === quest.questCreatorId ? "Creator" : "Applied"} color="primary" variant="outlined"></Chip>
                             </li>
                         ))}
                     </ul>
@@ -172,7 +185,7 @@ const MyQuestPage = () => {
 
                 {/* Quest Hunter (Chat Sessions) */}
                 <div className="quest-hunter">
-                    <h2>Quest Progress</h2>
+                    <h2 style={{ color: '#90caf9' }}>Quest Progress</h2>
                     {selectedQuest ? (
                         <ul>
                             {chatSessions[selectedQuest.id]?.filter(session => session.questStatus === "PENDING")
@@ -182,7 +195,7 @@ const MyQuestPage = () => {
                                         className={`chat-session ${selectedSession === session.id ? "active" : ""}`}
                                         style={{
                                             color: "white",
-                                            border: "1px solid white",
+                                            border: "1px solid #90caf9",
                                             padding: "10px",
                                             marginBottom: "8px",
                                             borderRadius: "8px",
@@ -226,7 +239,7 @@ const MyQuestPage = () => {
                                                         borderRadius: "6px",
                                                         background: "#444",
                                                         color: "white",
-                                                        border: "1px solid white",
+                                                        border: "1px solid #90caf9",
                                                         cursor: "pointer",
                                                         transition: "background 0.3s ease",
                                                     }}
@@ -235,24 +248,30 @@ const MyQuestPage = () => {
                                                 >
                                                     Submit
                                                 </button>
-                                                <button onClick={() => fetchMessages(session.id)} style={{
-                                                    marginLeft: "10px",
-                                                    padding: "8px 12px",
-                                                    borderRadius: "6px",
-                                                    background: "#444",
-                                                    color: "white",
-                                                    border: "1px solid white",
-                                                    cursor: "pointer",
-                                                    transition: "background 0.3s ease",
-                                                    justifyContent: "center",
-                                                    textAlign: "center",
 
-                                                }}>
-                                                    <Email /> <>Email</>
-                                                </button>
                                             </div>
-                                        )}
+                                        )
+
+
+                                        }
+                                        <button onClick={() => fetchMessages(session.id)} style={{
+                                            marginTop: "10px",
+                                            marginLeft: "10px",
+                                            padding: "8px 12px",
+                                            borderRadius: "6px",
+                                            background: "#444",
+                                            color: "white",
+                                            border: "1px solid white",
+                                            cursor: "pointer",
+                                            transition: "background 0.3s ease",
+                                            justifyContent: "center",
+                                            textAlign: "center",
+
+                                        }}>
+                                            <Email /> <>Email</>
+                                        </button>
                                     </li>
+
 
                                 )) || <p>No pending users available for this quest</p>}
                         </ul>
@@ -263,7 +282,7 @@ const MyQuestPage = () => {
 
                 {/* Chat Inbox */}
                 <div className="inbox">
-                    <h2>Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}</h2>
+                    <h2 style={{ color: '#90caf9' }}>Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}</h2>
                     {messages.length > 0 ? (
                         <ul>
                             {messages.map((msg, index) => (

@@ -32,7 +32,7 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
       alert("Error: Missing required questMsg");
       return;
     }
-    onAccept({ ...postSession, questRequestMsg: questMessage, questAcceptorId: user.id }, '');
+    onAccept({ ...postSession, questRequestMsg: questMessage, questAcceptorId: user.id, questStatus: 'PENDING' }, '');
     closeInterestedDialog();
   };
 

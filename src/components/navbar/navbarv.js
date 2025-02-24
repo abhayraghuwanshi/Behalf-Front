@@ -94,7 +94,7 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: 'black', maxWidth: '90vw', left: '50%', transform: 'translateX(-50%)', borderRadius: '8px' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'black', maxWidth: '92vw', left: '50%', transform: 'translateX(-50%)', borderRadius: '8px' }}>
         <Container maxWidth="lg"> {/* ✅ Reduced width */}
           <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: '40px' }}>
             <Typography

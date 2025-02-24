@@ -1,11 +1,15 @@
+import CommentIcon from '@mui/icons-material/Comment';
+import Face5Icon from '@mui/icons-material/Face5';
+import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, Collapse, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useAuth } from "../SignIn/AuthContext";
 
+
 const Comment = ({ comment, addReply, level = 0, user }) => {
     const [replyText, setReplyText] = useState("");
     const [showReplyInput, setShowReplyInput] = useState(false);
-    const [showReplies, setShowReplies] = useState(true);
+    const [showReplies, setShowReplies] = useState(false);
 
     const handleReply = () => {
         if (!replyText.trim()) return;
@@ -16,21 +20,31 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
 
     return (
         <Box sx={{ marginLeft: `${level * 20}px`, marginTop: 1, paddingLeft: "10px", borderLeft: level > 0 ? "2px solid #90caf9" : "none" }}>
-            {/* ✅ Ensure Username is Displayed */}
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="body1" sx={{ color: "white", fontWeight: level === 0 ? "bold" : "normal" }}>
-                    <span style={{ color: "#90caf9", fontWeight: "bold", marginRight: "8px" }}>
-                        {comment.username || "Anonymous"} {/* ✅ Display the username */}
+
+            <Box>
+                <Typography>
+                    <span style={{ color: "#90caf9", marginLeft: "10px", display: "flex", alignItems: "center" }}>
+                        <Face5Icon sx={{ marginRight: "5px" }} />
+                        {comment.username || "Anonymous"}
+
+                        <Typography sx={{ color: "", fontSize: "10px", marginLeft: "10px", color: "white" }}>
+                            -  {new Date(comment.createdAt).toLocaleString()}
+                        </Typography>
                     </span>
-                    {comment.text}
+                    <br />
+                    <div style={{ marginLeft: "20px" }}>
+                        {comment.text}
+                    </div>
+
                 </Typography>
+                <br />
                 {user && (
-                    <Button size="small" sx={{ color: "#90caf9", marginLeft: "10px" }} onClick={() => setShowReplyInput(!showReplyInput)}>
-                        Reply
+                    <Button size="small" sx={{ color: "#90caf9", fontSize: '8px' }} onClick={() => setShowReplyInput(!showReplyInput)}>
+                        <CommentIcon sx={{ marginRight: '5px', height: '12px' }} /> Reply
                     </Button>
                 )}
                 {comment.replies.length > 0 && (
-                    <Button size="small" sx={{ color: "#90caf9", marginLeft: "10px" }} onClick={() => setShowReplies(!showReplies)}>
+                    <Button size="small" sx={{ color: "#90caf9", fontSize: '8px' }} onClick={() => setShowReplies(!showReplies)}>
                         {showReplies ? "Hide Replies" : "Show Replies"}
                     </Button>
                 )}
@@ -38,7 +52,7 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
 
             {/* Reply Input - Only show if user is logged in */}
             {showReplyInput && user && (
-                <Box sx={{ marginTop: 1 }}>
+                <Box sx={{ marginTop: 1, display: 'flex', alignItems: 'center' }}>
                     <TextField
                         fullWidth
                         label="Reply"
@@ -47,8 +61,8 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
                         margin="dense"
                         sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, color: "white" } }}
                     />
-                    <Button onClick={handleReply} variant="contained" sx={{ marginTop: 1, backgroundColor: "#90caf9" }}>
-                        Add Reply
+                    <Button onClick={handleReply} variant="contained" sx={{ marginLeft: 1, backgroundColor: "#90caf9" }}>
+                        <SendIcon />
                     </Button>
                 </Box>
             )}
@@ -71,6 +85,7 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
 const CommentSection = ({ comments, addComment, addReply }) => {
     const [newComment, setNewComment] = useState("");
     const { user, loading } = useAuth(); // ✅ Get user authentication state
+    const [showAllComments, setShowAllComments] = useState(false);
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
@@ -87,7 +102,7 @@ const CommentSection = ({ comments, addComment, addReply }) => {
         <Box sx={{ paddingTop: "10px" }}>
             {/* Add New Comment - Only for Logged-In Users */}
             {user ? (
-                <>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <TextField
                         fullWidth
                         label="Add a comment"
@@ -99,11 +114,11 @@ const CommentSection = ({ comments, addComment, addReply }) => {
                     <Button
                         onClick={handleAddComment} // ✅ Fix Button Click
                         variant="contained"
-                        sx={{ marginTop: 1, backgroundColor: "#90caf9" }}
+                        sx={{ marginLeft: 1, backgroundColor: "#90caf9" }}
                     >
                         Add Comment
                     </Button>
-                </>
+                </Box>
             ) : (
                 <Typography sx={{ color: "#90caf9", textAlign: "center", fontSize: "16px", marginBottom: "10px" }}>
                     🔒 Log in to post a comment
@@ -112,9 +127,14 @@ const CommentSection = ({ comments, addComment, addReply }) => {
 
             {/* Show Comments */}
             <Box sx={{ marginTop: "10px" }}>
-                {comments.map((comment) => (
+                {comments.slice(0, showAllComments ? comments.length : 1).map((comment) => (
                     <Comment key={comment.id} comment={comment} addReply={addReply} user={user} />
                 ))}
+                {comments.length > 1 && (
+                    <Button size="small" sx={{ color: "#90caf9", marginTop: "10px" }} onClick={() => setShowAllComments(!showAllComments)}>
+                        {showAllComments ? "Show Less" : "Show More"}
+                    </Button>
+                )}
             </Box>
         </Box>
     );

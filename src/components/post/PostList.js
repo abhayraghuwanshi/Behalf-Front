@@ -28,8 +28,8 @@ const PostList = () => {
       alert("Sign in to share");
       return;
     }
-
-    if (!postSession.questCreatorId || !postSession.id) {
+    console.log(postSession);
+    if (!postSession.questCreatorId) {
       alert("Error: Missing required fields");
       return;
     }

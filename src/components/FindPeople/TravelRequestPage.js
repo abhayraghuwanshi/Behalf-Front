@@ -1,4 +1,4 @@
-import { Box, Button, List, ListItem, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Button, List, ListItem, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TravelRequestService from "../../service/TravelRequestService";
 import { useAuth } from "../SignIn/AuthContext"; // ✅ Import useAuth
@@ -75,21 +75,9 @@ const TravelRequestPage = () => {
         : [];
 
     return (
-        <Box sx={{ minHeight: "100vh", backgroundColor: "#121212", color: "white", padding: "20px", marginTop: "100px" }}>
+        <Box sx={{ minHeight: "100vh", color: "white", padding: "20px", marginTop: "100px", marginLeft: '40px', marginRight: '40px' }}>
             {/* Filters */}
             <Box sx={{ display: "flex", gap: 2, marginBottom: "20px" }}>
-                <TextField
-                    select
-                    fullWidth
-                    label="Filter by Category"
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                    sx={{ "& .MuiInputLabel-root": { color: "white" }, "& .MuiOutlinedInput-root": { color: "white" } }}
-                >
-                    <MenuItem value="all">All</MenuItem>
-                    <MenuItem value="traveler">Traveler</MenuItem>
-                    <MenuItem value="seeker">Seeker</MenuItem>
-                </TextField>
                 <TextField
                     fullWidth
                     type="date"
@@ -97,7 +85,9 @@ const TravelRequestPage = () => {
                     value={filterDate}
                     onChange={(e) => setFilterDate(e.target.value)}
                     InputLabelProps={{ shrink: true }}
-                    sx={{ "& .MuiInputLabel-root": { color: "white" }, "& .MuiOutlinedInput-root": { color: "white" } }}
+                    InputProps={{ sx: { color: "white" } }}
+
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
                 />
             </Box>
 
@@ -145,26 +135,28 @@ const TravelRequestPage = () => {
                         {/* Toggle Comments Button */}
                         <Button
                             variant="outlined"
-                            sx={{ marginTop: "15px", color: "white", borderColor: "white" }}
+                            sx={{ marginTop: "15px", color: "purple", borderColor: "purple", alignItems: 'left', "&:hover": { borderColor: "gray", backgroundColor: 'purple', color: 'white' } }}
                             onClick={() => fetchComments(request.id)}
                         >
                             {request.showComments ? "Hide Comments" : "Comments"}
                         </Button>
 
                         {/* Comment Section */}
-                        {request.showComments && (
-                            <Box sx={{ marginTop: "15px", width: "100%" }}>
-                                <CommentSection
-                                    comments={request.comments || []}
-                                    addComment={(text) => addComment(request.id, text)}
-                                    addReply={(commentId, text) => addReply(request.id, commentId, text)}
-                                />
-                            </Box>
-                        )}
+                        {
+                            request.showComments && (
+                                <Box sx={{ marginTop: "15px", width: "100%" }}>
+                                    <CommentSection
+                                        comments={request.comments || []}
+                                        addComment={(text) => addComment(request.id, text)}
+                                        addReply={(commentId, text) => addReply(request.id, commentId, text)}
+                                    />
+                                </Box>
+                            )
+                        }
                     </ListItem>
                 ))}
             </List>
-        </Box>
+        </Box >
     );
 };
 
