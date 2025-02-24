@@ -69,9 +69,9 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
       width: '42vw',
       padding: 2,
       margin: 2,
-      border: '1px white solid',
+      border: '1px #90caf9 solid',
       backgroundColor: "transparent",
-      boxShadow: "none",
+      // boxShadow: "none",
       display: 'flex', // Use flexbox for layout
       alignItems: 'flex-start', // Align items to the top
     }}>

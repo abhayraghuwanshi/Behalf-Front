@@ -1,3 +1,4 @@
+import { Email } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import '../../service/PostService';
 import PostService from '../../service/PostService';
@@ -196,7 +197,7 @@ const MyQuestPage = () => {
 
                                         {/* Dropdown for status update (only for quest creator) */}
                                         {user.id === selectedQuest.questCreatorId && (
-                                            <>
+                                            <div style={{ marginTop: "10px" }}>
                                                 <select
                                                     value={selectedQuest.questStatus}
                                                     onChange={handleChange}
@@ -243,10 +244,13 @@ const MyQuestPage = () => {
                                                     border: "1px solid white",
                                                     cursor: "pointer",
                                                     transition: "background 0.3s ease",
+                                                    justifyContent: "center",
+                                                    textAlign: "center",
+
                                                 }}>
-                                                    Inbox
+                                                    <Email /> <>Email</>
                                                 </button>
-                                            </>
+                                            </div>
                                         )}
                                     </li>
 

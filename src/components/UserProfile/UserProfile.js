@@ -31,12 +31,14 @@ const UserProfile = () => {
         <div
             elevation={6}
             style={{
-                backgroundColor: "transparent",
                 color: "white",
-                padding: "20px",
+                padding: "30px",
                 margin: "auto",
                 borderRadius: "12px",
-                textAlign: "center"
+                textAlign: "center",
+                marginTop: "100px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                maxWidth: "400px",
             }}
         >
             {/* Profile Image */}
