@@ -20,7 +20,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       return;
     }
 
-    if (!questInstructions || !questValidity || !questReward || !questLabel) {
+    if (!questInstructions || !questValidity || !questReward) {
       alert("Please fill in all fields.");
       return;
     }
@@ -30,7 +30,6 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       questInstructions,
       questValidity,
       questReward: parseFloat(questReward),
-      questLabel, // Added category
     };
 
     try {

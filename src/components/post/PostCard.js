@@ -77,7 +77,7 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
     }}>
       {/* Left side: Image/Icon */}
       <Box sx={{ marginRight: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 60 }}>
-        <Avatar sx={{ bgcolor: 'white', color: 'black' }}>
+        <Avatar sx={{ bgcolor: '#90caf9', color: 'black' }}>
           <TruckIcon />
         </Avatar>
       </Box>

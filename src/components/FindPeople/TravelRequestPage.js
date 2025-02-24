@@ -109,7 +109,7 @@ const TravelRequestPage = () => {
             )}
 
             {/* Travel Requests */}
-            <List sx={{ overflowY: "auto", maxHeight: "80vh" }}>
+            <List>
                 {filteredRequests.map((request) => (
                     <ListItem
                         key={request.id}
