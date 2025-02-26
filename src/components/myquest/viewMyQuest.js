@@ -288,6 +288,8 @@ const MyQuestPage = () => {
                             {messages.map((msg, index) => (
                                 <li key={index}>
                                     <strong>{msg.sender === user.id.toString() ? "You" : getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession))}:</strong> {msg.message}
+                                    <div style={{ fontSize: "10px", color: "#90caf9" }}>
+                                        {new Date(msg.timestamp).toLocaleString()}  </div>
                                 </li>
                             ))}
                         </ul>

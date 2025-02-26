@@ -66,8 +66,8 @@ function Navbar() {
                     textTransform: 'uppercase',
                     padding: '6px 12px',
                     borderRadius: '4px',
+                    backgroundColor: location.pathname === page.path ? '#1976d2' : 'transparent',
                     '&:hover': { backgroundColor: '#1565c0' },
-                    '&.active': { backgroundColor: '' },
                   }}
                 >
                   {page.name.trim()}
@@ -87,7 +87,6 @@ function Navbar() {
                     borderRadius: '4px',
                     backgroundColor: button.color,
                     '&:hover': { backgroundColor: '#7b1fa2' },
-                    '&.active': { backgroundColor: '#1976d2' },
                   }}
                 >
                   {button.name}

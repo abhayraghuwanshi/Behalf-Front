@@ -5,8 +5,7 @@ import { Box, Button, Collapse, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useAuth } from "../SignIn/AuthContext";
 
-
-const Comment = ({ comment, addReply, level = 0, user }) => {
+const Comment = ({ comment, addReply, level = 0, user, requestCreatedAt }) => {
     const [replyText, setReplyText] = useState("");
     const [showReplyInput, setShowReplyInput] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
@@ -18,24 +17,29 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
         setShowReplyInput(false);
     };
 
+    const getCommentDay = () => {
+        const commentDate = new Date(comment.creationDate);
+        const requestDate = new Date(requestCreatedAt);
+        const diffTime = Math.abs(commentDate - requestDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    };
+
     return (
         <Box sx={{ marginLeft: `${level * 20}px`, marginTop: 1, paddingLeft: "10px", borderLeft: level > 0 ? "2px solid #90caf9" : "none" }}>
-
             <Box>
                 <Typography>
                     <span style={{ color: "#90caf9", marginLeft: "10px", display: "flex", alignItems: "center" }}>
                         <Face5Icon sx={{ marginRight: "5px" }} />
                         {comment.username || "Anonymous"}
-
                         <Typography sx={{ color: "", fontSize: "10px", marginLeft: "10px", color: "white" }}>
-                            -  {new Date(comment.createdAt).toLocaleString()}
+                            - {getCommentDay()} day ago
                         </Typography>
                     </span>
                     <br />
                     <div style={{ marginLeft: "20px" }}>
                         {comment.text}
                     </div>
-
                 </Typography>
                 <br />
                 {user && (
@@ -72,7 +76,7 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
                 <Collapse in={showReplies}>
                     <Box>
                         {comment.replies.map((reply) => (
-                            <Comment key={reply.id} comment={reply} addReply={addReply} level={level + 1} user={user} />
+                            <Comment key={reply.id} comment={reply} addReply={addReply} level={level + 1} user={user} requestCreatedAt={requestCreatedAt} />
                         ))}
                     </Box>
                 </Collapse>
@@ -82,7 +86,7 @@ const Comment = ({ comment, addReply, level = 0, user }) => {
 };
 
 // Main Comment Section
-const CommentSection = ({ comments, addComment, addReply }) => {
+const CommentSection = ({ comments, addComment, addReply, requestCreatedAt }) => {
     const [newComment, setNewComment] = useState("");
     const { user, loading } = useAuth(); // ✅ Get user authentication state
     const [showAllComments, setShowAllComments] = useState(false);
@@ -128,7 +132,7 @@ const CommentSection = ({ comments, addComment, addReply }) => {
             {/* Show Comments */}
             <Box sx={{ marginTop: "10px" }}>
                 {comments.slice(0, showAllComments ? comments.length : 1).map((comment) => (
-                    <Comment key={comment.id} comment={comment} addReply={addReply} user={user} />
+                    <Comment key={comment.id} comment={comment} addReply={addReply} user={user} requestCreatedAt={requestCreatedAt} />
                 ))}
                 {comments.length > 1 && (
                     <Button size="small" sx={{ color: "#90caf9", marginTop: "10px" }} onClick={() => setShowAllComments(!showAllComments)}>

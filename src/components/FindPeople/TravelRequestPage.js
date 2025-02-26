@@ -179,6 +179,7 @@ const TravelRequestPage = () => {
                                         comments={request.comments || []}
                                         addComment={(text) => addComment(request.id, text)}
                                         addReply={(commentId, text) => addReply(request.id, commentId, text)}
+                                        requestCreatedAt={request.createdAt}
                                     />
                                 </Box>
                             )
