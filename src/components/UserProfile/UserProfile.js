@@ -1,10 +1,12 @@
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ProfileService from "../../service/ProfileService";
 
 const UserProfile = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -18,6 +20,15 @@ const UserProfile = () => {
 
         fetchUserInfo();
     }, []);
+
+    const handleLogout = async () => {
+        try {
+            await ProfileService.logout();
+            navigate('/login'); // Redirect to login page after logout
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     if (error) {
         return <Typography color="error">Error: {error}</Typography>;
@@ -63,6 +74,24 @@ const UserProfile = () => {
             <Typography variant="body1">
                 <strong>Last Name:</strong> {userInfo.lastName}
             </Typography>
+
+            <Button
+                key='logout'
+                onClick={handleLogout}
+                sx={{
+                    color: 'white',
+                    fontSize: '14px',
+                    padding: '6px 12px',
+                    borderRadius: '4px',
+                    backgroundColor: '#d32f2f',
+                    '&:hover': { backgroundColor: '#7b1fa2' },
+                    '&.active': { backgroundColor: '#1976d2' },
+                }}
+            >
+                Logout
+            </Button>
+
+
         </div>
     );
 };

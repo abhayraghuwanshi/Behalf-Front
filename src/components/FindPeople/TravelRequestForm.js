@@ -32,8 +32,9 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     value={formData.fromLocation}
                     onChange={handleChange}
                     margin="dense"
-                    sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
-                />
+                    InputProps={{ sx: { color: "white" } }}
+                    InputLabelProps={{ sx: { color: "white" } }}
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }} />
                 <TextField
                     fullWidth
                     label="To Location"
@@ -41,8 +42,11 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     value={formData.toLocation}
                     onChange={handleChange}
                     margin="dense"
-                    sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
-                />
+                    InputProps={{ sx: { color: "white" } }}
+                    InputLabelProps={{ sx: { color: "white" } }}
+                    InputProps={{ sx: { color: "white" } }}
+                    InputLabelProps={{ sx: { color: "white" } }}
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }} />
                 <TextField
                     fullWidth
                     type="date"
@@ -52,7 +56,9 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     onChange={handleChange}
                     margin="dense"
                     InputLabelProps={{ shrink: true }}
-                    sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
+                    InputProps={{ sx: { color: "white" } }}
+                    InputLabelProps={{ sx: { color: "white" } }}
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
                 />
             </DialogContent>
             <DialogActions>

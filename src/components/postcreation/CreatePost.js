@@ -58,7 +58,9 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           margin="dense"
           multiline
           rows={4}
-          sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
+          InputProps={{ sx: { color: "white" } }}
+          InputLabelProps={{ sx: { color: "white" } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
         />
         <TextField
           fullWidth
@@ -67,7 +69,9 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           value={questValidity}
           onChange={(e) => setQuestValidity(e.target.value)}
           margin="dense"
-          sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
+          InputProps={{ sx: { color: "white" } }}
+          InputLabelProps={{ sx: { color: "white" } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
         />
         <TextField
           fullWidth
@@ -77,12 +81,14 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           value={questReward}
           onChange={(e) => setQuestReward(e.target.value)}
           margin="dense"
-          sx={{ '& .MuiInputLabel-root': { color: 'white' }, '& .MuiOutlinedInput-root': { color: 'white' } }}
+          InputProps={{ sx: { color: "white" } }}
+          InputLabelProps={{ sx: { color: "white" } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary" sx={{ color: 'white' }}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary" sx={{ color: 'white' }}>Submit</Button>
+        <Button onClick={handleSubmit} color="primary" variant="contained" sx={{ color: 'white', backgroundColor: 'purple' }}>Submit</Button>
       </DialogActions>
     </Dialog>
   );

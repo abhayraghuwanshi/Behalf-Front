@@ -63,3 +63,7 @@
 .transparent-container-image {
   height: 600px;
 }
+
+.App {
+  overflow: hidden;
+}

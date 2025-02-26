@@ -22,7 +22,7 @@ function Home() {
       {/* Section 1 */}
       <div>
         {/* Section 1 */}
-        <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2, px: 3 }}>
+        <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2 }}>
           <Grid xs={12} md={2} />
           <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn through quests</Typography>

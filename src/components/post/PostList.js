@@ -1,6 +1,8 @@
+import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
 import ProfileService from "../../service/ProfileService";
+import CreatePost from "../postcreation/CreatePost";
 import { useAuth } from "../SignIn/AuthContext";
 import PostCard from "./PostCard";
 import FilterControls from "./PostFilter";
@@ -18,6 +20,7 @@ const PostList = () => {
     categoryFilter: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
 
   const dropDownOptions = [
     "PICKUP_DELIVERY",
@@ -92,6 +95,16 @@ const PostList = () => {
 
   return (
     <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px' }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
+        <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
+        <Button
+          variant="outlined"
+          sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+          onClick={() => setIsCreatingPost(true)}
+        >
+          Create Post
+        </Button>
+      </Box>
       <FilterControls
         minPrice={filters.minPrice}
         maxPrice={filters.maxPrice}
@@ -124,6 +137,13 @@ const PostList = () => {
           <p>No posts found.</p>
         )}
       </div>
+
+      {/* Dialog for Delivery Quest Creation */}
+      <Dialog open={isCreatingPost} onClose={() => setIsCreatingPost(false)} fullWidth maxWidth="sm">
+        <DialogContent>
+          <CreatePost open={isCreatingPost} handleClose={() => setIsCreatingPost(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

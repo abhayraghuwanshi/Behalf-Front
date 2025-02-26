@@ -15,12 +15,6 @@ function App() {
   return (
 
     <div className="App">
-      {/* <div style={{ filter: 'blur(5px)' }}>
-        <Swirl className="swirl" />
-      </div> */}
-      {/* <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, filter: 'blur(5px)' }}>
-        <Swirl className="swirl" />
-      </div> */}
       <Router>
         <ResponsiveAppBar />
         <Routes>
