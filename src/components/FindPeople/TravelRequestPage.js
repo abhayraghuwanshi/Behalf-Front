@@ -99,7 +99,7 @@ const TravelRequestPage = () => {
     return (
         <Box sx={{ minHeight: "100vh", color: "white", padding: "20px", marginTop: "100px", marginLeft: '40px', marginRight: '40px' }}>
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
-                <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1 }}>🌍 Travel Requests</Typography>
+                <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1 }}>🌍 Travel Requests</Typography>
                 <Button
                     variant="outlined"
                     sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}

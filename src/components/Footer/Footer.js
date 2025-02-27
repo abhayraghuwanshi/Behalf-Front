@@ -1,6 +1,7 @@
 import { LinkedIn, Twitter } from '@mui/icons-material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { Box, Container, Link, Typography } from '@mui/material';
+import logo from '../navbar/dropquest5.png';
 
 const Footer = () => {
     return (
@@ -13,9 +14,7 @@ const Footer = () => {
 
                 {/* Logo Section */}
                 <Box sx={{ gap: 2 }}>
-                    <img src="/logo.png" alt="Company Logo" width={48} height={48} />
-                    <Typography variant="h6">Your Company</Typography>
-
+                    <img src={logo} alt="Company Logo" width={220} height={40} />
                     <Typography>A902, Aaahika Apartment</Typography>
                     <Typography>Bangalore</Typography>
                     <Typography>Email: abhay.ott@gmail.com</Typography>

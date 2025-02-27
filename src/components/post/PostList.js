@@ -96,7 +96,7 @@ const PostList = () => {
   return (
     <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px' }}>
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
-        <Typography variant="h4" sx={{ textAlign: "center", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
+        <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
         <Button
           variant="outlined"
           sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}

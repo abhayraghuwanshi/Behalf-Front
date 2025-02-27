@@ -63,6 +63,7 @@
   /* Set a maximum height for the grid */
   height: 80vh;
   flex: 1;
+  margin-bottom: auto;
   /* Ensure the height is fixed */
 }
 

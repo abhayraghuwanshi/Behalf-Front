@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../SignIn/AuthContext';
-import logo from './dropquest2.png';
+import logo from './dropquest5.png';
 
 const pages = [
   { name: 'Home', path: '/' },
@@ -34,9 +34,9 @@ function Navbar() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: 'black', left: '50%', transform: 'translateX(-50%)', borderRadius: '8px' }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'black', borderRadius: '8px' }}>
         <Container maxWidth="lg">
-          <Toolbar disableGutters sx={{ justifyContent: 'space-between', minHeight: '40px' }}>
+          <Toolbar disableGutters sx={{ minHeight: '40px', marginLeft: '-60px', }}>
             <Typography
               variant="h6"
               noWrap
@@ -52,7 +52,7 @@ function Navbar() {
               }}
               onClick={() => navigate('/')}
             >
-              <img src={logo} alt="Logo" style={{ width: '100px', height: '60px' }} />
+              <img src={logo} alt="Logo" style={{ width: '180px', height: '35px' }} />
             </Typography>
 
             <Box sx={{ display: 'flex', gap: 1 }}>
@@ -75,7 +75,7 @@ function Navbar() {
               ))}
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1, marginLeft: 'auto' }}>
               {actionButtons.map((button) => (
                 <Button
                   key={button.name}
