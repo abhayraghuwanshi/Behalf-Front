@@ -1,76 +1,87 @@
+import { Google } from "@mui/icons-material";
+import { Button, Container, Paper } from "@mui/material";
 import React, { useState } from "react";
 import { BACKEND_API_URL } from "../../env";
-import './loginComponent.css';
-
 
 const LoginPage = ({ onLogin }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${BACKEND_API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Login failed");
+            }
+
+            onLogin?.(); // Call parent function if provided
+            alert("Login successful!");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleLoginGoogle = () => {
         window.location.href = `${BACKEND_API_URL}/oauth2/authorization/google`;
     };
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
-        // Replace this block with your actual authentication API call
-        const mockApiLogin = (username, password) =>
-            new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (username === "admin" && password === "password") {
-                        resolve({ success: true });
-                    } else {
-                        reject({ success: false, message: "Invalid credentials" });
-                    }
-                }, 1000);
-            });
-
-        try {
-            const response = await mockApiLogin(username, password);
-            if (response.success) {
-                setError("");
-                if (onLogin) onLogin(); // Call a parent-provided callback on successful login
-                alert("Login successful!");
-            }
-        } catch (err) {
-            setError(err.message || "Login failed. Please try again.");
-        }
-    };
-
     return (
-        <div className="login-page">
-            <form className="login-form" onSubmit={handleLogin}>
-                <h2>Login</h2>
-                {error && <p className="error">{error}</p>}
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
+        <Container maxWidth="xs" sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+            <Paper elevation={3} sx={{ padding: 4, borderRadius: 2, backgroundColor: "transparent", backdropFilter: "blur(10px)" }}>
+                {/* <Typography variant="h4" align="center" sx={{ color: "white", mb: 2 }}>
+                    Login
+                </Typography>
+                {error && <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>{error}</Typography>}
+                <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    <TextField
+                        label="Username"
+                        variant="outlined"
+                        fullWidth
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
+                        InputProps={{ style: { color: "white" } }}
+                        InputLabelProps={{ style: { color: "white" } }}
+                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "#ddd" } } }}
                     />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
+                    <TextField
+                        label="Password"
                         type="password"
-                        id="password"
+                        variant="outlined"
+                        fullWidth
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        InputProps={{ style: { color: "white" } }}
+                        InputLabelProps={{ style: { color: "white" } }}
+                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "#ddd" } } }}
                     />
-                </div>
-                <button type="submit">Login</button>
-                <button onClick={handleLoginGoogle}>Login with Google</button>
-            </form>
-
-
-        </div>
-
+                    <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+                        {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Login"}
+                    </Button> */}
+                <Button variant="contained" fullWidth onClick={handleLoginGoogle}>
+                    <Google /> Login with Google
+                </Button>
+                {/* </form> */}
+            </Paper>
+        </Container >
     );
 };
 

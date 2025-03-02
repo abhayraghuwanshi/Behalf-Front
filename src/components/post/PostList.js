@@ -1,8 +1,9 @@
+import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
-import ProfileService from "../../service/ProfileService";
+import CreatePost from "../postcreation/CreatePost";
 import { useAuth } from "../SignIn/AuthContext";
-import Post from "./PostCard"; // Assuming you have a Post component for displaying individual posts
+import PostCard from "./PostCard";
 import FilterControls from "./PostFilter";
 import "./PostList.css";
 
@@ -10,47 +11,32 @@ const PostList = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
-  const [allIds, setAllIds] = useState({}); // Initially empty
-  const [userMap, setUserMap] = useState({}); // Initially empty
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(10000);
-  const [dateFilter, setDateFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [filters, setFilters] = useState({
+    minPrice: 0,
+    maxPrice: 10000,
+    dateFilter: "",
+    categoryFilter: "",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
 
   const dropDownOptions = [
-    "PHOTOGRAPHY",
-    "GRAPHIC_DESIGN",
-    "PET_SITTING",
-    "SEWING",
-    "HANDIWORK",
     "PICKUP_DELIVERY",
-    "BOOK_KEEPING",
-    "ONLINE_TUTORIAL",
   ];
 
-  const handleAccept = async (post, message) => {
-    if (!user || !user.id) {
+  const handleAccept = async (postSession) => {
+    if (!user?.id) {
+      alert("Sign in to share");
       return;
     }
-
-    console.log("Post data:", post); // ✅ Debugging step
-
-    if (!post.questCreatorId || !post.id) {
-      console.error("Missing questCreatorId or questId", post);
+    console.log(postSession);
+    if (!postSession.questCreatorId) {
       alert("Error: Missing required fields");
       return;
     }
 
-    const postAgreement = {
-      questCreatorId: post.questCreatorId,
-      questId: post.id,
-      questStatus: "PENDING",
-      questAcceptorId: user.id,
-      questRequestMsg: message,
-    };
-
     try {
-      const response = await PostService.agreePost(postAgreement);
+      const response = await PostService.agreePost(postSession);
       if (response.status === 200 || response.status === 201) {
         alert("Agreement created!");
       }
@@ -60,96 +46,91 @@ const PostList = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await PostService.getPosts();
-        if (response.status === 200) {
-          console.log("API Data:", response.data); // Debugging
-          setPosts(response.data);
-          setFilteredPosts(response.data);
-
-          // Extract all unique questCreatorIds
-          const creatorIds = [...new Set(response.data.map((post) => post.questCreatorId))];
-          setAllIds(creatorIds); // ✅ Store only unique IDs
-        } else {
-          console.error("Failed to fetch posts. Status:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching posts:", error);
+  const fetchPosts = async () => {
+    try {
+      const response = await PostService.getPosts();
+      if (response.status === 200) {
+        setPosts(response.data);
+        setFilteredPosts(response.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
+
+
+  const applyFilters = () => {
+    const filtered = posts.filter(
+      (post) =>
+        post.questReward >= filters.minPrice &&
+        post.questReward <= filters.maxPrice &&
+        (!filters.dateFilter || new Date(post.date) >= new Date(filters.dateFilter)) &&
+        (!filters.categoryFilter || post.questLabel === filters.categoryFilter) &&
+        (post.questInstructions.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.id.toString().includes(searchTerm))
+    );
+    setFilteredPosts(filtered);
+  };
+
+  useEffect(() => {
     fetchPosts();
   }, []);
 
-
   useEffect(() => {
-    const l = Object.keys(allIds).length;
-    if (l === 0) return; // Skip if no IDs available
-
-    const fetchPostByEmail = async () => {
-      console.log("User userid:", allIds); // Debugging
-      try {
-        if (l === 0) return;
-        const response = await ProfileService.fetchUserByEmail(allIds);
-        if (response.status === 200) {
-          console.log("User Info:", response); // Debugging
-
-          setUserMap(response.data); // ✅ Now `allIds` is { questCreatorId: UserInformation }
-          console.log("User map - ", response.data);
-        } else {
-          console.error("Failed to fetch user info. Status:", response.status);
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    };
-
-    fetchPostByEmail();
-  }, [allIds]); // Fetch only when `allIds` updates
-
-
-  useEffect(() => {
-    const filtered = posts.filter(
-      (post) =>
-        post.questReward >= minPrice &&
-        post.questReward <= maxPrice &&
-        (!dateFilter || new Date(post.date) >= new Date(dateFilter)) &&
-        (!categoryFilter || post.questLabel === categoryFilter)
-    );
-    setFilteredPosts(filtered);
-  }, [posts, minPrice, maxPrice, dateFilter, categoryFilter]);
+    applyFilters();
+  }, [posts, filters, searchTerm]);
 
   return (
-    <div>
+    <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px', padding: '20px', color: 'white', marginBottom: '40px' }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
+        <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
+        <Button
+          variant="outlined"
+          sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hove r": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+          onClick={() => setIsCreatingPost(true)}
+        >
+          Create Post
+        </Button>
+      </Box>
       <FilterControls
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        dateFilter={dateFilter}
-        categoryFilter={categoryFilter}
-        setMinPrice={setMinPrice}
-        setMaxPrice={setMaxPrice}
-        setDateFilter={setDateFilter}
-        setCategoryFilter={setCategoryFilter}
-        dropDownOptions={dropDownOptions}
+        minPrice={filters.minPrice}
+        maxPrice={filters.maxPrice}
+        dateFilter={filters.dateFilter}
+        searchTerm={searchTerm}
+        setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
+        setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
+        setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
+        setSearchTerm={setSearchTerm}
       />
 
       <div className="post-grid">
         {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => (
-            <div key={post.id}>
-              <Post
+          filteredPosts.map((post) =>
+            post ? (
+              <PostCard
+                key={post.id}
                 postData={post}
-                ids={userMap}
-                onAccept={(postData, message) => handleAccept(postData, message)}
+                onAccept={handleAccept}
+                user={user}
+                postSession={{
+                  questCreatorId: post.questCreatorId,
+                  questId: post.id,
+                }}
               />
-            </div>
-          ))
+            ) : null
+          )
         ) : (
           <p>No posts found.</p>
         )}
       </div>
+
+      {/* Dialog for Delivery Quest Creation */}
+      <Dialog open={isCreatingPost} onClose={() => setIsCreatingPost(false)} fullWidth maxWidth="sm">
+        <DialogContent>
+          <CreatePost open={isCreatingPost} handleClose={() => setIsCreatingPost(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

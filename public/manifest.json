@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Drop Quest",
+  "name": "App to do delivery to earn money",
   "icons": [
     {
       "src": "favicon.ico",

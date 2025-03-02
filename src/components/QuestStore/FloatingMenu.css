@@ -1,0 +1,32 @@
+.floating-menu {
+    position: fixed;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.floating-menu button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.floating-menu button:hover {
+    background-color: #555;
+}
+
+.floating-menu button.active {
+    background-color: #ff9900;
+}

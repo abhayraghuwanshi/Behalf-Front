@@ -1,6 +1,6 @@
-import { Box, Grid, MenuItem, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; // Corrected import
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import React from "react";
@@ -9,19 +9,32 @@ const FilterControls = ({
     minPrice,
     maxPrice,
     dateFilter,
-    categoryFilter,
+    searchTerm,
     setMinPrice,
     setMaxPrice,
     setDateFilter,
-    setCategoryFilter,
-    dropDownOptions
+    setSearchTerm,
 }) => {
     return (
-        <Box sx={{ padding: 2, border: 1, margin: 2 }}>
-            <h3>Filters</h3>
+        <Box >
             <Grid container spacing={2}>
+                {/* Search Term */}
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Search"
+                        type="text"
+                        fullWidth
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
+                    />
+                </Grid>
+
                 {/* Min Price */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Min Price"
                         type="number"
@@ -29,11 +42,14 @@ const FilterControls = ({
                         value={minPrice}
                         onChange={(e) => setMinPrice(Number(e.target.value))}
                         variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
                     />
                 </Grid>
 
                 {/* Max Price */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Max Price"
                         type="number"
@@ -41,41 +57,39 @@ const FilterControls = ({
                         value={maxPrice}
                         onChange={(e) => setMaxPrice(Number(e.target.value))}
                         variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
                     />
                 </Grid>
 
                 {/* Post Date */}
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Post Date"
                             value={dateFilter ? dayjs(dateFilter) : null}
                             onChange={(newValue) => setDateFilter(newValue ? newValue.toISOString() : "")}
-                            renderInput={(params) => <TextField {...params} fullWidth />}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true,
+                                    InputProps: { sx: { color: "#edebeb" } },
+                                    InputLabelProps: { sx: { color: "#edebeb" } },
+                                    sx: {
+                                        "& .MuiSvgIcon-root": { color: "#edebeb" }, // Calendar icon color
+                                        backgroundColor: "#1E1E1E",
+                                    },
+
+                                },
+                            }}
+
+
                         />
                     </LocalizationProvider>
                 </Grid>
 
-                {/* Category */}
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        select
-                        label="Category"
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        fullWidth
-                        variant="outlined"
-                    >
-                        <MenuItem value="">All Categories</MenuItem>
-                        {dropDownOptions.map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
             </Grid>
-        </Box>
+        </Box >
     );
 };
 

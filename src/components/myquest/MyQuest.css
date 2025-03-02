@@ -3,8 +3,10 @@
     display: flex;
     height: 100vh;
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    /* ✅ Transparent background */
+    color: white;
+
+    /* ✅ White text */
 }
 
 /* Sidebar and Section Styling */
@@ -16,29 +18,20 @@
     overflow-y: auto;
     border-radius: 8px;
     margin: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.quests {
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
-}
-
-.quest-hunter {
-    background-color: #fdfdfd;
-    border-right: 1px solid #e0e0e0;
-}
-
-.inbox {
-    background-color: #fafafa;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    /* ✅ Softer white shadow */
+    /* ✅ White border */
+    background-color: #212121;
+    margin-bottom: 15px;
 }
 
 /* Heading Styling */
 h2 {
     margin-top: 0;
     font-size: 1.5rem;
-    color: #007bff;
-    border-bottom: 2px solid #e0e0e0;
+    color: white;
+    /* ✅ White text */
+    /* ✅ White bottom border */
     padding-bottom: 8px;
 }
 
@@ -52,29 +45,30 @@ ul {
 li {
     padding: 12px;
     margin-bottom: 8px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+    /* ✅ Semi-transparent */
+    /* ✅ White border */
     border-radius: 6px;
     cursor: pointer;
+    color: white;
+    /* ✅ White text */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 li.active {
-    background-color: #e6f7ff;
-    border: 1px solid #007bff;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
     font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
 }
 
 li:hover {
-    background-color: #f7faff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 }
 
 /* Chat Message Styling */
 .inbox ul {
     max-height: calc(100% - 80px);
-    /* Leave space for input */
     overflow-y: auto;
     padding-right: 8px;
 }
@@ -82,75 +76,78 @@ li:hover {
 .inbox ul li {
     margin-bottom: 12px;
     padding: 8px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+    /* ✅ Semi-transparent */
+    /* ✅ White border */
     border-radius: 6px;
-}
-
-.inbox ul li strong {
-    color: #007bff;
-    margin-right: 4px;
+    color: white;
+    /* ✅ White text */
 }
 
 /* Message Input Section */
-.message-input {
+/* .message-input {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 16px;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 12px;
-}
+    border-top: 1px solid white;
+    /* ✅ White border */
+/* padding-top: 12px;
+} */
 
-.message-input input {
+*/ .message-input input {
     flex: 1;
     padding: 10px 12px;
     font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    /* ✅ White border */
+    background: transparent;
+    /* ✅ Transparent input */
+    color: white;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+
 .message-input input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+    border-color: white;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     outline: none;
 }
 
 .message-input button {
     padding: 10px 16px;
-    background-color: #007bff;
+    background-color: transparent;
+    /* ✅ Transparent button */
     color: white;
+    /* ✅ White text */
     font-size: 14px;
-    border: none;
+    /* ✅ White border */
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .message-input button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
 }
 
 /* Scrollbar Styling */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f0f0f0;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #007bff;
+    background: white;
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0056b3;
-}
+    background: rgba(255, 255, 255, 0.7);
+} */
 
 /* Responsive Design */
 @media (max-width: 768px) {

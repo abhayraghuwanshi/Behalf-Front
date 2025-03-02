@@ -1,34 +1,25 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import PostService from "../../service/PostService"; // Assuming this handles the API call for creating the post
 import { useAuth } from '../SignIn/AuthContext';
 
-const CreatePost = ({ onPostCreated }) => {
+const CreatePost = ({ open, handleClose, onPostCreated }) => {
   const { user } = useAuth();
   const [questInstructions, setQuestInstructions] = useState("");
-  const [questValidity, setQuestValidity] = useState("");
+  const [questValidity, setQuestValidity] = useState(dayjs().format("DD-MM-YYYY"));
   const [questReward, setQuestReward] = useState("");
-  const [questLabel, setQuestLabel] = useState(""); // Default empty category
 
-  const dropDownOptions = [
-    "PHOTOGRAPHY",
-    "GRAPHIC_DESIGN",
-    "PET_SITTING",
-    "SEWING",
-    "HANDIWORK",
-    "PICKUP_DELIVERY",
-    "BOOK_KEEPING",
-    "ONLINE_TUTORIAL",
-  ];
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     if (!user) {
       alert("Login to create a post");
       return;
     }
 
-    if (!questInstructions || !questValidity || !questReward || !questLabel) {
+    if (!questInstructions || !questValidity || !questReward) {
       alert("Please fill in all fields.");
       return;
     }
@@ -36,9 +27,8 @@ const CreatePost = ({ onPostCreated }) => {
     const post = {
       questCreatorId: user.id,
       questInstructions,
-      questValidity,
+      questValidity: dayjs(questValidity, "DD-MM-YYYY").toDate(),
       questReward: parseFloat(questReward),
-      questLabel, // Added category
     };
 
     try {
@@ -46,6 +36,7 @@ const CreatePost = ({ onPostCreated }) => {
       if (response.status === 200 || response.status === 201) {
         alert("Post created!");
         onPostCreated && onPostCreated(); // Optional callback
+        handleClose();
       }
     } catch (error) {
       console.error("Error creating post:", error);
@@ -54,141 +45,59 @@ const CreatePost = ({ onPostCreated }) => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Create Quest</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-
-        {/* Quest Instructions Field */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Quest Instructions</label>
-          <textarea
-            value={questInstructions}
-            onChange={(e) => setQuestInstructions(e.target.value)}
-            placeholder="Enter quest instructions"
-            rows="4"
-            required
-            style={styles.textarea}
+    <Dialog open={open} onClose={handleClose} sx={{ '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' } }}>
+      <DialogTitle sx={{ color: 'white' }}>Create Quest</DialogTitle>
+      <DialogContent>
+        <TextField
+          fullWidth
+          label="Quest Instructions"
+          name="questInstructions"
+          value={questInstructions}
+          onChange={(e) => setQuestInstructions(e.target.value)}
+          margin="dense"
+          multiline
+          rows={4}
+          InputProps={{ sx: { color: "white" } }}
+          InputLabelProps={{ sx: { color: "white" } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
+        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Post Date"
+            value={questValidity ? dayjs(questValidity, "DD-MM-YYYY") : null}
+            onChange={(newValue) => setQuestValidity(newValue ? newValue.format("DD-MM-YYYY") : "")}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                InputProps: { sx: { color: "white" } },
+                InputLabelProps: { sx: { color: "white" } },
+                sx: {
+                  "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } },
+                  "& .MuiSvgIcon-root": { color: "white" }, // Calendar icon color
+                },
+              },
+            }}
           />
-        </div>
-
-        {/* Quest Validity Field */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Quest Validity</label>
-          <input
-            type="text"
-            value={questValidity}
-            onChange={(e) => setQuestValidity(e.target.value)}
-            placeholder="Enter validity (e.g., '30 days')"
-            required
-            style={styles.input}
-          />
-        </div>
-
-        {/* Quest Reward Field */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Quest Reward (₹)</label>
-          <input
-            type="number"
-            value={questReward}
-            onChange={(e) => setQuestReward(e.target.value)}
-            placeholder="Enter reward amount"
-            required
-            min="0"
-            style={styles.input}
-          />
-        </div>
-
-        {/* Quest Category Dropdown */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Quest Category</label>
-          <select
-            value={questLabel}
-            onChange={(e) => setQuestLabel(e.target.value)}
-            required
-            style={styles.select}
-          >
-            <option value="" disabled>Select a category</option>
-            {dropDownOptions.map((option) => (
-              <option key={option} value={option}>
-                {option.replace("_", " ")}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Submit Button */}
-        <button type="submit" style={styles.button}>
-          Create Quest
-        </button>
-      </form>
-    </div>
+        </LocalizationProvider>
+        <TextField
+          fullWidth
+          label="Quest Reward (₹)"
+          name="questReward"
+          type="number"
+          value={questReward}
+          onChange={(e) => setQuestReward(e.target.value)}
+          margin="dense"
+          InputProps={{ sx: { color: "white" } }}
+          InputLabelProps={{ sx: { color: "white" } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary" sx={{ color: 'white' }}>Cancel</Button>
+        <Button onClick={handleSubmit} color="primary" variant="contained" sx={{ color: 'white', backgroundColor: 'purple' }}>Submit</Button>
+      </DialogActions>
+    </Dialog>
   );
-};
-
-// CSS-in-JS Styling
-const styles = {
-  container: {
-    margin: "0 auto",
-    padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#fff",
-  },
-  title: {
-    textAlign: "center",
-    fontSize: "24px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-  },
-  formGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    marginBottom: "5px",
-    color: "#333",
-  },
-  input: {
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-  },
-  textarea: {
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    resize: "vertical",
-  },
-  select: {
-    padding: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    backgroundColor: "#fff",
-  },
-  button: {
-    padding: "10px 20px",
-    borderRadius: "4px",
-    border: "none",
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: "#fff",
-    backgroundColor: "#007BFF",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-  },
-  buttonHover: {
-    backgroundColor: "#0056b3",
-  },
 };
 
 export default CreatePost;

@@ -2,8 +2,8 @@
 
 /* General Layout */
 .post-list-layout {
-  /* display: grid;
-  grid-template-columns: 1fr 3fr; */
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   padding: 20px;
   background-color: #f9f9f9;
@@ -19,13 +19,11 @@
 }
 
 /* Filter Controls */
-.post-list-layout {
-  display: flex;
-  flex-direction: column;
-}
-
 .filter-controls {
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .filter-row {
@@ -53,28 +51,24 @@
   background-color: #0056b3;
 }
 
-.post-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
 /* Post Grid */
 .post-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+  /* Adjust the gap between cards */
 }
 
-/* General Styling for Post Component */
 .post-card {
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 12px;
-  padding: 16px;
-  margin: 16px;
+  padding: 12px;
+  width: calc(60% - 10px);
+  /* Two cards per row with gap */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 
 .post-card:hover {
@@ -88,6 +82,7 @@
   font-weight: 600;
   margin-bottom: 8px;
   color: #333;
+  cursor: pointer;
 }
 
 /* Quest Reward and Validity Styling */
@@ -95,6 +90,7 @@
   font-size: 1rem;
   color: #555;
   line-height: 1.5;
+  cursor: pointer;
 }
 
 /* Quest Label Styling */
@@ -103,6 +99,7 @@
   font-weight: 500;
   color: #007BFF;
   margin-top: 8px;
+  cursor: pointer;
 }
 
 /* Button Styling */
@@ -123,31 +120,6 @@
 }
 
 /* Dialog Styling */
-.MuiDialog-paper {
-  border-radius: 12px !important;
-  padding: 16px;
-}
-
-.MuiDialogContent-root {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.MuiInput-root {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-.MuiInput-root:focus-within {
-  border-color: #007BFF;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
-/* Dialog Action Buttons */
 .MuiDialogActions-root {
   justify-content: space-between;
   margin-top: 16px;
@@ -162,18 +134,12 @@
   transition: background-color 0.3s ease;
 }
 
-.MuiButton-root:hover {
-  background-color: #0056b3;
-}
-
-.MuiButton-sizeSmall {
-  padding: 6px 12px;
-  font-size: 0.8rem;
-}
 
 /* Responsive Layout */
 @media (max-width: 768px) {
   .post-card {
+    width: 100%;
+    /* Full width on small screens */
     margin: 12px;
     padding: 12px;
   }
@@ -188,14 +154,6 @@
 
   .post-card div:nth-child(3) {
     font-size: 0.8rem;
-  }
-}
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .post-list-layout {
-    grid-template-columns: 1fr;
   }
 
   .filter-controls {
