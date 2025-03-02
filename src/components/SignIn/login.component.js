@@ -1,4 +1,5 @@
-import { Button, CircularProgress, Container, Paper, TextField, Typography } from "@mui/material";
+import { Google } from "@mui/icons-material";
+import { Button, Container, Paper } from "@mui/material";
 import React, { useState } from "react";
 import { BACKEND_API_URL } from "../../env";
 
@@ -44,7 +45,7 @@ const LoginPage = ({ onLogin }) => {
     return (
         <Container maxWidth="xs" sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
             <Paper elevation={3} sx={{ padding: 4, borderRadius: 2, backgroundColor: "transparent", backdropFilter: "blur(10px)" }}>
-                <Typography variant="h4" align="center" sx={{ color: "white", mb: 2 }}>
+                {/* <Typography variant="h4" align="center" sx={{ color: "white", mb: 2 }}>
                     Login
                 </Typography>
                 {error && <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>{error}</Typography>}
@@ -74,13 +75,13 @@ const LoginPage = ({ onLogin }) => {
                     />
                     <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
                         {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Login"}
-                    </Button>
-                    <Button variant="contained" fullWidth onClick={handleLoginGoogle}>
-                        Login with Google
-                    </Button>
-                </form>
+                    </Button> */}
+                <Button variant="contained" fullWidth onClick={handleLoginGoogle}>
+                    <Google /> Login with Google
+                </Button>
+                {/* </form> */}
             </Paper>
-        </Container>
+        </Container >
     );
 };
 

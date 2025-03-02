@@ -1,3 +1,4 @@
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import TruckIcon from '@mui/icons-material/LocalShipping'; // Import a truck icon
 import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Box, Card, MenuItem, Select, Typography } from '@mui/material';
@@ -8,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import React, { useState } from 'react';
 import './PostList.css';
 
-const Post = ({ postSession, allIds, onAccept, user, postData }) => {
+const Post = ({ postSession, onAccept, user, postData }) => {
   const [isReferExpanded, setIsReferExpanded] = useState(false);
   const [questMessage, setQuestMessage] = useState("");
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -66,11 +67,12 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
 
   return (
     <Card sx={{
-      width: '42vw',
+      width: "100%",
       padding: 2,
-      margin: 2,
-      border: '1px #90caf9 solid',
-      backgroundColor: "transparent",
+      marginBottom: 1,
+      marginTop: 2,
+      border: "1px solid transparent",
+      backgroundColor: "#1E1E1E",
       // boxShadow: "none",
       display: 'flex', // Use flexbox for layout
       alignItems: 'flex-start', // Align items to the top
@@ -89,7 +91,7 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
         </Typography>
 
         <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
-          Author: {postData.questCreatorId}
+          Author: {postData?.userInformation?.firstName} {postData?.userInformation?.lastName}
         </Typography>
 
         <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
@@ -107,20 +109,25 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
 
         <Box display="flex" justifyContent="flex-start" gap={1} mt={2}>
           <Button
-            variant="outlined"
+
             sx={{
-              color: "purple",
-              borderColor: "purple",
+              color: "white",
+              backgroundColor: "#4d4d4d",
+
+
+
               "&:hover": { borderColor: "gray" },
             }}
             onClick={openInterestedDialog}
           >
+            <FavoriteIcon sx={{ paddingRight: "5px", }} />
             Interested
           </Button>
-          <Button onClick={handleShare} variant="outlined"
+          <Button onClick={handleShare}
             sx={{
-              color: "purple",
-              borderColor: "purple",
+              color: "white",
+              backgroundColor: "#4d4d4d",
+
               "&:hover": { borderColor: "gray" },
             }}>
 
@@ -185,9 +192,9 @@ const Post = ({ postSession, allIds, onAccept, user, postData }) => {
             sx={{ color: "white", border: "1px solid white" }}
           >
             <MenuItem value="" disabled>Select a User</MenuItem>
-            {Object.values(allIds).map((user) => (
+            {/* {Object.values(allIds).map((user) => (
               <MenuItem key={user.id} value={user.id}>{user.firstName} {user.lastName}</MenuItem>
-            ))}
+            ))} */}
           </Select>
           <input
             type="text"

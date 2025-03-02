@@ -11,6 +11,12 @@
   --AppBar-background: none;
 }
 
+@media (min-width: 1200px) {
+  .css-5c1adp-MuiContainer-root {
+    max-width: none
+  }
+}
+
 .navbar-logo {
   display: flex;
   align-items: center;

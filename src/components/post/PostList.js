@@ -1,7 +1,6 @@
 import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
-import ProfileService from "../../service/ProfileService";
 import CreatePost from "../postcreation/CreatePost";
 import { useAuth } from "../SignIn/AuthContext";
 import PostCard from "./PostCard";
@@ -12,7 +11,6 @@ const PostList = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
-  const [userMap, setUserMap] = useState({});
   const [filters, setFilters] = useState({
     minPrice: 0,
     maxPrice: 10000,
@@ -54,23 +52,13 @@ const PostList = () => {
       if (response.status === 200) {
         setPosts(response.data);
         setFilteredPosts(response.data);
-        fetchUserInfo();
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
 
-  const fetchUserInfo = async () => {
-    try {
-      const response = await ProfileService.fetchUserByEmail();
-      if (response.status === 200) {
-        setUserMap(response.data);
-      }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
+
 
   const applyFilters = () => {
     const filtered = posts.filter(
@@ -94,12 +82,12 @@ const PostList = () => {
   }, [posts, filters, searchTerm]);
 
   return (
-    <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px' }}>
+    <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px', padding: '20px', color: 'white', marginBottom: '40px' }}>
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
         <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
         <Button
           variant="outlined"
-          sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+          sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hove r": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
           onClick={() => setIsCreatingPost(true)}
         >
           Create Post
@@ -123,7 +111,6 @@ const PostList = () => {
               <PostCard
                 key={post.id}
                 postData={post}
-                allIds={userMap}
                 onAccept={handleAccept}
                 user={user}
                 postSession={{

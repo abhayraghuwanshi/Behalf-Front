@@ -23,12 +23,11 @@
 }
 
 .post-card button {
-    background-color: #007BFF;
     color: #fff;
+    border-color: #333;
     padding: 8px 16px;
-    border: none;
     border-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     cursor: pointer;
     margin-top: 12px;
     transition: background-color 0.3s ease;

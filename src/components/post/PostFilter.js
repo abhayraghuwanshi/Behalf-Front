@@ -16,11 +16,10 @@ const FilterControls = ({
     setSearchTerm,
 }) => {
     return (
-        <Box sx={{ padding: 2, border: 1, margin: 2, color: 'white', borderColor: "white" }}>
-            <h3 style={{ color: "white" }}>Filters</h3>
+        <Box >
             <Grid container spacing={2}>
                 {/* Search Term */}
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Search"
                         type="text"
@@ -30,12 +29,12 @@ const FilterControls = ({
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
                     />
                 </Grid>
 
                 {/* Min Price */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Min Price"
                         type="number"
@@ -45,12 +44,12 @@ const FilterControls = ({
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
                     />
                 </Grid>
 
                 {/* Max Price */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <TextField
                         label="Max Price"
                         type="number"
@@ -60,12 +59,12 @@ const FilterControls = ({
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+                        sx={{ backgroundColor: "#1E1E1E", }}
                     />
                 </Grid>
 
                 {/* Post Date */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Post Date"
@@ -74,20 +73,23 @@ const FilterControls = ({
                             slotProps={{
                                 textField: {
                                     fullWidth: true,
-                                    InputProps: { sx: { color: "white" } },
-                                    InputLabelProps: { sx: { color: "white" } },
+                                    InputProps: { sx: { color: "#edebeb" } },
+                                    InputLabelProps: { sx: { color: "#edebeb" } },
                                     sx: {
-                                        "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } },
-                                        "& .MuiSvgIcon-root": { color: "white" }, // Calendar icon color
+                                        "& .MuiSvgIcon-root": { color: "#edebeb" }, // Calendar icon color
+                                        backgroundColor: "#1E1E1E",
                                     },
+
                                 },
                             }}
+
+
                         />
                     </LocalizationProvider>
                 </Grid>
 
             </Grid>
-        </Box>
+        </Box >
     );
 };
 

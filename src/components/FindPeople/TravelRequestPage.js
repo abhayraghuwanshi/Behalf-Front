@@ -116,10 +116,9 @@ const TravelRequestPage = () => {
                     label="Filter by Date"
                     value={filterDate}
                     onChange={(e) => setFilterDate(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
+                    InputLabelProps={{ shrink: true, sx: { color: "white" }, disableAnimation: true }}
                     InputProps={{ sx: { color: "white" } }}
-                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
-                />
+                    sx={{ backgroundColor: "#343434" }} />
             </Box>
 
             {/* Show Network Error Message */}
@@ -135,13 +134,12 @@ const TravelRequestPage = () => {
                     <ListItem
                         key={request.id}
                         sx={{
-                            display: "flex",
                             flexDirection: "column",
                             backgroundColor: "#1E1E1E",
                             padding: "20px",
                             borderRadius: "10px",
                             marginBottom: "20px",
-                            border: "1px solid #90caf9",
+                            border: "1px solid transparent",
                         }}
                     >
                         {/* Travel Request Details */}
@@ -163,13 +161,15 @@ const TravelRequestPage = () => {
                         </Box>
 
                         {/* Toggle Comments Button */}
-                        <Button
-                            variant="outlined"
-                            sx={{ marginTop: "15px", color: "purple", borderColor: "purple", alignItems: 'left', "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                            onClick={() => fetchComments(request.id)}
-                        >
-                            {request.showComments ? "Hide Comments" : "Comments"}
-                        </Button>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "10px", }}>
+                            <Button
+                                size="small"
+                                sx={{ marginTop: "15px", color: "white", backgroundColor: '#343434', left: 0, "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                                onClick={() => fetchComments(request.id)}
+                            >
+                                {request.showComments ? "Hide Comments" : "Comments"}
+                            </Button>
+                        </div>
 
                         {/* Comment Section */}
                         {
@@ -199,7 +199,7 @@ const TravelRequestPage = () => {
                     />
                 </DialogContent>
             </Dialog>
-        </Box>
+        </Box >
     );
 };
 

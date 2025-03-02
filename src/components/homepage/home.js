@@ -32,8 +32,8 @@ function Home() {
                 <AwesomeButton className='signup-button' onReleased={() => handleClick()}>Sign Up</AwesomeButton>
               )}
               <Typography sx={{ mt: 1, color: 'white' }}>
-                {user ? 'You are signed in ' : 'or '}
-                <a href="/login" style={{ color: 'white' }}>Sign in</a>
+                {user ? <a href="/post" style={{ color: 'white' }}>create quest</a> : <a href="/login" style={{ color: 'white' }}>Sign in</a>
+                }
               </Typography>
             </div>
           </Grid>

@@ -34,7 +34,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     margin="dense"
                     InputProps={{ sx: { color: "white" } }}
                     InputLabelProps={{ sx: { color: "white" } }}
-                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }} />
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }} />
                 <TextField
                     fullWidth
                     label="To Location"
@@ -44,9 +44,7 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     margin="dense"
                     InputProps={{ sx: { color: "white" } }}
                     InputLabelProps={{ sx: { color: "white" } }}
-                    InputProps={{ sx: { color: "white" } }}
-                    InputLabelProps={{ sx: { color: "white" } }}
-                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }} />
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }} />
                 <TextField
                     fullWidth
                     type="date"
@@ -55,10 +53,8 @@ const TravelRequestForm = ({ open, handleClose, handleSubmit }) => {
                     value={formData.travelDate}
                     onChange={handleChange}
                     margin="dense"
-                    InputLabelProps={{ shrink: true }}
                     InputProps={{ sx: { color: "white" } }}
-                    InputLabelProps={{ sx: { color: "white" } }}
-                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+                    sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
                 />
             </DialogContent>
             <DialogActions>

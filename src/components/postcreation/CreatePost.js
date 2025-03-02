@@ -1,4 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 import PostService from "../../service/PostService"; // Assuming this handles the API call for creating the post
 import { useAuth } from '../SignIn/AuthContext';
@@ -6,13 +10,8 @@ import { useAuth } from '../SignIn/AuthContext';
 const CreatePost = ({ open, handleClose, onPostCreated }) => {
   const { user } = useAuth();
   const [questInstructions, setQuestInstructions] = useState("");
-  const [questValidity, setQuestValidity] = useState("");
+  const [questValidity, setQuestValidity] = useState(dayjs().format("DD-MM-YYYY"));
   const [questReward, setQuestReward] = useState("");
-  const [questLabel, setQuestLabel] = useState(""); // Default empty category
-
-  const dropDownOptions = [
-    "PICKUP_DELIVERY",
-  ];
 
   const handleSubmit = async () => {
     if (!user) {
@@ -28,7 +27,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
     const post = {
       questCreatorId: user.id,
       questInstructions,
-      questValidity,
+      questValidity: dayjs(questValidity, "DD-MM-YYYY").toDate(),
       questReward: parseFloat(questReward),
     };
 
@@ -60,19 +59,26 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           rows={4}
           InputProps={{ sx: { color: "white" } }}
           InputLabelProps={{ sx: { color: "white" } }}
-          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
         />
-        <TextField
-          fullWidth
-          label="Quest Validity"
-          name="questValidity"
-          value={questValidity}
-          onChange={(e) => setQuestValidity(e.target.value)}
-          margin="dense"
-          InputProps={{ sx: { color: "white" } }}
-          InputLabelProps={{ sx: { color: "white" } }}
-          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Post Date"
+            value={questValidity ? dayjs(questValidity, "DD-MM-YYYY") : null}
+            onChange={(newValue) => setQuestValidity(newValue ? newValue.format("DD-MM-YYYY") : "")}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                InputProps: { sx: { color: "white" } },
+                InputLabelProps: { sx: { color: "white" } },
+                sx: {
+                  "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } },
+                  "& .MuiSvgIcon-root": { color: "white" }, // Calendar icon color
+                },
+              },
+            }}
+          />
+        </LocalizationProvider>
         <TextField
           fullWidth
           label="Quest Reward (₹)"
@@ -83,7 +89,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           margin="dense"
           InputProps={{ sx: { color: "white" } }}
           InputLabelProps={{ sx: { color: "white" } }}
-          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" } } }}
+          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
         />
       </DialogContent>
       <DialogActions>
