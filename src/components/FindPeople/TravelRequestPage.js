@@ -97,109 +97,118 @@ const TravelRequestPage = () => {
         : [];
 
     return (
-        <Box sx={{ minHeight: "100vh", color: "white", padding: "20px", marginTop: "100px", marginLeft: '40px', marginRight: '40px' }}>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
-                <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1 }}>🌍 Travel Requests</Typography>
-                <Button
-                    variant="outlined"
-                    sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                    onClick={() => setIsCreatingPeopleQuest(true)}
-                >
-                    Create Post
-                </Button>
-            </Box>
-            {/* Filters */}
-            <Box sx={{ display: "flex", gap: 2, marginBottom: "20px" }}>
-                <TextField
-                    fullWidth
-                    type="date"
-                    label="Filter by Date"
-                    value={filterDate}
-                    onChange={(e) => setFilterDate(e.target.value)}
-                    InputLabelProps={{ shrink: true, sx: { color: "white" }, disableAnimation: true }}
-                    InputProps={{ sx: { color: "white" } }}
-                    sx={{ backgroundColor: "#343434" }} />
-            </Box>
-
-            {/* Show Network Error Message */}
-            {error && (
-                <Typography sx={{ color: "red", textAlign: "center", fontSize: "18px" }}>
-                    ⚠️ Unable to connect to the server. Showing cached data.
-                </Typography>
-            )}
-
-            {/* Travel Requests */}
-            <List>
-                {filteredRequests.map((request) => (
-                    <ListItem
-                        key={request.id}
-                        sx={{
-                            flexDirection: "column",
-                            backgroundColor: "#1E1E1E",
-                            padding: "20px",
-                            borderRadius: "10px",
-                            marginBottom: "20px",
-                            border: "1px solid transparent",
-                        }}
+        <Box sx={{ minHeight: "80vh", padding: "20px", width: "100%" }}>
+            <Box sx={{ color: "white", padding: "20px" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
+                    <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1 }}> My Journey</Typography>
+                    <Button
+                        variant="outlined"
+                        sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                        onClick={() => setIsCreatingPeopleQuest(true)}
                     >
-                        {/* Travel Request Details */}
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                        Add Manually
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                        onClick={() => setIsCreatingPeopleQuest(true)}
+                    >
+                        Auto Import (Gmail)
+                    </Button>
+                </Box>
+                {/* Filters */}
+                <Box sx={{ display: "flex", gap: 2, marginBottom: "20px" }}>
+                    <TextField
+                        fullWidth
+                        type="date"
+                        label="Filter by Date"
+                        value={filterDate}
+                        onChange={(e) => setFilterDate(e.target.value)}
+                        InputLabelProps={{ shrink: true, sx: { color: "white" }, disableAnimation: true }}
+                        InputProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#343434" }} />
+                </Box>
 
-                            <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "10px" }}>
-                                <Box sx={{ textAlign: "left" }}>
-                                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>{request.fromLocation}</Typography>
-                                    <Typography variant="body2" sx={{ color: "#bbbbbb" }}>Departure: {request.travelDate}</Typography>
-                                </Box>
+                {/* Show Network Error Message */}
+                {error && (
+                    <Typography sx={{ color: "red", textAlign: "center", fontSize: "18px" }}>
+                        ⚠️ Unable to connect to the server. Showing cached data.
+                    </Typography>
+                )}
 
-                                <Typography variant="body1" sx={{ color: "#90caf9" }}>➝</Typography>
+                {/* Travel Requests */}
+                <List>
+                    {filteredRequests.map((request) => (
+                        <ListItem
+                            key={request.id}
+                            sx={{
+                                flexDirection: "column",
+                                backgroundColor: "#1E1E1E",
+                                padding: "20px",
+                                borderRadius: "10px",
+                                marginBottom: "20px",
+                                border: "1px solid transparent",
+                            }}
+                        >
+                            {/* Travel Request Details */}
+                            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
 
-                                <Box sx={{ textAlign: "right" }}>
-                                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>{request.toLocation}</Typography>
-                                    <Typography variant="body2" sx={{ color: "#bbbbbb" }}>Arrival: Next Day</Typography>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "10px" }}>
+                                    <Box sx={{ textAlign: "left" }}>
+                                        <Typography variant="h5" sx={{ fontWeight: "bold" }}>{request.fromLocation}</Typography>
+                                        <Typography variant="body2" sx={{ color: "#bbbbbb" }}>Departure: {request.travelDate}</Typography>
+                                    </Box>
+
+                                    <Typography variant="body1" sx={{ color: "#90caf9" }}>➝</Typography>
+
+                                    <Box sx={{ textAlign: "right" }}>
+                                        <Typography variant="h5" sx={{ fontWeight: "bold" }}>{request.toLocation}</Typography>
+                                        <Typography variant="body2" sx={{ color: "#bbbbbb" }}>Arrival: Next Day</Typography>
+                                    </Box>
                                 </Box>
                             </Box>
-                        </Box>
 
-                        {/* Toggle Comments Button */}
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "10px", }}>
-                            <Button
-                                size="small"
-                                sx={{ marginTop: "15px", color: "white", backgroundColor: '#343434', left: 0, "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                                onClick={() => fetchComments(request.id)}
-                            >
-                                {request.showComments ? "Hide Comments" : "Comments"}
-                            </Button>
-                        </div>
+                            {/* Toggle Comments Button */}
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "10px", }}>
+                                <Button
+                                    size="small"
+                                    sx={{ marginTop: "15px", color: "white", backgroundColor: '#343434', left: 0, "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                                    onClick={() => fetchComments(request.id)}
+                                >
+                                    {request.showComments ? "Hide Comments" : "Comments"}
+                                </Button>
+                            </div>
 
-                        {/* Comment Section */}
-                        {
-                            request.showComments && (
-                                <Box sx={{ marginTop: "15px", width: "100%" }}>
-                                    <CommentSection
-                                        comments={request.comments || []}
-                                        addComment={(text) => addComment(request.id, text)}
-                                        addReply={(commentId, text) => addReply(request.id, commentId, text)}
-                                        requestCreatedAt={request.createdAt}
-                                    />
-                                </Box>
-                            )
-                        }
+                            {/* Comment Section */}
+                            {
+                                request.showComments && (
+                                    <Box sx={{ marginTop: "15px", width: "100%" }}>
+                                        <CommentSection
+                                            comments={request.comments || []}
+                                            addComment={(text) => addComment(request.id, text)}
+                                            addReply={(commentId, text) => addReply(request.id, commentId, text)}
+                                            requestCreatedAt={request.createdAt}
+                                        />
+                                    </Box>
+                                )
+                            }
 
-                    </ListItem>
-                ))}
-            </List>
+                        </ListItem>
+                    ))}
+                </List>
 
-            {/* Dialog for People Quest Creation */}
-            <Dialog open={isCreatingPeopleQuest} onClose={() => setIsCreatingPeopleQuest(false)} fullWidth maxWidth="sm">
-                <DialogContent>
-                    <TravelRequestForm
-                        open={isCreatingPeopleQuest}
-                        handleClose={() => setIsCreatingPeopleQuest(false)}
-                        handleSubmit={(data) => handleTravelCreation(data)}
-                    />
-                </DialogContent>
-            </Dialog>
-        </Box >
+                {/* Dialog for People Quest Creation */}
+                <Dialog open={isCreatingPeopleQuest} onClose={() => setIsCreatingPeopleQuest(false)} fullWidth maxWidth="sm">
+                    <DialogContent>
+                        <TravelRequestForm
+                            open={isCreatingPeopleQuest}
+                            handleClose={() => setIsCreatingPeopleQuest(false)}
+                            handleSubmit={(data) => handleTravelCreation(data)}
+                        />
+                    </DialogContent>
+                </Dialog>
+            </Box>
+        </Box>
     );
 };
 

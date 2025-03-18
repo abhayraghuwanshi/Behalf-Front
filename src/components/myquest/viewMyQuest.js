@@ -221,16 +221,19 @@ const MyQuestPage = () => {
                                 onClick={() => setSelectedQuest(quest)}
                                 className={selectedQuest?.id === quest.id ? "active" : ""}
                             >
+                                <Chip sx={{
+                                    borderRadius: "4px",
+                                    margin: "4px",
+                                    color: "white",
+                                }} label={user.id === quest.questCreatorId ? "Creator" : "Applied"} variant="outlined" size="small">
+
+                                </Chip>
+                                <br />
                                 Instruction: {quest.questInstructions} <br />
                                 Reward: ${quest.questReward} <br />
                                 Author: {userMap && quest.questCreatorId && userMap[quest.questCreatorId] ? `${userMap[quest.questCreatorId].firstName} ${userMap[quest.questCreatorId].lastName}` : "Unknown"} <br />
                                 Created: {new Date(quest.creationTimestamp).toLocaleDateString()} <br />
                                 Quest Progress: {quest.questStatus == null ? 'PENDING' : quest.questStatus} <br />
-                                <Chip sx={{
-                                    borderRadius: "4px",
-                                    margin: "4px",
-                                    color: "white",
-                                }} label={user.id === quest.questCreatorId ? "Creator" : "Applied"} variant="outlined" size="small"></Chip>
                             </li>
                         ))}
                     </ul>

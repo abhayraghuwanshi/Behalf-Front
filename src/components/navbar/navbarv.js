@@ -9,22 +9,31 @@ import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import COUNTRIES from '../navbar/Country';
+import { useCountry } from '../navbar/CountryProvider';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest6.png';
 
+
 const pages = [
-  { name: 'Active Quests', path: '/post' },
-  { name: 'Travellers', path: '/people' },
+  { name: 'Delivery Requests', path: '/post' },
+  { name: 'My Requests', path: '/requests' },
   { name: 'Store', path: '/store' },
 ];
+
 
 function Navbar() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { selectedCountry, setSelectedCountry } = useCountry();
 
   const handleClick = (page) => {
     navigate(page.path);
+  };
+
+  const handleCountryChange = (e) => {
+    setSelectedCountry(e.target.value);
   };
 
   const filteredPages = user
@@ -83,6 +92,7 @@ function Navbar() {
                 </IconButton>
               </>
             ) : (
+
               <Button
                 onClick={() => navigate('/login')}
                 sx={{
@@ -95,7 +105,17 @@ function Navbar() {
                 Login
               </Button>
             )}
+            <div className="country-selector">
+              <select value={selectedCountry} onChange={handleCountryChange}>
+                {COUNTRIES.map(country => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </Box>
+
         </Toolbar>
       </Container>
     </AppBar >

@@ -82,49 +82,49 @@ const PostList = () => {
   }, [posts, filters, searchTerm]);
 
   return (
-    <div style={{ marginTop: '100px', marginLeft: '40px', marginRight: '40px', padding: '20px', color: 'white', marginBottom: '40px' }}>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: "20px" }}>
-        <Typography variant="h4" sx={{ textAlign: "left", flexGrow: 1, color: 'white' }}>📦 Delivery Quests</Typography>
-        <Button
-          variant="outlined"
-          sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hove r": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-          onClick={() => setIsCreatingPost(true)}
-        >
-          Create Post
-        </Button>
+    <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20px', color: 'white', marginBottom: '40px' }}>
+      <Box sx={{ width: '720px', display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "20px" }}>
+          <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
+          <Button
+            variant="outlined"
+            sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+            onClick={() => setIsCreatingPost(true)}
+          >
+            Create Post
+          </Button>
+        </Box>
+        <FilterControls
+          minPrice={filters.minPrice}
+          maxPrice={filters.maxPrice}
+          dateFilter={filters.dateFilter}
+          searchTerm={searchTerm}
+          setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
+          setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
+          setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
+          setSearchTerm={setSearchTerm}
+        />
+        <div className="post-grid" style={{ width: '100%' }}>
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post) =>
+              post ? (
+                <PostCard
+                  key={post.id}
+                  postData={post}
+                  onAccept={handleAccept}
+                  user={user}
+                  postSession={{
+                    questCreatorId: post.questCreatorId,
+                    questId: post.id,
+                  }}
+                />
+              ) : null
+            )
+          ) : (
+            <p>No posts found.</p>
+          )}
+        </div>
       </Box>
-      <FilterControls
-        minPrice={filters.minPrice}
-        maxPrice={filters.maxPrice}
-        dateFilter={filters.dateFilter}
-        searchTerm={searchTerm}
-        setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
-        setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
-        setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
-        setSearchTerm={setSearchTerm}
-      />
-
-      <div className="post-grid">
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) =>
-            post ? (
-              <PostCard
-                key={post.id}
-                postData={post}
-                onAccept={handleAccept}
-                user={user}
-                postSession={{
-                  questCreatorId: post.questCreatorId,
-                  questId: post.id,
-                }}
-              />
-            ) : null
-          )
-        ) : (
-          <p>No posts found.</p>
-        )}
-      </div>
-
       {/* Dialog for Delivery Quest Creation */}
       <Dialog open={isCreatingPost} onClose={() => setIsCreatingPost(false)} fullWidth maxWidth="sm">
         <DialogContent>
