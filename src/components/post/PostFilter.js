@@ -10,26 +10,47 @@ const FilterControls = ({
     maxPrice,
     dateFilter,
     searchTerm,
+    locationFrom,
+    locationTo,
     setMinPrice,
     setMaxPrice,
     setDateFilter,
     setSearchTerm,
+    setLocationFrom,
+    setLocationTo,
 }) => {
     return (
-        <Box >
+        <Box>
             <Grid container spacing={2}>
                 {/* Search Term */}
+
+                {/* Location From */}
                 <Grid item xs={12} sm={3}>
                     <TextField
-                        label="Search"
+                        label="Location From"
                         type="text"
                         fullWidth
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={locationFrom}
+                        onChange={(e) => setLocationFrom(e.target.value)}
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ backgroundColor: "#1E1E1E", }}
+                        sx={{ backgroundColor: "#1E1E1E" }}
+                    />
+                </Grid>
+
+                {/* Location To */}
+                <Grid item xs={12} sm={3}>
+                    <TextField
+                        label="Location To"
+                        type="text"
+                        fullWidth
+                        value={locationTo}
+                        onChange={(e) => setLocationTo(e.target.value)}
+                        variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#1E1E1E" }}
                     />
                 </Grid>
 
@@ -44,7 +65,7 @@ const FilterControls = ({
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ backgroundColor: "#1E1E1E", }}
+                        sx={{ backgroundColor: "#1E1E1E" }}
                     />
                 </Grid>
 
@@ -59,7 +80,7 @@ const FilterControls = ({
                         variant="outlined"
                         InputProps={{ sx: { color: "white" } }}
                         InputLabelProps={{ sx: { color: "white" } }}
-                        sx={{ backgroundColor: "#1E1E1E", }}
+                        sx={{ backgroundColor: "#1E1E1E" }}
                     />
                 </Grid>
 
@@ -79,17 +100,28 @@ const FilterControls = ({
                                         "& .MuiSvgIcon-root": { color: "#edebeb" }, // Calendar icon color
                                         backgroundColor: "#1E1E1E",
                                     },
-
                                 },
                             }}
-
-
                         />
                     </LocalizationProvider>
                 </Grid>
 
+                <Grid item xs={12} sm={9}>
+                    <TextField
+                        label="Search"
+                        placeholder="Search for posts"
+                        type="text"
+                        fullWidth
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        variant="outlined"
+                        InputProps={{ sx: { color: "white" } }}
+                        InputLabelProps={{ sx: { color: "white" } }}
+                        sx={{ backgroundColor: "#1E1E1E" }}
+                    />
+                </Grid>
             </Grid>
-        </Box >
+        </Box>
     );
 };
 

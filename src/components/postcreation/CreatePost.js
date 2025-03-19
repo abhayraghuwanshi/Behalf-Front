@@ -1,17 +1,45 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import PostService from "../../service/PostService"; // Assuming this handles the API call for creating the post
+import PostService from "../../service/PostService";
 import { useAuth } from '../SignIn/AuthContext';
+
+const packagingOptions = [
+  "With Box",
+  "Without Box",
+  "With Bill",
+  "Without Bill",
+  "Fragile",
+  "Gift Wrapped",
+  "Sealed",
+  "Eco-Friendly",
+  "Original Packaging",
+  "Custom Packaging",
+];
 
 const CreatePost = ({ open, handleClose, onPostCreated }) => {
   const { user } = useAuth();
   const [questInstructions, setQuestInstructions] = useState("");
-  const [questValidity, setQuestValidity] = useState(dayjs().format("DD-MM-YYYY"));
+  const [questValidity, setQuestValidity] = useState(dayjs().format("YYYY-MM-DD"));
   const [questReward, setQuestReward] = useState("");
+  const [locationFrom, setLocationFrom] = useState("");
+  const [locationTo, setLocationTo] = useState("");
+  const [questCurrency, setQuestCurrency] = useState("INR");
+  const [questStatus, setQuestStatus] = useState("Pending");
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [selectedPackaging, setSelectedPackaging] = useState([]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async () => {
     if (!user) {
@@ -19,23 +47,29 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       return;
     }
 
-    if (!questInstructions || !questValidity || !questReward) {
-      alert("Please fill in all fields.");
+    if (!questInstructions || !questValidity || !questReward || !locationTo) {
+      alert("Please fill in all required fields.");
       return;
     }
 
     const post = {
       questCreatorId: user.id,
       questInstructions,
-      questValidity: dayjs(questValidity, "DD-MM-YYYY").toDate(),
+      questValidity: dayjs(questValidity).toDate(),
       questReward: parseFloat(questReward),
+      locationFrom,
+      locationTo,
+      questCurrency,
+      questStatus,
+      image,
+      packagingOptions: selectedPackaging,
     };
 
     try {
       const response = await PostService.createPost(post);
       if (response.status === 200 || response.status === 201) {
         alert("Post created!");
-        onPostCreated && onPostCreated(); // Optional callback
+        onPostCreated && onPostCreated();
         handleClose();
       }
     } catch (error) {
@@ -44,57 +78,118 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
     }
   };
 
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': { borderColor: 'white' },
+      '&:hover fieldset': { borderColor: 'blue' },
+    },
+    '& .MuiInputLabel-root': { color: 'white' },
+    '& .MuiOutlinedInput-input': { color: 'white' },
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} sx={{ '& .MuiPaper-root': { backgroundColor: 'black', color: 'white' } }}>
-      <DialogTitle sx={{ color: 'white' }}>Create Quest</DialogTitle>
+      <DialogTitle>Create Quest</DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
           label="Quest Instructions"
-          name="questInstructions"
+          placeholder="Can you bring this product ..."
           value={questInstructions}
           onChange={(e) => setQuestInstructions(e.target.value)}
           margin="dense"
           multiline
           rows={4}
-          InputProps={{ sx: { color: "white" } }}
-          InputLabelProps={{ sx: { color: "white" } }}
-          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
+          sx={inputStyles}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label="Post Date"
-            value={questValidity ? dayjs(questValidity, "DD-MM-YYYY") : null}
-            onChange={(newValue) => setQuestValidity(newValue ? newValue.format("DD-MM-YYYY") : "")}
+            label="Quest Validity"
+            value={questValidity ? dayjs(questValidity) : null}
+            onChange={(newValue) => setQuestValidity(newValue ? newValue.format("YYYY-MM-DD") : "")}
             slotProps={{
               textField: {
                 fullWidth: true,
-                InputProps: { sx: { color: "white" } },
-                InputLabelProps: { sx: { color: "white" } },
-                sx: {
-                  "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } },
-                  "& .MuiSvgIcon-root": { color: "white" }, // Calendar icon color
-                },
+                sx: inputStyles,
               },
             }}
           />
         </LocalizationProvider>
         <TextField
           fullWidth
-          label="Quest Reward (₹)"
-          name="questReward"
+          label="Quest Reward"
           type="number"
           value={questReward}
           onChange={(e) => setQuestReward(e.target.value)}
           margin="dense"
-          InputProps={{ sx: { color: "white" } }}
-          InputLabelProps={{ sx: { color: "white" } }}
-          sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "blue" } } }}
+          sx={inputStyles}
         />
+        <TextField
+          fullWidth
+          label="Pickup location"
+          placeholder="Mumbai, India"
+          value={locationFrom}
+          onChange={(e) => setLocationFrom(e.target.value)}
+          margin="dense"
+          sx={inputStyles}
+        />
+        <TextField
+          fullWidth
+          label="Delivery location"
+          placeholder="Bangalore, India"
+          value={locationTo}
+          onChange={(e) => setLocationTo(e.target.value)}
+          margin="dense"
+          sx={inputStyles}
+        />
+        <TextField
+          fullWidth
+          label="Currency"
+          value={questCurrency}
+          onChange={(e) => setQuestCurrency(e.target.value)}
+          margin="dense"
+          sx={inputStyles}
+        />
+
+        <TextField
+          select
+          fullWidth
+          label="Packaging Options"
+          value={selectedPackaging}
+          onChange={(e) => setSelectedPackaging(e.target.value)}
+          SelectProps={{
+            MenuProps: {
+              PaperProps: {
+                style: {
+                  backgroundColor: 'black',
+                  color: 'white',
+                },
+              },
+            },
+          }}
+          sx={inputStyles}
+        >
+          {packagingOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+
+
+
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ marginTop: '10px', color: 'white' }}
+        />
+        {preview && <img src={preview} alt="Preview" style={{ marginTop: '10px', maxWidth: '100%' }} />}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary" sx={{ color: 'white' }}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained" sx={{ color: 'white', backgroundColor: 'purple' }}>Submit</Button>
+        <Button onClick={handleClose} color="secondary">Cancel</Button>
+        <Button onClick={handleSubmit} color="primary" variant="contained">Submit</Button>
       </DialogActions>
     </Dialog>
   );

@@ -65,6 +65,13 @@ const Post = ({ postSession, onAccept, user, postData }) => {
     });
   };
 
+  const viewDetail = (id) => {
+    const shareUrl = `${window.location.origin}/post/id`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      alert("Share link copied to clipboard!");
+    });
+  };
+
   return (
     <Card sx={{
       width: "100%",
@@ -114,8 +121,6 @@ const Post = ({ postSession, onAccept, user, postData }) => {
               color: "white",
               backgroundColor: "#4d4d4d",
 
-
-
               "&:hover": { borderColor: "gray" },
             }}
             onClick={openInterestedDialog}
@@ -133,6 +138,15 @@ const Post = ({ postSession, onAccept, user, postData }) => {
 
             Share
             <ShareIcon sx={{ marginLeft: '5px' }} />
+          </Button>
+
+          <Button onClick={() => window.location.href = `/post/${postData.id}`}
+            sx={{
+              color: "white",
+              backgroundColor: "#4d4d4d",
+              "&:hover": { borderColor: "gray" },
+            }}>
+            Details
           </Button>
         </Box>
       </Box>

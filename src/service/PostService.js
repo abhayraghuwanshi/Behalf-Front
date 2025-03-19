@@ -45,10 +45,28 @@ class PostService {
     });
   }
 
+  async getPostById(postId) {
+    try {
+      const response = await axios.get(`${API_URL}/detail?postId=${postId}`, { withCredentials: true });
+      return response.data;
 
+    } catch (error) {
+      console.error(" failed:", error);
+    }
+  }
 
+  async getSimilarPosts(postId) {
 
+    try {
+      const response = await axios.get(`${API_URL}/recommend?questId=${postId}`,
+        { withCredentials: true });
+      return response.data;
 
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
+  }
 }
 
 export default new PostService();

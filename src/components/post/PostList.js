@@ -83,7 +83,7 @@ const PostList = () => {
 
   return (
     <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20px', color: 'white', marginBottom: '40px' }}>
-      <Box sx={{ width: '720px', display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "20px" }}>
           <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
           <Button
@@ -91,7 +91,7 @@ const PostList = () => {
             sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
             onClick={() => setIsCreatingPost(true)}
           >
-            Create Post
+            Create Request
           </Button>
         </Box>
         <FilterControls

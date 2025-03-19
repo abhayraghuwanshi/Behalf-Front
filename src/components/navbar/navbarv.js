@@ -1,4 +1,5 @@
 import MailIcon from '@mui/icons-material/Mail';
+import { MenuItem } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -6,6 +7,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -14,13 +16,11 @@ import { useCountry } from '../navbar/CountryProvider';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest6.png';
 
-
 const pages = [
   { name: 'Delivery Requests', path: '/post' },
   { name: 'My Requests', path: '/requests' },
   { name: 'Store', path: '/store' },
 ];
-
 
 function Navbar() {
   const { user } = useAuth();
@@ -28,18 +28,19 @@ function Navbar() {
   const location = useLocation();
   const { selectedCountry, setSelectedCountry } = useCountry();
 
-  const handleClick = (page) => {
-    navigate(page.path);
+  const handleClick = (page) => navigate(page.path);
+
+  const handleCountryChange = (e) => setSelectedCountry(e.target.value);
+
+  const filteredPages = user ? [...pages] : pages;
+  const inputStyles = {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': { borderColor: 'white' },
+      '&:hover fieldset': { borderColor: 'blue' },
+    },
+    '& .MuiInputLabel-root': { color: 'white' },
+    '& .MuiOutlinedInput-input': { color: 'white' },
   };
-
-  const handleCountryChange = (e) => {
-    setSelectedCountry(e.target.value);
-  };
-
-  const filteredPages = user
-    ? [...pages]
-    : pages;
-
   return (
     <AppBar position="fixed" sx={{ backgroundColor: 'black', borderRadius: '8px' }}>
       <Container>
@@ -88,11 +89,10 @@ function Navbar() {
 
                 {/* Profile with Avatar */}
                 <IconButton onClick={() => navigate('/profile')}>
-                  <Avatar sx={{ width: 32, height: 32 }} />
+                  <Avatar src={user?.profileImage || ''} alt={user?.name || 'User'} sx={{ width: 32, height: 32 }} />
                 </IconButton>
               </>
             ) : (
-
               <Button
                 onClick={() => navigate('/login')}
                 sx={{
@@ -105,20 +105,35 @@ function Navbar() {
                 Login
               </Button>
             )}
-            <div className="country-selector">
-              <select value={selectedCountry} onChange={handleCountryChange}>
-                {COUNTRIES.map(country => (
-                  <option key={country.code} value={country.code}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </Box>
 
+            {/* Country Selector */}
+            <TextField
+              select
+              label="Country"
+              value={selectedCountry}
+              onChange={handleCountryChange}
+              sx={inputStyles}
+              SelectProps={{
+                MenuProps: {
+                  PaperProps: {
+                    style: {
+                      backgroundColor: 'black',
+                      color: 'white',
+                    },
+                  },
+                },
+              }}
+            >
+              {COUNTRIES.map((country) => (
+                <MenuItem key={country.code} value={country.code}>
+                  {country.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
         </Toolbar>
       </Container>
-    </AppBar >
+    </AppBar>
   );
 }
 
