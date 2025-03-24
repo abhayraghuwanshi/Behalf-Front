@@ -85,14 +85,23 @@ const Post = ({ postSession, onAccept, user, postData }) => {
       alignItems: 'flex-start', // Align items to the top
     }}>
       {/* Left side: Image/Icon */}
-      <Box sx={{ marginRight: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 60 }}>
-        <Avatar sx={{ bgcolor: '#90caf9', color: 'black' }}>
-          <TruckIcon />
-        </Avatar>
-      </Box>
 
       {/* Right side: Content */}
       <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
+        <Box sx={{ marginRight: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 100 }}>
+          {postData.imageUrl ? (
+            <img
+              src={postData.imageUrl}
+              alt="Quest"
+              style={{ width: '100px', height: '100px', borderRadius: '8px', objectFit: 'cover' }}
+            />
+          ) : (
+            <Avatar sx={{ bgcolor: '#90caf9', color: 'black', width: '100px', height: '100px' }}>
+              <TruckIcon />
+            </Avatar>
+          )}
+        </Box>
+
         <Typography variant="body1" gutterBottom sx={{ color: "white", cursor: "auto", fontWeight: 'bold' }}>
           {postData.questInstructions}
         </Typography>

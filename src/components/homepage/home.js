@@ -108,11 +108,11 @@ function Home() {
   ];
 
   const handleSeeMoreQuests = () => {
-    navigate("/quests");
+    navigate("/post");
   };
 
   const handleSeeMoreItems = () => {
-    navigate("/items");
+    navigate("/store");
   };
 
   return (

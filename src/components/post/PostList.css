@@ -55,7 +55,6 @@
 .post-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
   /* Adjust the gap between cards */
 }
 

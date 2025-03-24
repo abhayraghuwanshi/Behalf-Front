@@ -34,10 +34,6 @@ function Navbar() {
 
   const filteredPages = user ? [...pages] : pages;
   const inputStyles = {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': { borderColor: 'white' },
-      '&:hover fieldset': { borderColor: 'blue' },
-    },
     '& .MuiInputLabel-root': { color: 'white' },
     '& .MuiOutlinedInput-input': { color: 'white' },
   };

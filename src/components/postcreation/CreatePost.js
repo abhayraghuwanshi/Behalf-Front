@@ -2,8 +2,10 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Te
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState } from "react";
+import { BACKEND_API_URL } from "../../env";
 import PostService from "../../service/PostService";
 import { useAuth } from '../SignIn/AuthContext';
 
@@ -52,20 +54,36 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       return;
     }
 
-    const post = {
-      questCreatorId: user.id,
-      questInstructions,
-      questValidity: dayjs(questValidity).toDate(),
-      questReward: parseFloat(questReward),
-      locationFrom,
-      locationTo,
-      questCurrency,
-      questStatus,
-      image,
-      packagingOptions: selectedPackaging,
-    };
-
     try {
+      let imageUrl = "";
+      if (image) {
+        const formData = new FormData();
+        formData.append("file", image);
+
+        const uploadResponse = await axios.post(
+          `${BACKEND_API_URL}/api/v1/document/quest/file`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+
+        imageUrl = uploadResponse.data;
+      }
+
+      const post = {
+        questCreatorId: user.id,
+        questInstructions,
+        questValidity: dayjs(questValidity).toDate(),
+        questReward: parseFloat(questReward),
+        locationFrom,
+        locationTo,
+        questCurrency,
+        questStatus,
+        imageUrl, // Store image URL
+        packagingOptions: selectedPackaging,
+      };
+
       const response = await PostService.createPost(post);
       if (response.status === 200 || response.status === 201) {
         alert("Post created!");
@@ -77,6 +95,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       alert("Failed to create post");
     }
   };
+
 
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
