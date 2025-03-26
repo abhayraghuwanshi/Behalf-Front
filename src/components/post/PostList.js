@@ -104,7 +104,7 @@ const PostList = () => {
           setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
           setSearchTerm={setSearchTerm}
         />
-        <div className="post-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', }}>
+        <div className="post-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', marginTop: '30px' }}>
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) =>
               post ? (

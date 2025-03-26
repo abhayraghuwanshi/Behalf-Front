@@ -1,12 +1,13 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import TruckIcon from '@mui/icons-material/LocalShipping'; // Import a truck icon
 import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, Box, Card, MenuItem, Select, Typography } from '@mui/material';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import { Avatar, Box, Card, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import imageService from "../../service/FileService";
 import './PostList.css';
 
 const Post = ({ postSession, onAccept, user, postData }) => {
@@ -14,6 +15,30 @@ const Post = ({ postSession, onAccept, user, postData }) => {
   const [questMessage, setQuestMessage] = useState("");
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [selectedReferId, setSelectedReferId] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (postData.imageUrl) {
+        const [bucketName, imageId] = postData.imageUrl.split('/');
+        try {
+          const fetchedImageUrl = await imageService.fetchImage(`${bucketName}/file/${imageId}`);
+          setImageUrl(fetchedImageUrl);
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+      }
+    };
+
+    fetchImage();
+
+    // Cleanup to release memory
+    return () => {
+      if (imageUrl) {
+        imageService.releaseImage(imageUrl);
+      }
+    };
+  }, [postData.imageUrl]);
 
   const openInterestedDialog = () => setIsPopUpOpen(true);
   const closeInterestedDialog = () => { setIsPopUpOpen(false); setQuestMessage(""); }
@@ -74,90 +99,84 @@ const Post = ({ postSession, onAccept, user, postData }) => {
 
   return (
     <Card sx={{
-      width: "100%",
+      width: "300px",
       padding: 2,
-      marginBottom: 1,
-      marginTop: 2,
-      border: "1px solid transparent",
-      backgroundColor: "#1E1E1E",
-      // boxShadow: "none",
-      display: 'flex', // Use flexbox for layout
-      alignItems: 'flex-start', // Align items to the top
+      marginBottom: 2,
+      border: "1px solid #333",
+      borderRadius: "12px",
+      backgroundColor: "#1E1E1E", // Black background
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+      transition: "transform 0.2s, box-shadow 0.2s",
+      cursor: "pointer",
+      color: "#ffffff", // White text
+      "&:hover": {
+        transform: "translateY(-4px)",
+        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)"
+      }
     }}>
-      {/* Left side: Image/Icon */}
+      {/* Image Section */}
+      <Box sx={{ textAlign: "center", marginBottom: 2 }}>
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt="Quest"
+            style={{ width: '100%', height: '200px', borderRadius: '8px', objectFit: 'cover' }}
+          />
+        ) : (
+          <Avatar sx={{ bgcolor: '#333', color: '#ffffff', width: '100%', height: '200px', fontSize: "2rem" }}>
+            <ShoppingBagIcon sx={{ height: '100px', width: '100%' }} /> {/* Default icon */}
+          </Avatar>
+        )}
+      </Box>
 
-      {/* Right side: Content */}
-      <Box sx={{ flexGrow: 1, textAlign: 'left' }}>
-        <Box sx={{ marginRight: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', minWidth: 100 }}>
-          {postData.imageUrl ? (
-            <img
-              src={postData.imageUrl}
-              alt="Quest"
-              style={{ width: '100px', height: '100px', borderRadius: '8px', objectFit: 'cover' }}
-            />
-          ) : (
-            <Avatar sx={{ bgcolor: '#90caf9', color: 'black', width: '100px', height: '100px' }}>
-              <TruckIcon />
-            </Avatar>
-          )}
-        </Box>
-
-        <Typography variant="body1" gutterBottom sx={{ color: "white", cursor: "auto", fontWeight: 'bold' }}>
+      {/* Content Section */}
+      <Box sx={{ textAlign: 'left' }}>
+        <Typography variant="h6" gutterBottom sx={{ color: "#ffffff", fontWeight: 'bold' }}>
           {postData.questInstructions}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
-          Author: {postData?.userInformation?.firstName} {postData?.userInformation?.lastName}
+        <Typography variant="body2" sx={{ color: "#cccccc" }}>
+          {postData.locationFrom} ={'>'}  {postData.locationTo}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
-          Created: {new Date(postData.creationTimestamp).toLocaleDateString()}
+        <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 'bold', marginTop: 1 }}>
+          Reward: {postData.questReward} {postData.questCurrency}
         </Typography>
+      </Box>
 
-        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
-          Reward: {postData.questReward} rupees
-        </Typography>
+      {/* Action Buttons */}
+      <Box display="flex" justifyContent="space-between" mt={2}>
+        <Button
+          sx={{
+            color: "#ffffff",
+            backgroundColor: "#333",
+            "&:hover": { backgroundColor: "#555" },
+          }}
+          onClick={openInterestedDialog}
+        >
+          <FavoriteIcon sx={{ paddingRight: "5px" }} />
+          Interested
+        </Button>
+        <Button
+          sx={{
+            color: "#ffffff",
+            backgroundColor: "#333",
+            "&:hover": { backgroundColor: "#555" },
+          }}
+          onClick={handleShare}
+        >
+          Share
+          <ShareIcon sx={{ marginLeft: '5px' }} />
+        </Button>
 
-        <Typography variant="body2" sx={{ color: "white", cursor: "auto" }}>
-          {/* <AccessTimeIcon sx={{ color: "white", fontSize: 'inherit', marginRight: '4px' }} /> */}
-          Valid for: {postData.questValidity} days
-        </Typography>
-
-        <Box display="flex" justifyContent="flex-start" gap={1} mt={2}>
-          <Button
-
-            sx={{
-              color: "white",
-              backgroundColor: "#4d4d4d",
-
-              "&:hover": { borderColor: "gray" },
-            }}
-            onClick={openInterestedDialog}
-          >
-            <FavoriteIcon sx={{ paddingRight: "5px", }} />
-            Interested
-          </Button>
-          <Button onClick={handleShare}
-            sx={{
-              color: "white",
-              backgroundColor: "#4d4d4d",
-
-              "&:hover": { borderColor: "gray" },
-            }}>
-
-            Share
-            <ShareIcon sx={{ marginLeft: '5px' }} />
-          </Button>
-
-          <Button onClick={() => window.location.href = `/post/${postData.id}`}
-            sx={{
-              color: "white",
-              backgroundColor: "#4d4d4d",
-              "&:hover": { borderColor: "gray" },
-            }}>
-            Details
-          </Button>
-        </Box>
+        <Button onClick={() => window.location.href = `/post/${postData.id}`}
+          sx={{
+            color: "white",
+            backgroundColor: "#4d4d4d",
+            "&:hover": { borderColor: "gray" },
+          }}>
+          Details
+        </Button>
       </Box>
 
       {/* Dialogs (Popups) */}
@@ -201,43 +220,6 @@ const Post = ({ postSession, onAccept, user, postData }) => {
           <Button onClick={closeInterestedDialog} sx={{ color: "white" }}>
             Close
           </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={isReferExpanded} onClose={closeReferDialog} fullWidth maxWidth="sm"
-        sx={{ "& .MuiPaper-root": { backgroundColor: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(5px)" } }}>
-        <DialogContent>
-          <Select
-            value={selectedReferId}
-            onChange={(e) => setSelectedReferId(e.target.value)}
-            displayEmpty
-            fullWidth
-            sx={{ color: "white", border: "1px solid white" }}
-          >
-            <MenuItem value="" disabled>Select a User</MenuItem>
-            {/* {Object.values(allIds).map((user) => (
-              <MenuItem key={user.id} value={user.id}>{user.firstName} {user.lastName}</MenuItem>
-            ))} */}
-          </Select>
-          <input
-            type="text"
-            value={questMessage}
-            onChange={(e) => setQuestMessage(e.target.value)}
-            placeholder="Enter Message"
-            required
-            style={{
-              backgroundColor: "transparent",
-              color: "white",
-              border: "1px solid white",
-              padding: "8px",
-              width: "100%"
-            }}
-            default="I am refering you"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button size="small" onClick={handleRefer} sx={{ color: "white" }}>Send</Button>
-          <Button onClick={closeReferDialog} sx={{ color: "white" }}>Close</Button>
         </DialogActions>
       </Dialog>
     </Card >

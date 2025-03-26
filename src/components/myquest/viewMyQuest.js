@@ -1,12 +1,10 @@
 import { Email } from "@mui/icons-material";
 import { Chip, MenuItem, Select, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import '../../service/PostService';
 import PostService from '../../service/PostService';
 import ProfileService from "../../service/ProfileService";
 import QuestSessionService from "../../service/QuestSessionService";
 import { useAuth } from "../SignIn/AuthContext";
-import '../UserProfile/UserProfile';
 import Inbox from "./Inbox";
 import "./MyQuest.css";
 
@@ -21,7 +19,7 @@ const MyQuestPage = () => {
     const [selectedSession, setSelectedSession] = useState(null);
     const [userMap, setUserMap] = useState({});
     const [questFilter, setQuestFilter] = useState("ALL");
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true);
     const labels = ["PENDING", "REJECTED", "SUCCESS"];
     const [selectedStatus, setSelectedStatus] = useState('PENDING');
     const [filterLabel, setFilterLabel] = useState("ALL");
@@ -73,24 +71,6 @@ const MyQuestPage = () => {
         }
     };
 
-    // Fetch data concurrently
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!user || !user.id) return;
-
-            try {
-                setLoading(true); // Set loading to true before fetching
-                await Promise.all([fetchUserInfo(), fetchQuestData()]);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false); // Set loading to false after fetching
-            }
-        };
-
-        fetchData();
-    }, [user]);
-
     // Apply filters
     useEffect(() => {
         const applyFilters = () => {
@@ -113,11 +93,6 @@ const MyQuestPage = () => {
 
         applyFilters();
     }, [quests, filterLabel, filterDate, user]);
-
-    // Render loading state
-    if (loading) {
-        return <div tex="white">Loading...</div>;
-    }
 
     // Fetch messages for a specific chat session
     const fetchMessages = async (sessionId) => {
@@ -179,13 +154,55 @@ const MyQuestPage = () => {
         return userMap[recipientId] ? `${userMap[recipientId].firstName} ${userMap[recipientId].lastName}` : "Unknown";
     };
 
-    return (
-        <div>
-            <div className="my-quest-page" style={{ marginTop: "100px", marginBottom: "50px" }}>
+    // Fetch data on component mount
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!user || !user.id) {
+                setLoading(false);
+                return;
+            }
 
+            try {
+                setLoading(true);
+                await Promise.all([fetchUserInfo(), fetchQuestData()]);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [user]);
+
+    // Render content based on login state
+    const renderContent = () => {
+        // If loading, show loading state
+        if (loading) {
+            return <div style={{ color: "white", textAlign: "center", marginTop: "200px" }}>Loading...</div>;
+        }
+
+        // If not logged in, show login message
+        if (!user) {
+            return (
+                <div style={{
+                    color: "white",
+                    textAlign: "center",
+                    marginTop: "100px",
+                    padding: "20px",
+                    borderRadius: "10px"
+                }}>
+                    <p>You need to login to view and manage quests.</p>
+                    <p>Please sign in to access your quest information.</p>
+                </div>
+            );
+        }
+
+        // If logged in, render the full quest page
+        return (
+            <div className="my-quest-page" style={{ marginTop: "100px", marginBottom: "50px" }}>
                 <div className="quests">
                     <h2 style={{ color: '#90caf9' }}> Quests</h2>
-                    {/* Filters */}
                     <div className="filters" style={{ display: "flex", gap: "20px", marginBottom: "20px", width: "100%", }}>
                         <Select
                             value={filterLabel}
@@ -212,22 +229,27 @@ const MyQuestPage = () => {
                         {filteredQuests.map((quest) => (
                             <li
                                 style={{
-                                    padding: "10px", marginBottom: "15px", borderRadius: "8px",
-                                    cursor: "pointer", background: selectedQuest?.id === quest.id ? "#444" :
-                                        "#303030", transition: "background 0.3s",
+                                    padding: "10px",
+                                    marginBottom: "15px",
+                                    borderRadius: "8px",
+                                    cursor: "pointer",
+                                    background: selectedQuest?.id === quest.id ? "#444" : "#303030",
+                                    transition: "background 0.3s",
                                     lineHeight: '24px'
                                 }}
                                 key={quest.id}
                                 onClick={() => setSelectedQuest(quest)}
-                                className={selectedQuest?.id === quest.id ? "active" : ""}
                             >
-                                <Chip sx={{
-                                    borderRadius: "4px",
-                                    margin: "4px",
-                                    color: "white",
-                                }} label={user.id === quest.questCreatorId ? "Creator" : "Applied"} variant="outlined" size="small">
-
-                                </Chip>
+                                <Chip
+                                    sx={{
+                                        borderRadius: "4px",
+                                        margin: "4px",
+                                        color: "white",
+                                    }}
+                                    label={user.id === quest.questCreatorId ? "Creator" : "Applied"}
+                                    variant="outlined"
+                                    size="small"
+                                />
                                 <br />
                                 Instruction: {quest.questInstructions} <br />
                                 Reward: ${quest.questReward} <br />
@@ -239,7 +261,6 @@ const MyQuestPage = () => {
                     </ul>
                 </div>
 
-                {/* Quest Hunter (Chat Sessions) */}
                 <div className="quest-hunter">
                     <h2 style={{ color: '#90caf9' }}>Quest Progress</h2>
                     {selectedQuest ? (
@@ -262,12 +283,10 @@ const MyQuestPage = () => {
                                             transition: "background 0.3s",
                                         }}
                                     >
-                                        {/* Left Side: Chat Info & Status Update */}
                                         <div className="left-content" style={{ display: "flex", flexDirection: "column" }}>
                                             <div>
                                                 {getChatRecipientName(session)} - {session.questStatus} Application
                                             </div>
-                                            {/* Dropdown for status update (only for quest creator) */}
                                             {user.id === selectedQuest.questCreatorId && (
                                                 <div style={{ marginTop: "10px", display: "flex", alignItems: "center" }}>
                                                     <select
@@ -311,7 +330,6 @@ const MyQuestPage = () => {
                                             )}
                                         </div>
 
-                                        {/* Right Side: Inbox Button */}
                                         <div className="right-content">
                                             <button
                                                 onClick={() => fetchMessages(session.id)}
@@ -322,15 +340,11 @@ const MyQuestPage = () => {
                                                     cursor: "pointer",
                                                     transition: "background 0.3s ease",
                                                 }}
-
                                             >
                                                 <Email />
                                             </button>
                                         </div>
                                     </li>
-
-
-
                                 )) || <p>No pending users available for this quest</p>}
                         </ul>
                     ) : (
@@ -338,35 +352,6 @@ const MyQuestPage = () => {
                     )}
                 </div>
 
-                {/* Chat Inbox
-                <div className="inbox">
-                    <h2 style={{ color: '#90caf9' }}>Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}</h2>
-                    {messages.length > 0 ? (
-                        <ul>
-                            {messages.map((msg, index) => (
-                                <li key={index}>
-                                    <strong>{msg.sender === user.id.toString() ? "You" : getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession))}:</strong> {msg.message}
-                                    <div style={{ fontSize: "10px", color: "#90caf9" }}>
-                                        {new Date(msg.timestamp).toLocaleString()}  </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Select a chat session to see messages</p>
-                    )}
-
-
-                    <div className="message-input">
-                        <input
-                            type="text"
-                            placeholder="Write a message..."
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                        />
-                        <button onClick={handleSendMessage}>Send</button>
-                    </div>
-                </div> 
-                */}
                 <Inbox
                     messages={messages}
                     user={user}
@@ -378,9 +363,14 @@ const MyQuestPage = () => {
                     handleSendMessage={handleSendMessage}
                     getChatRecipientName={getChatRecipientName}
                 />
-
             </div>
-        </div >
+        );
+    };
+
+    return (
+        <div>
+            {renderContent()}
+        </div>
     );
 };
 
