@@ -1,6 +1,6 @@
 import { Button } from '@mui/base';
 import React, { useEffect, useState } from 'react';
-import { BACKEND_API_URL } from './../../env.js'; // Import the BACKEND_API_URL from the .env file
+import ProductService from '../../service/ProductService'; // Import the new ProductService
 import './ProductList.css'; // Ensure this file contains your desired styles
 
 function ProductList({ onAddOrUpdateCart, cart }) {
@@ -13,14 +13,7 @@ function ProductList({ onAddOrUpdateCart, cart }) {
     }, []);
 
     const fetchProducts = async (name, price) => {
-        let url = BACKEND_API_URL + '/api/store/products';
-        const params = new URLSearchParams();
-        if (name) params.append('name', name);
-        if (price) params.append('price', price);
-        if ([...params].length > 0) url += '?' + params.toString();
-
-        const response = await fetch(url);
-        const data = await response.json();
+        const data = await ProductService.getProducts(name, price); // Use the service to fetch products
         setProducts(data);
     };
 

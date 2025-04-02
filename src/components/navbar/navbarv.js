@@ -1,5 +1,4 @@
 import MailIcon from '@mui/icons-material/Mail';
-import { MenuItem } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -7,11 +6,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import COUNTRIES from '../navbar/Country';
+import CountrySelector from '../Country/CountrySelector';
 import { useCountry } from '../navbar/CountryProvider';
 import { useAuth } from '../SignIn/AuthContext';
 import logo from './dropquest6.png';
@@ -74,6 +72,13 @@ function Navbar() {
 
           {/* Right Side - Actions */}
           <Box sx={{ position: 'absolute', right: '0', display: 'flex', gap: '10px', alignItems: 'center' }}>
+
+
+            <CountrySelector
+              selectedCountry={selectedCountry}
+              handleCountryChange={handleCountryChange}
+              inputStyles={inputStyles}
+            />
             {user ? (
               <>
                 {/* My-Quest with Message Icon */}
@@ -101,31 +106,6 @@ function Navbar() {
                 Login
               </Button>
             )}
-
-            {/* Country Selector */}
-            <TextField
-              select
-              label="Country"
-              value={selectedCountry}
-              onChange={handleCountryChange}
-              sx={inputStyles}
-              SelectProps={{
-                MenuProps: {
-                  PaperProps: {
-                    style: {
-                      backgroundColor: 'black',
-                      color: 'white',
-                    },
-                  },
-                },
-              }}
-            >
-              {COUNTRIES.map((country) => (
-                <MenuItem key={country.code} value={country.code}>
-                  {country.name}
-                </MenuItem>
-              ))}
-            </TextField>
           </Box>
         </Toolbar>
       </Container>

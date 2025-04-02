@@ -1,93 +1,25 @@
 import { Typography } from '@mui/joy';
 import Grid from '@mui/joy/Grid';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
+import PostService from '../../service/PostService';
+import ProductService from '../../service/ProductService';
+import { useCountry } from '../navbar/CountryProvider';
+import Post from '../post/PostCard';
 import { useAuth } from '../SignIn/AuthContext';
 import img from './travelbyplane3.png';
 
 function Home() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const [popularItems, setPopularItems] = useState([]);
+  const [questRecommendations, setQuestRecommendations] = useState([]);
+  const { selectedCountry } = useCountry(); // Get the selected country from CountryProvider
 
   const handleClick = () => {
     navigate("/login");
   }
-
-  const questRecommendations = [
-    {
-      "id": 1,
-      "questCreatorId": 2,
-      "questInstructions": "Deliver a laptop to New York",
-      "questValidity": "2025-04-20T13:00:00.000+00:00",
-      "questReward": 5000,
-      "creationTimestamp": "2025-03-10T11:45:42.245+00:00",
-      "userInformation": {
-        "id": 2,
-        "email": "john.doe@gmail.com",
-        "firstName": "John",
-        "lastName": "Doe",
-        "picture": "https://example.com/john_doe.png"
-      }
-    },
-    {
-      "id": 2,
-      "questCreatorId": 3,
-      "questInstructions": "Need a book from Chicago",
-      "questValidity": "2025-04-25T13:00:00.000+00:00",
-      "questReward": 2000,
-      "creationTimestamp": "2025-03-12T11:45:42.245+00:00",
-      "userInformation": {
-        "id": 3,
-        "email": "jane.smith@gmail.com",
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "picture": "https://example.com/jane_smith.png"
-      }
-    },
-    {
-      "id": 3,
-      "questCreatorId": 4,
-      "questInstructions": "Deliver a phone to Los Angeles",
-      "questValidity": "2025-04-30T13:00:00.000+00:00",
-      "questReward": 3000,
-      "creationTimestamp": "2025-03-15T11:45:42.245+00:00",
-      "userInformation": {
-        "id": 4,
-        "email": "alice.jones@gmail.com",
-        "firstName": "Alice",
-        "lastName": "Jones",
-        "picture": "https://example.com/alice_jones.png"
-      }
-    }
-  ];
-
-  const popularItems = [
-    {
-      "id": 101,
-      "itemName": "Wireless Headphones",
-      "price": 150,
-      "image": "https://example.com/wireless_headphones.png"
-    },
-    {
-      "id": 102,
-      "itemName": "Smartwatch",
-      "price": 200,
-      "image": "https://example.com/smartwatch.png"
-    },
-    {
-      "id": 103,
-      "itemName": "Gaming Console",
-      "price": 500,
-      "image": "https://example.com/gaming_console.png"
-    },
-    {
-      "id": 104,
-      "itemName": "Bluetooth Speaker",
-      "price": 100,
-      "image": "https://example.com/bluetooth_speaker.png"
-    }
-  ];
 
   const howItWorks = [
     {
@@ -114,6 +46,36 @@ function Home() {
   const handleSeeMoreItems = () => {
     navigate("/store");
   };
+
+  useEffect(() => {
+    const fetchPopularItems = async () => {
+      try {
+        const products = await ProductService.getProducts();
+        setPopularItems(products);
+      } catch (error) {
+        console.error('Error fetching popular items:', error);
+      }
+    };
+
+    if (selectedCountry) {
+      fetchPopularItems();
+    }
+  }, []); // Add selectedCountry as a dependency
+
+  useEffect(() => {
+    const fetchQuests = async () => {
+      try {
+        const response = await PostService.getPosts({ userCountry: selectedCountry });
+        setQuestRecommendations(response.data);
+      } catch (error) {
+        console.error('Error fetching quests:', error);
+      }
+    };
+
+    if (selectedCountry) {
+      fetchQuests();
+    }
+  }, [selectedCountry]);
 
   return (
     <div style={{ color: 'white' }}>
@@ -159,18 +121,14 @@ function Home() {
 
       {/* Quest Recommendations */}
       <h2 style={{ textAlign: 'center', marginTop: '60px' }}>Delivery Quest for you</h2>
-      <Grid container spacing={2} >
+      <Grid container spacing={2}>
         <Grid xs={12} md={1.5}></Grid>
         {questRecommendations.slice(0, 3).map((quest) => (
           <Grid key={quest.id} xs={12} md={3}>
-            <div style={{ backgroundColor: '#383838', padding: '10px', borderRadius: '5px', height: '300px', textAlign: 'center' }}>
-              <Typography level="body1" sx={{ color: 'white' }}>{quest.questInstructions}</Typography>
-              <Typography level="body2" sx={{ color: 'white' }}>Reward: {quest.questReward}</Typography>
-            </div>
+            <Post postData={quest} />
           </Grid>
         ))}
-        <Grid xs={12} md={1.5}>
-        </Grid>
+        <Grid xs={12} md={1.5}></Grid>
       </Grid>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
@@ -191,7 +149,7 @@ function Home() {
           <Grid key={item.id} xs={12} md={3}>
             <div style={{ backgroundColor: '#383838', padding: '10px', borderRadius: '5px', textAlign: 'center', height: '300px' }}>
               <img src={item.image} alt={item.itemName} width="50" height="50" />
-              <Typography sx={{ color: 'white' }}>{item.itemName}</Typography>
+              <Typography sx={{ color: 'white' }}>{item.name}</Typography>
               <Typography sx={{ color: 'white' }}>Price: {item.price}</Typography>
             </div>
           </Grid>

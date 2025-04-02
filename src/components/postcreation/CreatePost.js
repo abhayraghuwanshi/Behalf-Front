@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { BACKEND_API_URL } from "../../env";
 import PostService from "../../service/PostService";
+import CountrySelector from '../Country/CountrySelector';
 import { useAuth } from '../SignIn/AuthContext';
 
 const packagingOptions = [
@@ -28,7 +29,9 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
   const [questValidity, setQuestValidity] = useState(dayjs().format("YYYY-MM-DD"));
   const [questReward, setQuestReward] = useState("");
   const [locationFrom, setLocationFrom] = useState("");
+  const [locationFromDetail, setLocationFromDetail] = useState("");
   const [locationTo, setLocationTo] = useState("");
+  const [locationToDetail, setLocationToDetail] = useState("");
   const [questCurrency, setQuestCurrency] = useState("INR");
   const [questStatus, setQuestStatus] = useState("Pending");
   const [image, setImage] = useState(null);
@@ -65,6 +68,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
           }
         );
 
@@ -78,6 +82,8 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
         questReward: parseFloat(questReward),
         locationFrom,
         locationTo,
+        locationToDetail,
+        locationFromDetail,
         questCurrency,
         questStatus,
         imageUrl, // Store image URL
@@ -100,7 +106,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       '& fieldset': { borderColor: 'white' },
-      '&:hover fieldset': { borderColor: 'blue' },
+      '&:hover fieldset': { borderColor: 'purple' },
     },
     '& .MuiInputLabel-root': { color: 'white' },
     '& .MuiOutlinedInput-input': { color: 'white' },
@@ -112,7 +118,7 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
       <DialogContent>
         <TextField
           fullWidth
-          label="Quest Instructions"
+          label="Product Instructions"
           placeholder="Can you bring this product ..."
           value={questInstructions}
           onChange={(e) => setQuestInstructions(e.target.value)}
@@ -121,81 +127,112 @@ const CreatePost = ({ open, handleClose, onPostCreated }) => {
           rows={4}
           sx={inputStyles}
         />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Quest Validity"
-            value={questValidity ? dayjs(questValidity) : null}
-            onChange={(newValue) => setQuestValidity(newValue ? newValue.format("YYYY-MM-DD") : "")}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                sx: inputStyles,
-              },
-            }}
-          />
-        </LocalizationProvider>
+
         <TextField
           fullWidth
-          label="Quest Reward"
-          type="number"
-          value={questReward}
-          onChange={(e) => setQuestReward(e.target.value)}
+          multiline
+          label="Pickup Instructions"
+          placeholder="Pickup from any Nike Store, Vietnam"
+          value={locationFromDetail}
+          onChange={(e) => setLocationFromDetail(e.target.value)}
           margin="dense"
-          sx={inputStyles}
-        />
-        <TextField
-          fullWidth
-          label="Pickup location"
-          placeholder="Mumbai, India"
-          value={locationFrom}
-          onChange={(e) => setLocationFrom(e.target.value)}
-          margin="dense"
-          sx={inputStyles}
-        />
-        <TextField
-          fullWidth
-          label="Delivery location"
-          placeholder="Bangalore, India"
-          value={locationTo}
-          onChange={(e) => setLocationTo(e.target.value)}
-          margin="dense"
-          sx={inputStyles}
-        />
-        <TextField
-          fullWidth
-          label="Currency"
-          value={questCurrency}
-          onChange={(e) => setQuestCurrency(e.target.value)}
-          margin="dense"
+          rows={2}
           sx={inputStyles}
         />
 
         <TextField
-          select
           fullWidth
-          label="Packaging Options"
-          value={selectedPackaging}
-          onChange={(e) => setSelectedPackaging(e.target.value)}
-          SelectProps={{
-            MenuProps: {
-              PaperProps: {
-                style: {
-                  backgroundColor: 'black',
-                  color: 'white',
+          multiline
+          label="Delivery Instruction"
+          placeholder="Delivery in Aahika Apartment, Bangalore"
+          value={locationToDetail}
+          onChange={(e) => setLocationToDetail(e.target.value)}
+          margin="dense"
+          rows={2}
+          sx={inputStyles}
+        />
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+
+          <TextField
+            select
+            fullWidth
+            label="Packaging Options"
+            value={selectedPackaging}
+            onChange={(e) => setSelectedPackaging(e.target.value)}
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  style: {
+                    backgroundColor: 'black',
+                    color: 'white',
+                  },
                 },
               },
-            },
-          }}
-          sx={inputStyles}
-        >
-          {packagingOptions.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </TextField>
+            }}
+            sx={inputStyles}
+          >
+            {packagingOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
 
 
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Quest Validity"
+              value={questValidity ? dayjs(questValidity) : null}
+              onChange={(newValue) => setQuestValidity(newValue ? newValue.format("YYYY-MM-DD") : "")}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  sx: inputStyles,
+                },
+              }}
+            />
+          </LocalizationProvider>
+
+        </div>
+
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+
+          <TextField
+            fullWidth
+            label="Currency"
+            value={questCurrency}
+            onChange={(e) => setQuestCurrency(e.target.value)}
+            margin="dense"
+            sx={inputStyles}
+          />
+
+          <TextField
+            fullWidth
+            label="Quest Reward"
+            type="number"
+            value={questReward}
+            onChange={(e) => setQuestReward(e.target.value)}
+            margin="dense"
+            sx={inputStyles}
+          />
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }} >
+          <CountrySelector
+            selectedCountry={locationFrom}
+            handleCountryChange={(e) => setLocationFrom(e.target.value)}
+            inputStyles={inputStyles}
+            label={"From Location"}
+          />
+          <CountrySelector
+            selectedCountry={locationTo}
+            handleCountryChange={(e) => setLocationTo(e.target.value)}
+            inputStyles={inputStyles}
+            label={"To Location"}
+          />
+        </div>
 
 
         <input

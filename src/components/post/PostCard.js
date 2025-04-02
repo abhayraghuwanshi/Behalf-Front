@@ -1,14 +1,18 @@
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Avatar, Box, Card, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import Stack from '@mui/material/Stack';
 import React, { useEffect, useState } from 'react';
 import imageService from "../../service/FileService";
 import './PostList.css';
+
 
 const Post = ({ postSession, onAccept, user, postData }) => {
   const [isReferExpanded, setIsReferExpanded] = useState(false);
@@ -114,6 +118,14 @@ const Post = ({ postSession, onAccept, user, postData }) => {
         boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)"
       }
     }}>
+
+      <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', marginBottom: '10px' }}>
+        <Chip label={postData.locationTo} color="primary" />
+        <ArrowForwardIcon />
+        <Chip label={postData.locationFrom} color="success" />
+      </Stack>
+
+
       {/* Image Section */}
       <Box sx={{ textAlign: "center", marginBottom: 2 }}>
         {imageUrl ? (
@@ -135,9 +147,6 @@ const Post = ({ postSession, onAccept, user, postData }) => {
           {postData.questInstructions}
         </Typography>
 
-        <Typography variant="body2" sx={{ color: "#cccccc" }}>
-          {postData.locationFrom} ={'>'}  {postData.locationTo}
-        </Typography>
 
         <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 'bold', marginTop: 1 }}>
           Reward: {postData.questReward} {postData.questCurrency}

@@ -4,25 +4,26 @@ import { BACKEND_API_URL } from '../env';
 const API_URL = `${BACKEND_API_URL}/api/quests`;
 
 class PostService {
-  async getPosts() {
-    return axios.get(API_URL + "/fetch", {
+  async getPosts(params = {}) {
+    return axios.get(`${API_URL}/fetch`, {
+      params, // Include country or other parameters
       withCredentials: true,
       headers: {
-        'Accept': 'application/json'
-      }
+        'Accept': 'application/json',
+      },
     });
-
   }
 
-
   async createPost(post) {
-    return axios.post(API_URL + "/create", post, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',  // Add this to avoid issues
-      },
-      withCredentials: true,  // Ensure credentials (cookies/tokens) are sent
-    });
+
+    return axios.post(API_URL + "/create", post,
+      {
+        withCredentials: true,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',  // Add this to avoid issues
+        },
+      });
   }
 
 
