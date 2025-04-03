@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useCountry } from '../navbar/CountryProvider';
 import CartCheckout from './CartCheckout';
 import FloatingMenu from './FloatingMenu';
 import MyOrders from './MyOrders';
@@ -6,6 +7,7 @@ import ProductList from './ProductList';
 
 function QuestStore() {
     const [selected, setSelected] = useState('store');
+    const { selectedCountry, setSelectedCountry } = useCountry();
     // Initialize cart from local storage (if available)
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem('cart');
@@ -33,7 +35,7 @@ function QuestStore() {
     const renderContent = () => {
         switch (selected) {
             case 'store':
-                return <ProductList cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
+                return <ProductList cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} selectedCountry={selectedCountry} />;
             case 'orderlist':
                 return <CartCheckout cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
             case 'myorders':

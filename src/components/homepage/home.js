@@ -48,19 +48,31 @@ function Home() {
   };
 
   useEffect(() => {
-    const fetchPopularItems = async () => {
+    const fetchPopularItems = async (selectedCountry) => {
       try {
-        const products = await ProductService.getProducts();
-        setPopularItems(products);
+        const response = await ProductService.getProducts(selectedCountry);
+
+        // Map the API response to the required format
+        const filteredItems = response
+          .flatMap((store) =>
+            store.inventories.map((inventory) => ({
+              id: inventory.id,
+              name: `Item SKU: ${inventory.sku}`,
+              price: inventory.price,
+              image: "https://via.placeholder.com/50", // Placeholder image
+            }))
+          );
+
+        setPopularItems(filteredItems);
       } catch (error) {
-        console.error('Error fetching popular items:', error);
+        console.error("Error fetching popular items:", error);
       }
     };
 
     if (selectedCountry) {
-      fetchPopularItems();
+      fetchPopularItems(selectedCountry);
     }
-  }, []); // Add selectedCountry as a dependency
+  }, [selectedCountry]); // Add selectedCountry as a dependency
 
   useEffect(() => {
     const fetchQuests = async () => {

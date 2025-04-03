@@ -3,18 +3,37 @@ import React, { useEffect, useState } from 'react';
 import ProductService from '../../service/ProductService'; // Import the new ProductService
 import './ProductList.css'; // Ensure this file contains your desired styles
 
-function ProductList({ onAddOrUpdateCart, cart }) {
+function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
+
+
     const [products, setProducts] = useState([]);
     const [filterName, setFilterName] = useState("");
     const [filterPrice, setFilterPrice] = useState("");
 
     useEffect(() => {
-        fetchProducts();
-    }, []);
+        fetchProducts(selectedCountry);
+    }, [selectedCountry]); // Fetch products when the selected country changes
 
-    const fetchProducts = async (name, price) => {
-        const data = await ProductService.getProducts(name, price); // Use the service to fetch products
-        setProducts(data);
+    const fetchProducts = async (selectedCountry) => {
+        try {
+            const response = await ProductService.getProducts(selectedCountry);
+
+            // Map the API response to the required format
+            const formattedProducts = response
+                .flatMap((store) =>
+                    store.inventories.map((inventory) => ({
+                        id: inventory.id,
+                        name: `Item SKU: ${inventory.sku}`,
+                        price: inventory.price,
+                        inStock: inventory.quantity > 0,
+                        imageUrl: "https://via.placeholder.com/150", // Placeholder image
+                    }))
+                );
+
+            setProducts(formattedProducts);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
     };
 
     const handleFilter = () => {
