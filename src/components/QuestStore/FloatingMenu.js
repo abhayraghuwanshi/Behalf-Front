@@ -26,6 +26,12 @@ function FloatingMenu({ selected, onMenuSelect }) {
             >
                 My Orders
             </button>
+            <button
+                className={selected === 'admin' ? 'active' : ''}
+                onClick={() => handleSelection('admin')}
+            >
+                Admin
+            </button>
         </div>
     );
 }

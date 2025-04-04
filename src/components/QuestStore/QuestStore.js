@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AdminPanel from '../admin/AdminPanel';
 import { useCountry } from '../navbar/CountryProvider';
 import CartCheckout from './CartCheckout';
 import FloatingMenu from './FloatingMenu';
@@ -40,6 +41,8 @@ function QuestStore() {
                 return <CartCheckout cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
             case 'myorders':
                 return <MyOrders />;
+            case 'admin':
+                return <AdminPanel />; // Placeholder for admin panel
             default:
                 return <ProductList cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
         }
