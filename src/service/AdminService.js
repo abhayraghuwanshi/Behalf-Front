@@ -5,7 +5,7 @@ const API_BASE_URL = "http://localhost:8080/api"; // Adjust URL as needed
 const AdminService = {
     fetchStores: async (setStores, country = "") => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/stores/fetch`, { params: { country } });
+            const response = await axios.get(`${API_BASE_URL}/stores/fetch`, { params: { country }, withCredentials: true });
             setStores(response.data);
         } catch (error) {
             console.error("Error fetching stores:", error);
@@ -14,7 +14,10 @@ const AdminService = {
 
     addStore: async (storeData) => {
         try {
-            await axios.post(`${API_BASE_URL}/stores`, storeData);
+            await axios.post(`${API_BASE_URL}/stores`, storeData, {
+                withCredentials: true,
+
+            });
         } catch (error) {
             console.error("Error adding store:", error);
         }
@@ -22,7 +25,12 @@ const AdminService = {
 
     fetchUsers: async (setUsers) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/users`);
+            const response = await axios.get(`${API_BASE_URL}/users`, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                },
+            });
             setUsers(response.data);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -31,15 +39,57 @@ const AdminService = {
 
     assignUserRole: async (userId, role) => {
         try {
-            await axios.put(`${API_BASE_URL}/users/${userId}/role`, { role });
+            await axios.post(`${API_BASE_URL}/admin/users/assign-role`, { 'role': role, 'userId': userId }, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
         } catch (error) {
             console.error("Error assigning user role:", error);
         }
     },
 
+    searchUsers: async (query) => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/user/search?query=${encodeURIComponent(query)}`, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error searching users:", error);
+            return []; // Return an empty array in case of error
+        }
+    },
+
+    getUsersByRole: async (role) => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/admin/users/role/${role}`, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching users with role ${role}:`, error);
+            return []; // Return empty array to avoid crash on frontend
+        }
+    },
+
+
     fetchInventory: async (storeId, setInventory) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/inventory/${storeId}`);
+            const response = await axios.get(`${API_BASE_URL}/inventory/${storeId}`, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                },
+            });
             setInventory(response.data);
         } catch (error) {
             console.error("Error fetching inventory:", error);
@@ -48,7 +98,13 @@ const AdminService = {
 
     addInventoryItem: async (storeId, sku, quantity, price) => {
         try {
-            await axios.post(`${API_BASE_URL}/inventory`, { storeId, sku, quantity, price });
+            await axios.post(`${API_BASE_URL}/inventory`, { storeId, sku, quantity, price }, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+            });
         } catch (error) {
             console.error("Error adding inventory item:", error);
         }
