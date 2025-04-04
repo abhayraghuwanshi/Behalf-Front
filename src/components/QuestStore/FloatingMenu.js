@@ -1,33 +1,41 @@
 import React from 'react';
+import { useMenu } from '../../context/MenuContext';
 import './FloatingMenu.css';
 
-function FloatingMenu({ selected, onMenuSelect }) {
+function FloatingMenu({ onMenuSelect }) {
+    const { selectedMenu, setSelectedMenu } = useMenu();
+
     const handleSelection = (menu) => {
+        setSelectedMenu(menu);
         onMenuSelect(menu);
     };
+
+    React.useEffect(() => {
+        onMenuSelect(selectedMenu);
+    }, [selectedMenu, onMenuSelect]);
 
     return (
         <div className="floating-menu">
             <button
-                className={selected === 'store' ? 'active' : ''}
+                className={selectedMenu === 'store' ? 'active' : ''}
                 onClick={() => handleSelection('store')}
             >
                 Store
             </button>
             <button
-                className={selected === 'orderlist' ? 'active' : ''}
+                className={selectedMenu === 'orderlist' ? 'active' : ''}
                 onClick={() => handleSelection('orderlist')}
             >
                 Cart
             </button>
             <button
-                className={selected === 'myorders' ? 'active' : ''}
+                className={selectedMenu === 'myorders' ? 'active' : ''}
                 onClick={() => handleSelection('myorders')}
             >
                 My Orders
             </button>
             <button
-                className={selected === 'admin' ? 'active' : ''}
+                className={selectedMenu === 'admin' ? 'active' : ''}
                 onClick={() => handleSelection('admin')}
             >
                 Admin

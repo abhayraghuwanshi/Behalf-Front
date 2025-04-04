@@ -9,6 +9,7 @@ const AdminService = {
             setStores(response.data);
         } catch (error) {
             console.error("Error fetching stores:", error);
+            setStores([]); // Set to empty array in case of error
         }
     },
 
@@ -82,9 +83,9 @@ const AdminService = {
     },
 
 
-    fetchInventory: async (storeId, setInventory) => {
+    fetchInventory: async (setInventory) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/inventory/${storeId}`, {
+            const response = await axios.get(`${API_BASE_URL}/inventory`, {
                 withCredentials: true,
                 headers: {
                     "Accept": "application/json",
@@ -96,9 +97,9 @@ const AdminService = {
         }
     },
 
-    addInventoryItem: async (storeId, sku, quantity, price) => {
+    addInventoryItem: async (payload) => {
         try {
-            await axios.post(`${API_BASE_URL}/inventory`, { storeId, sku, quantity, price }, {
+            await axios.post(`${API_BASE_URL}/inventory`, payload, {
                 withCredentials: true,
                 headers: {
                     "Accept": "application/json",

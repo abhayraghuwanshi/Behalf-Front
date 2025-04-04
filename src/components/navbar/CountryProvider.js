@@ -17,7 +17,6 @@ export function CountryProvider({ children }) {
                 if (!response.ok) throw new Error('Failed to fetch country data');
 
                 const data = await response.json();
-                console.log('Detected Country Data:', data);
 
                 const countryName = data?.country_name;
 

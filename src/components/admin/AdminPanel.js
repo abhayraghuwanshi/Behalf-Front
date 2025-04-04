@@ -1,20 +1,21 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
+import { useMenu } from "../../context/MenuContext";
 import InventoryManagement from "./InventoryManagement";
 import StoreManagement from "./StoreManagement";
 import UserManagement from "./UserManagement";
 
 export default function AdminPanel() {
-    const [activeTab, setActiveTab] = useState(0);
+    const { adminTab, setAdminTab } = useMenu();
 
     const handleTabChange = (event, newValue) => {
-        setActiveTab(newValue);
+        setAdminTab(newValue);
     };
 
     return (
         <div style={{ padding: "24px", backgroundColor: "black", color: "white", minHeight: "100vh" }}>
             <Tabs
-                value={activeTab}
+                value={adminTab}
                 onChange={handleTabChange}
                 textColor="inherit"
                 indicatorColor="primary"
@@ -25,13 +26,13 @@ export default function AdminPanel() {
                 <Tab label="Inventory Management" sx={{ color: "white" }} />
             </Tabs>
 
-            <Box hidden={activeTab !== 0}>
+            <Box hidden={adminTab !== 0}>
                 <StoreManagement />
             </Box>
-            <Box hidden={activeTab !== 1}>
+            <Box hidden={adminTab !== 1}>
                 <UserManagement />
             </Box>
-            <Box hidden={activeTab !== 2}>
+            <Box hidden={adminTab !== 2}>
                 <InventoryManagement />
             </Box>
         </div>

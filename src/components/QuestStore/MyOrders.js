@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardActions, CardContent, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BACKEND_API_URL } from './../../env.js';
 
 function MyOrders() {
     const [myOrders, setMyOrders] = useState([]);
@@ -12,8 +11,8 @@ function MyOrders() {
     }, []);
 
     const fetchMyOrders = async () => {
-        const response = await fetch(`${BACKEND_API_URL}/api/store/myorders?userId=${userId}`);
-        const data = await response.json();
+        // const response = await fetch(`${BACKEND_API_URL}/api/store/myorders?userId=${userId}`);
+        const data = [];
         setMyOrders(data);
     };
 
