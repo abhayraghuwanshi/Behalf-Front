@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import ProductService from '../../service/ProductService'; // Import the new ProductService
 
 function MyOrders() {
     const [myOrders, setMyOrders] = useState([]);
@@ -11,9 +12,8 @@ function MyOrders() {
     }, []);
 
     const fetchMyOrders = async () => {
-        // const response = await fetch(`${BACKEND_API_URL}/api/store/myorders?userId=${userId}`);
-        const data = [];
-        setMyOrders(data);
+        const data = await ProductService.getMyOrders(userId);
+        setMyOrders(data || []);
     };
 
     const handleViewDetails = (order) => {

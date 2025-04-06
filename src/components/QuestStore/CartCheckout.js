@@ -10,8 +10,8 @@ import {
     Typography
 } from '@mui/material';
 import React, { useState } from 'react';
+import ProductService from '../../service/ProductService'; // Import the new ProductService
 import { useAuth } from '../SignIn/AuthContext';
-import { BACKEND_API_URL } from './../../env.js';
 
 function CartCheckout({ cart, onAddOrUpdateCart }) {
     const { user } = useAuth();
@@ -31,7 +31,7 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
             alert('Address is required.');
             return;
         }
-        // Construct checkout data for multiple items
+
         const checkoutData = {
             userId: user.id,
             address,
@@ -39,12 +39,7 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
             items: cart.map(item => ({ id: item.id, quantity: item.quantity }))
         };
 
-        const response = await fetch(BACKEND_API_URL + '/api/store/checkout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(checkoutData)
-        });
-        const data = await response.json();
+        const data = await ProductService.checkoutOrder(checkoutData);
         setResponseOrder(data);
     };
 

@@ -2,7 +2,6 @@ import { Box, Button, Dialog, DialogContent, List, ListItem, TextField, Typograp
 import React, { useEffect, useState } from "react";
 import TravelRequestService from "../../service/TravelRequestService";
 import { useAuth } from "../SignIn/AuthContext";
-import CommentSection from "./CommentSection";
 import TravelRequestForm from "./TravelRequestForm";
 
 const TravelRequestPage = () => {
@@ -25,48 +24,6 @@ const TravelRequestPage = () => {
         fetchRequests();
     }, []);
 
-    const fetchComments = async (requestId, keepOpen = false) => {
-        const comments = await TravelRequestService.getCommentsByRequestId(requestId);
-        setRequests((prevRequests) =>
-            prevRequests.map((req) =>
-                req.id === requestId
-                    ? { ...req, comments, showComments: keepOpen ? true : !req.showComments }
-                    : req
-            )
-        );
-    };
-
-    const addComment = async (requestId, text) => {
-        if (!text.trim()) return;
-
-        if (!user || !user.firstName) {
-            console.error("User not found! Cannot add comment.");
-            return;
-        }
-
-        try {
-            await TravelRequestService.addComment(requestId, text, user.firstName);
-            await fetchComments(requestId, true);
-        } catch (error) {
-            console.error("Failed to add comment:", error);
-        }
-    };
-
-    const addReply = async (requestId, commentId, text) => {
-        if (!text.trim()) return;
-
-        if (!user || !user.firstName) {
-            console.error("User not found! Cannot add reply.");
-            return;
-        }
-
-        try {
-            await TravelRequestService.replyToComment(commentId, text, user.firstName);
-            await fetchComments(requestId, true);
-        } catch (error) {
-            console.error("Failed to add reply:", error);
-        }
-    };
 
     const handleTravelCreation = async (payload) => {
         try {
@@ -167,31 +124,6 @@ const TravelRequestPage = () => {
                                     </Box>
                                 </Box>
                             </Box>
-
-                            {/* Toggle Comments Button */}
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginTop: "10px", }}>
-                                <Button
-                                    size="small"
-                                    sx={{ marginTop: "15px", color: "white", backgroundColor: '#343434', left: 0, "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                                    onClick={() => fetchComments(request.id)}
-                                >
-                                    {request.showComments ? "Hide Comments" : "Comments"}
-                                </Button>
-                            </div>
-
-                            {/* Comment Section */}
-                            {
-                                request.showComments && (
-                                    <Box sx={{ marginTop: "15px", width: "100%" }}>
-                                        <CommentSection
-                                            comments={request.comments || []}
-                                            addComment={(text) => addComment(request.id, text)}
-                                            addReply={(commentId, text) => addReply(request.id, commentId, text)}
-                                            requestCreatedAt={request.createdAt}
-                                        />
-                                    </Box>
-                                )
-                            }
 
                         </ListItem>
                     ))}
