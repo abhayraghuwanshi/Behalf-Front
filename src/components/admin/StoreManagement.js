@@ -66,15 +66,18 @@ export default function StoreManagement() {
 
     return (
         <div>
-            <Typography variant="h6" sx={{ color: "white", marginTop: "16px" }}>Admin Store</Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleDialogOpen}
-                style={{ marginTop: "12px" }}
-            >
-                Create Store
-            </Button>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
+                <Typography variant="h6" sx={{ color: "white" }}>Admin Store</Typography>
+
+                <Button
+                    variant="outlined"
+                    sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                    onClick={handleDialogOpen}
+                >
+                    Create Store
+                </Button>
+            </div>
 
             {/* Dialog for creating a store */}
             <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">

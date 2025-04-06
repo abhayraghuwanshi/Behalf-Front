@@ -62,13 +62,18 @@ export default function UserManagement() {
 
     return (
         <div style={{ backgroundColor: "black", padding: "16px", minHeight: "100vh" }}>
-            <Typography variant="h6" sx={{ color: "white", marginBottom: "16px" }}>
-                Manage Users
-            </Typography>
 
-            <Button variant="contained" color="primary" onClick={() => setOpen(true)} sx={{ marginBottom: "24px" }}>
-                Assign Role to User
-            </Button>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
+                <Typography variant="h6" sx={{ color: "white" }}>Manage Users</Typography>
+
+                <Button
+                    variant="outlined"
+                    sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                    onClick={() => setOpen(true)}
+                >
+                    Assign Role to User
+                </Button>
+            </div>
 
             <Dialog
                 open={open}
@@ -144,10 +149,6 @@ export default function UserManagement() {
                     <Button onClick={assignUserRole} variant="contained" color="primary">Assign</Button>
                 </DialogActions>
             </Dialog>
-
-            <Typography variant="subtitle1" sx={{ color: "white", marginBottom: "8px" }}>
-                Users with Admin / Manager Role
-            </Typography>
 
             <TableContainer component={Paper} sx={{ backgroundColor: "#111" }}>
                 <Table>

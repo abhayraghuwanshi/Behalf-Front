@@ -11,6 +11,7 @@ export default function InventoryManagement() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [newStore, setNewStore] = useState("");
     const [stores, setStores] = useState([]);
+    const [newImages, setNewImages] = useState([]);
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -28,23 +29,35 @@ export default function InventoryManagement() {
         fetchInitialData();
     }, []);
 
+    const handleImageUpload = (e) => {
+        const files = Array.from(e.target.files);
+        setNewImages((prevImages) => [...prevImages, ...files]);
+    };
+
+    const removeImage = (index) => {
+        setNewImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+
     const addInventoryItem = async () => {
-        if (!newStore || !newSku || !newQuantity || !newPrice) {
-            alert("Please fill in all fields before submitting.");
+        if (!newStore || !newSku || !newQuantity || !newPrice || newImages.length === 0) {
+            alert("Please fill in all fields and upload at least one image before submitting.");
             return;
         }
 
         try {
             const storeObject = stores.find((store) => store.id === parseInt(newStore, 10));
-            const payload = {
-                store: storeObject,
-                sku: newSku,
-                quantity: newQuantity,
-                price: newPrice,
-            };
-            console.log("Payload for adding inventory item:", payload);
+            const formData = new FormData();
+            formData.append("store", JSON.stringify(storeObject));
+            formData.append("sku", newSku);
+            formData.append("quantity", newQuantity);
+            formData.append("price", newPrice);
+            newImages.forEach((image, index) => {
+                formData.append(`images[${index}]`, image);
+            });
 
-            await AdminService.addInventoryItem(payload);
+            console.log("Payload for adding inventory item:", formData);
+
+            await AdminService.addInventoryItem(formData);
             handleDialogClose();
         } catch (error) {
             console.error("Error adding inventory item:", error);
@@ -61,20 +74,22 @@ export default function InventoryManagement() {
         setNewSku("");
         setNewQuantity("");
         setNewPrice("");
+        setNewImages([]);
     };
 
     return (
         <div>
-            <Typography variant="h6" sx={{ color: "white", marginTop: "16px" }}>Inventory Management</Typography>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
+                <Typography variant="h6" sx={{ color: "white" }}>Inventory Management</Typography>
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleDialogOpen}
-                style={{ marginBottom: "16px" }}
-            >
-                Add Inventory Item
-            </Button>
+                <Button
+                    variant="outlined"
+                    sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                    onClick={handleDialogOpen}
+                >
+                    Add Inventory Item
+                </Button>
+            </div>
 
             {/* Dialog for adding inventory item */}
             <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
@@ -120,6 +135,38 @@ export default function InventoryManagement() {
                         onChange={(e) => setNewPrice(e.target.value)}
                         style={{ marginBottom: "12px" }}
                     />
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        style={{ marginBottom: "12px" }}
+                    />
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
+                        {newImages.map((image, index) => (
+                            <div key={index} style={{ position: "relative" }}>
+                                <img
+                                    src={URL.createObjectURL(image)}
+                                    alt={`Preview ${index}`}
+                                    style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                                />
+                                <Button
+                                    size="small"
+                                    color="secondary"
+                                    onClick={() => removeImage(index)}
+                                    style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        right: 0,
+                                        minWidth: "24px",
+                                        padding: "4px",
+                                    }}
+                                >
+                                    X
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose} color="secondary">
