@@ -78,7 +78,9 @@ function Home() {
     const fetchQuests = async () => {
       try {
         const response = await PostService.getPosts({ userCountry: selectedCountry });
-        setQuestRecommendations(response.data);
+        if (response.status === 200) {
+          setQuestRecommendations(response.data.content);
+        }
       } catch (error) {
         console.error('Error fetching quests:', error);
       }

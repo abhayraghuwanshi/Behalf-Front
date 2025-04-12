@@ -1,35 +1,45 @@
-import { Box, Button, Dialog, DialogContent, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  Pagination,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
+import { useCountry } from "../navbar/CountryProvider";
 import CreatePost from "../postcreation/CreatePost";
 import { useAuth } from "../SignIn/AuthContext";
 import PostCard from "./PostCard";
 import FilterControls from "./PostFilter";
 import "./PostList.css";
 
+const PAGE_SIZE = 30;
+
 const PostList = () => {
   const { user } = useAuth();
+  const { selectedCountry } = useCountry();
+
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isCreatingPost, setIsCreatingPost] = useState(false);
+
   const [filters, setFilters] = useState({
     minPrice: 0,
     maxPrice: 10000,
     dateFilter: "",
-    categoryFilter: "",
+    categoryFilter: "", // Placeholder if needed later
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [isCreatingPost, setIsCreatingPost] = useState(false);
-
-  const dropDownOptions = [
-    "PICKUP_DELIVERY",
-  ];
 
   const handleAccept = async (postSession) => {
     if (!user?.id) {
       alert("Sign in to share");
       return;
     }
-    console.log(postSession);
     if (!postSession.questCreatorId) {
       alert("Error: Missing required fields");
       return;
@@ -46,36 +56,37 @@ const PostList = () => {
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (page) => {
     try {
-      const response = await PostService.getPosts();
+      const response = await PostService.getPosts({
+        userCountry: selectedCountry,
+        page,
+        pageSize: PAGE_SIZE,
+      });
       if (response.status === 200) {
-        setPosts(response.data);
-        setFilteredPosts(response.data);
+        setPosts(response.data.content);
+        setFilteredPosts(response.data.content);
+        setTotalPages(response.data.totalPages);
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
 
-
-
   const applyFilters = () => {
-    const filtered = posts.filter(
-      (post) =>
-        post.questReward >= filters.minPrice &&
-        post.questReward <= filters.maxPrice &&
-        (!filters.dateFilter || new Date(post.date) >= new Date(filters.dateFilter)) &&
-        (!filters.categoryFilter || post.questLabel === filters.categoryFilter) &&
-        (post.questInstructions.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.id.toString().includes(searchTerm))
+    const filtered = posts.filter((post) =>
+      post.questReward >= filters.minPrice &&
+      post.questReward <= filters.maxPrice &&
+      (!filters.dateFilter || new Date(post.questValidity) >= new Date(filters.dateFilter)) &&
+      (post.questInstructions?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.id.toString().includes(searchTerm))
     );
     setFilteredPosts(filtered);
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    fetchPosts(currentPage - 1); // API is likely 0-indexed
+  }, [currentPage, selectedCountry]);
 
   useEffect(() => {
     applyFilters();
@@ -83,7 +94,7 @@ const PostList = () => {
 
   return (
     <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20px', color: 'white', marginBottom: '40px' }}>
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "20px" }}>
           <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
           <Button
@@ -94,6 +105,8 @@ const PostList = () => {
             Create Request
           </Button>
         </Box>
+
+        {/* Filter Controls */}
         <FilterControls
           minPrice={filters.minPrice}
           maxPrice={filters.maxPrice}
@@ -104,6 +117,8 @@ const PostList = () => {
           setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
           setSearchTerm={setSearchTerm}
         />
+
+        {/* Posts Grid */}
         <div className="post-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', marginTop: '30px' }}>
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) =>
@@ -124,7 +139,26 @@ const PostList = () => {
             <p>No posts found.</p>
           )}
         </div>
+
+        {/* Pagination */}
+        <Box mt={4}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, value) => setCurrentPage(value)}
+            color="primary"
+            sx={{
+              '& .MuiPaginationItem-root': {
+                color: 'white',
+              },
+              '& .Mui-selected': {
+                backgroundColor: '#90caf9 !important',
+              },
+            }}
+          />
+        </Box>
       </Box>
+
       {/* Dialog for Delivery Quest Creation */}
       <Dialog open={isCreatingPost} onClose={() => setIsCreatingPost(false)} fullWidth maxWidth="sm">
         <DialogContent>

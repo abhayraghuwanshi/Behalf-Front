@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMenu } from '../../context/MenuContext';
 import './FloatingMenu.css';
 
-function FloatingMenu({ onMenuSelect }) {
+function FloatingMenu({ onMenuSelect, isAdmin }) {
     const { selectedMenu, setSelectedMenu } = useMenu();
 
     const handleSelection = (menu) => {
@@ -10,7 +10,7 @@ function FloatingMenu({ onMenuSelect }) {
         onMenuSelect(menu);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         onMenuSelect(selectedMenu);
     }, [selectedMenu, onMenuSelect]);
 
@@ -34,12 +34,14 @@ function FloatingMenu({ onMenuSelect }) {
             >
                 My Orders
             </button>
-            <button
-                className={selectedMenu === 'admin' ? 'active' : ''}
-                onClick={() => handleSelection('admin')}
-            >
-                Admin
-            </button>
+            {isAdmin && (
+                <button
+                    className={selectedMenu === 'admin' ? 'active' : ''}
+                    onClick={() => handleSelection('admin')}
+                >
+                    Admin
+                </button>
+            )}
         </div>
     );
 }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import AdminService from '../../service/AdminService';
 import AdminPanel from '../admin/AdminPanel';
 import { useCountry } from '../navbar/CountryProvider';
+import { useAuth } from '../SignIn/AuthContext'; // Assuming AuthContext provides userId
 import CartCheckout from './CartCheckout';
 import FloatingMenu from './FloatingMenu';
 import MyOrders from './MyOrders';
@@ -9,11 +11,29 @@ import ProductList from './ProductList';
 function QuestStore() {
     const [selected, setSelected] = useState('store');
     const { selectedCountry, setSelectedCountry } = useCountry();
+    const { userId } = useAuth(); // Get userId from AuthContext
+    const [isAdmin, setIsAdmin] = useState(false);
+
     // Initialize cart from local storage (if available)
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem('cart');
         return savedCart ? JSON.parse(savedCart) : [];
     });
+
+    // Check if the user is an admin or manager when the component mounts
+    useEffect(() => {
+        const checkAdminStatus = async () => {
+            if (userId) {
+                try {
+                    const result = await AdminService.isAdminOrManager(userId);
+                    setIsAdmin(result);
+                } catch (error) {
+                    console.error("Error checking admin status:", error);
+                }
+            }
+        };
+        checkAdminStatus();
+    }, [isAdmin, userId]);
 
     // Update local storage whenever the cart changes
     useEffect(() => {
@@ -51,7 +71,7 @@ function QuestStore() {
     return (
         <div style={{ marginTop: '60px' }}>
             <div>{renderContent()}</div>
-            <FloatingMenu selected={selected} onMenuSelect={setSelected} />
+            <FloatingMenu selected={selected} onMenuSelect={setSelected} isAdmin={true} />
         </div>
     );
 }

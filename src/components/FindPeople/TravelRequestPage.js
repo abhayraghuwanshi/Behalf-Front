@@ -2,6 +2,7 @@ import { Box, Button, Dialog, DialogContent, List, ListItem, TextField, Typograp
 import React, { useEffect, useState } from "react";
 import TravelRequestService from "../../service/TravelRequestService";
 import { useAuth } from "../SignIn/AuthContext";
+import ConnectGmailButton from "../UserProfile/FetchEmail";
 import TravelRequestForm from "./TravelRequestForm";
 
 const TravelRequestPage = () => {
@@ -72,6 +73,7 @@ const TravelRequestPage = () => {
                     >
                         Auto Import (Gmail)
                     </Button>
+                    <ConnectGmailButton />
                 </Box>
                 {/* Filters */}
                 <Box sx={{ display: "flex", gap: 2, marginBottom: "20px" }}>
