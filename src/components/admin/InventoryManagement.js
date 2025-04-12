@@ -1,204 +1,235 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    MenuItem,
+    Paper,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
+} from "@mui/material";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminService from "../../service/AdminService";
+import * as ProductService from "../../service/ProductService1";
+
+const BASE_URL = "http://localhost:8080/api";
 
 export default function InventoryManagement() {
-    const [selectedStore, setSelectedStore] = useState(null);
-    const [inventory, setInventory] = useState([]);
-    const [newSku, setNewSku] = useState("");
-    const [newQuantity, setNewQuantity] = useState("");
-    const [newPrice, setNewPrice] = useState("");
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [newStore, setNewStore] = useState("");
     const [stores, setStores] = useState([]);
-    const [newImages, setNewImages] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [inventory, setInventory] = useState([]);
+    const [selectedStore, setSelectedStore] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const [form, setForm] = useState({
+        storeId: "",
+        productId: "",
+        quantity: "",
+        price: "",
+        locationWithinStore: "",
+        reorderLevel: "",
+        reorderQuantity: "",
+    });
 
     useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                const [storesResponse, inventoryResponse] = await Promise.all([
-                    AdminService.fetchStores(setStores),
-                    AdminService.fetchInventory(setInventory),
-                ]);
-
-            } catch (error) {
-                console.error("Error fetching initial data:", error);
-            }
-        };
-
-        fetchInitialData();
+        fetchStores();
+        fetchProducts();
     }, []);
 
-    const handleImageUpload = (e) => {
-        const files = Array.from(e.target.files);
-        setNewImages((prevImages) => [...prevImages, ...files]);
-    };
-
-    const removeImage = (index) => {
-        setNewImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    };
-
-    const addInventoryItem = async () => {
-        if (!newStore || !newSku || !newQuantity || !newPrice || newImages.length === 0) {
-            alert("Please fill in all fields and upload at least one image before submitting.");
-            return;
+    useEffect(() => {
+        if (selectedStore) {
+            fetchInventory(selectedStore);
         }
+    }, [selectedStore]);
 
+    const fetchStores = async () => {
+        const response = await AdminService.fetchStores();
+        setStores(response.data || []);
+    };
+
+    const fetchProducts = async () => {
+        const data = await ProductService.getProducts();
+        setProducts(data || []);
+    };
+
+    const fetchInventory = async (storeId) => {
         try {
-            const storeObject = stores.find((store) => store.id === parseInt(newStore, 10));
-            const formData = new FormData();
-            formData.append("store", JSON.stringify(storeObject));
-            formData.append("sku", newSku);
-            formData.append("quantity", newQuantity);
-            formData.append("price", newPrice);
-            newImages.forEach((image, index) => {
-                formData.append(`images[${index}]`, image);
-            });
-
-            console.log("Payload for adding inventory item:", formData);
-
-            await AdminService.addInventoryItem(formData);
-            handleDialogClose();
-        } catch (error) {
-            console.error("Error adding inventory item:", error);
-            alert("Failed to add inventory item. Please try again.");
+            const res = await axios.get(`${BASE_URL}/inventory/store/${storeId}`);
+            setInventory(res.data || []);
+        } catch (err) {
+            console.error("Failed to fetch inventory:", err);
         }
-    };
-
-    const handleDialogOpen = () => {
-        setIsDialogOpen(true);
     };
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
-        setNewSku("");
-        setNewQuantity("");
-        setNewPrice("");
-        setNewImages([]);
+        setForm({
+            storeId: "",
+            productId: "",
+            quantity: "",
+            price: "",
+            locationWithinStore: "",
+            reorderLevel: "",
+            reorderQuantity: "",
+        });
+    };
+
+    const handleAddInventory = async () => {
+        try {
+            const payload = {
+                store: stores.find((s) => s.id.toString() === form.storeId),
+                product: products.find((p) => p.id.toString() === form.productId),
+                quantity: Number(form.quantity),
+                price: Number(form.price),
+                locationWithinStore: form.locationWithinStore,
+                reorderLevel: Number(form.reorderLevel),
+                reorderQuantity: Number(form.reorderQuantity),
+            };
+
+            await AdminService.addInventoryItem(payload);
+
+            handleDialogClose();
+            fetchInventory(selectedStore);
+        } catch (err) {
+            console.error("Failed to add inventory item:", err);
+            alert("Error while adding inventory item.");
+        }
     };
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
-                <Typography variant="h6" sx={{ color: "white" }}>Inventory Management</Typography>
-
-                <Button
-                    variant="outlined"
-                    sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                    onClick={handleDialogOpen}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "16px 0" }}>
+                <Typography variant="h6" sx={{ color: "white" }}>
+                    Inventory Management
+                </Typography>
+                <Select
+                    value={selectedStore}
+                    onChange={(e) => setSelectedStore(e.target.value)}
+                    sx={{ backgroundColor: "#fff", minWidth: 200 }}
                 >
+                    {stores.map((store) => (
+                        <MenuItem key={store.id} value={store.id.toString()}>
+                            {store.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <Button variant="outlined" onClick={() => setIsDialogOpen(true)}>
                     Add Inventory Item
                 </Button>
             </div>
 
-            {/* Dialog for adding inventory item */}
             <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
                 <DialogTitle>Add Inventory Item</DialogTitle>
                 <DialogContent>
                     <Select
                         fullWidth
-                        value={newStore}
-                        onChange={(e) => setNewStore(e.target.value)}
-                        style={{ backgroundColor: "#222", color: "#fff", marginBottom: "12px" }}
-                        native
+                        value={form.storeId}
+                        onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+                        displayEmpty
+                        sx={{ mb: 2 }}
                     >
-                        <option value="" disabled>
-                            Select a Store
-                        </option>
+                        <MenuItem value="" disabled>
+                            Select Store
+                        </MenuItem>
                         {stores.map((store) => (
-                            <option key={store.id} value={store.id} style={{ backgroundColor: "#222", color: "#fff" }}>
+                            <MenuItem key={store.id} value={store.id.toString()}>
                                 {store.name}
-                            </option>
+                            </MenuItem>
                         ))}
                     </Select>
-                    <TextField
-                        label="SKU"
-                        variant="outlined"
+
+                    <Select
                         fullWidth
-                        value={newSku}
-                        onChange={(e) => setNewSku(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
+                        value={form.productId}
+                        onChange={(e) => setForm({ ...form, productId: e.target.value })}
+                        displayEmpty
+                        sx={{ mb: 2 }}
+                    >
+                        <MenuItem value="" disabled>
+                            Select Product
+                        </MenuItem>
+                        {products.map((prod) => (
+                            <MenuItem key={prod.id} value={prod.id.toString()}>
+                                {prod.name} ({prod.sku})
+                            </MenuItem>
+                        ))}
+                    </Select>
+
                     <TextField
                         label="Quantity"
-                        variant="outlined"
+                        type="number"
                         fullWidth
-                        value={newQuantity}
-                        onChange={(e) => setNewQuantity(e.target.value)}
-                        style={{ marginBottom: "12px" }}
+                        value={form.quantity}
+                        onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                        sx={{ mb: 2 }}
                     />
                     <TextField
                         label="Price"
-                        variant="outlined"
+                        type="number"
                         fullWidth
-                        value={newPrice}
-                        onChange={(e) => setNewPrice(e.target.value)}
-                        style={{ marginBottom: "12px" }}
+                        value={form.price}
+                        onChange={(e) => setForm({ ...form, price: e.target.value })}
+                        sx={{ mb: 2 }}
                     />
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        style={{ marginBottom: "12px" }}
+                    <TextField
+                        label="Location in Store"
+                        fullWidth
+                        value={form.locationWithinStore}
+                        onChange={(e) => setForm({ ...form, locationWithinStore: e.target.value })}
+                        sx={{ mb: 2 }}
                     />
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "12px" }}>
-                        {newImages.map((image, index) => (
-                            <div key={index} style={{ position: "relative" }}>
-                                <img
-                                    src={URL.createObjectURL(image)}
-                                    alt={`Preview ${index}`}
-                                    style={{ width: "100px", height: "100px", objectFit: "cover" }}
-                                />
-                                <Button
-                                    size="small"
-                                    color="secondary"
-                                    onClick={() => removeImage(index)}
-                                    style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        right: 0,
-                                        minWidth: "24px",
-                                        padding: "4px",
-                                    }}
-                                >
-                                    X
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
+                    <TextField
+                        label="Reorder Level"
+                        type="number"
+                        fullWidth
+                        value={form.reorderLevel}
+                        onChange={(e) => setForm({ ...form, reorderLevel: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        label="Reorder Quantity"
+                        type="number"
+                        fullWidth
+                        value={form.reorderQuantity}
+                        onChange={(e) => setForm({ ...form, reorderQuantity: e.target.value })}
+                        sx={{ mb: 2 }}
+                    />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDialogClose} color="secondary">
-                        Close
-                    </Button>
-                    <Button onClick={addInventoryItem} color="primary" variant="contained">
+                    <Button onClick={handleDialogClose}>Cancel</Button>
+                    <Button onClick={handleAddInventory} variant="contained" color="primary">
                         Save
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            <Paper style={{ padding: "16px", backgroundColor: "#333" }}>
+            <Paper style={{ padding: 16, backgroundColor: "#333" }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell style={{ color: "white" }}>Store</TableCell>
-                            <TableCell style={{ color: "white" }}>SKU</TableCell>
+                            <TableCell style={{ color: "white" }}>Product</TableCell>
                             <TableCell style={{ color: "white" }}>Quantity</TableCell>
                             <TableCell style={{ color: "white" }}>Price</TableCell>
-                            <TableCell style={{ color: "white" }}>Actions</TableCell>
+                            <TableCell style={{ color: "white" }}>Reorder Level</TableCell>
+                            <TableCell style={{ color: "white" }}>Reorder Quantity</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {inventory.map((item) => (
                             <TableRow key={item.id}>
-                                <TableCell>helo</TableCell>
-                                <TableCell>{item.sku}</TableCell>
-                                <TableCell>{item.quantity}</TableCell>
-                                <TableCell>{item.price}</TableCell>
-                                <TableCell>
-                                    {/* Add edit/delete buttons */}
-                                </TableCell>
+                                <TableCell style={{ color: "white" }}>{item.product?.name}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item.quantity}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item.price}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item.reorderLevel}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item.reorderQuantity}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

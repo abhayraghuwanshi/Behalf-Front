@@ -3,13 +3,13 @@ import axios from "axios";
 const API_BASE_URL = "http://localhost:8080/api"; // Adjust URL as needed
 
 const AdminService = {
-    fetchStores: async (setStores, country = "") => {
+    fetchStores: async (country = "") => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/stores/fetch`, { params: { country }, withCredentials: true });
-            setStores(response.data);
+            const response = await axios.get(`${API_BASE_URL}/stores`, { params: { country }, withCredentials: true });
+            return response.data
         } catch (error) {
             console.error("Error fetching stores:", error);
-            setStores([]); // Set to empty array in case of error
+            return []// Set to empty array in case of error
         }
     },
 
@@ -84,7 +84,7 @@ const AdminService = {
 
     fetchInventory: async (setInventory) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/inventory`, {
+            const response = await axios.get(`${API_BASE_URL}/inventory/by-product`, {
                 withCredentials: true,
                 headers: {
                     "Accept": "application/json",

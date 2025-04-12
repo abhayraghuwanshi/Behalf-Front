@@ -5,7 +5,12 @@ const BASE_URL = "http://localhost:8080/api/discounts";
 
 export const getDiscounts = async () => {
     try {
-        const response = await axios.get(BASE_URL);
+        const response = await axios.get(BASE_URL, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return response.data;
     } catch (err) {
         console.error("Failed to fetch discounts:", err);
@@ -15,7 +20,12 @@ export const getDiscounts = async () => {
 
 export const getDiscount = async (id) => {
     try {
-        const response = await axios.get(`${BASE_URL}/${id}`);
+        const response = await axios.get(`${BASE_URL}/${id}`, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return response.data;
     } catch (err) {
         console.error("Failed to fetch discount:", err);
@@ -25,7 +35,12 @@ export const getDiscount = async (id) => {
 
 export const createDiscount = async (data) => {
     try {
-        const response = await axios.post(BASE_URL, data);
+        const response = await axios.post(BASE_URL, data, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return response.data;
     } catch (err) {
         console.error("Failed to create discount:", err);
@@ -35,7 +50,12 @@ export const createDiscount = async (data) => {
 
 export const updateDiscount = async (id, data) => {
     try {
-        const response = await axios.put(`${BASE_URL}/${id}`, data);
+        const response = await axios.put(`${BASE_URL}/${id}`, data, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return response.data;
     } catch (err) {
         console.error("Failed to update discount:", err);
@@ -45,7 +65,12 @@ export const updateDiscount = async (id, data) => {
 
 export const deleteDiscount = async (id) => {
     try {
-        await axios.delete(`${BASE_URL}/${id}`);
+        await axios.delete(`${BASE_URL}/${id}`, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return true;
     } catch (err) {
         console.error("Failed to delete discount:", err);

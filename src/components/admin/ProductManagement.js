@@ -1,4 +1,3 @@
-// components/ProductPage.jsx
 import {
     Button,
     Dialog,
@@ -13,12 +12,18 @@ import {
     TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+
 import * as productService from "../../service/ProductService1";
 
 function ProductManagementPage() {
     const [products, setProducts] = useState([]);
     const [open, setOpen] = useState(false);
-    const [form, setForm] = useState({ name: "", sku: "", description: "" });
+    const [form, setForm] = useState({
+        name: "",
+        sku: "",
+        description: "",
+        images: [],
+    });
 
     useEffect(() => {
         fetchProducts();
@@ -26,19 +31,31 @@ function ProductManagementPage() {
 
     const fetchProducts = async () => {
         const res = await productService.getProducts();
-        setProducts(res.data);
+        setProducts(res || []);
+        console.log("Products fetched:", res.data);
     };
 
     const handleCreate = async () => {
-        await productService.createProduct(form);
-        fetchProducts();
-        setOpen(false);
+        try {
+            await productService.createProduct(form);
+            fetchProducts();
+            setOpen(false);
+            setForm({
+                name: "",
+                sku: "",
+                description: "",
+                images: [],
+            });
+        } catch (error) {
+            console.error("Product creation failed:", error);
+            alert("Failed to create product.");
+        }
     };
 
     return (
         <div style={{ padding: 20 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <h2>Products</h2>
+                <h2 style={{ color: "white" }}>Products</h2>
                 <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
                     Create Product
                 </Button>
@@ -47,28 +64,36 @@ function ProductManagementPage() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>SKU</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell>Operations</TableCell>
+                        <TableCell style={{ color: "white" }}>Name</TableCell>
+                        <TableCell style={{ color: "white" }}>SKU</TableCell>
+                        <TableCell style={{ color: "white" }}>Description</TableCell>
+                        <TableCell style={{ color: "white" }}>Operations</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {products.map((prod) => (
-                        <TableRow key={prod.id}>
-                            <TableCell>{prod.name}</TableCell>
-                            <TableCell>{prod.sku}</TableCell>
-                            <TableCell>{prod.description}</TableCell>
-                            <TableCell>
-                                {/* You can add edit/delete buttons here */}
+                    {products && products.length > 0 ? (
+                        products.map((prod) => (
+                            <TableRow key={prod.id}>
+                                <TableCell style={{ color: "white" }}>{prod.name}</TableCell>
+                                <TableCell style={{ color: "white" }}>{prod.sku}</TableCell>
+                                <TableCell style={{ color: "white" }}>{prod.description}</TableCell>
+                                <TableCell style={{ color: "white" }}>
+                                    {/* Add edit/delete buttons here if needed */}
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} align="center" style={{ color: "white" }}>
+                                No products available
                             </TableCell>
                         </TableRow>
-                    ))}
+                    )}
                 </TableBody>
             </Table>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Create Product</DialogTitle>
+                <DialogTitle style={{ color: "white" }}>Create Product</DialogTitle>
                 <DialogContent>
                     <TextField
                         margin="dense"
@@ -91,7 +116,47 @@ function ProductManagementPage() {
                         value={form.description}
                         onChange={(e) => setForm({ ...form, description: e.target.value })}
                     />
-                    <Button variant="contained" onClick={handleCreate} fullWidth sx={{ mt: 2 }}>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) =>
+                            setForm({ ...form, images: Array.from(e.target.files) })
+                        }
+                        style={{ marginTop: 16 }}
+                    />
+
+                    {form.images.length > 0 && (
+                        <div style={{ marginTop: 10 }}>
+                            <p style={{ color: "white" }}>Preview:</p>
+                            <Stack direction="row" spacing={2}>
+                                {form.images.map((img, idx) => (
+                                    <img
+                                        key={idx}
+                                        src={URL.createObjectURL(img)}
+                                        alt="preview"
+                                        style={{
+                                            width: 60,
+                                            height: 60,
+                                            objectFit: "cover",
+                                            borderRadius: 4,
+                                        }}
+                                        onLoad={(e) =>
+                                            URL.revokeObjectURL(e.target.src)
+                                        }
+                                    />
+                                ))}
+                            </Stack>
+                        </div>
+                    )}
+
+                    <Button
+                        variant="contained"
+                        onClick={handleCreate}
+                        fullWidth
+                        sx={{ mt: 2 }}
+                    >
                         Save
                     </Button>
                 </DialogContent>

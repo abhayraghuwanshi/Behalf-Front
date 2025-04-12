@@ -4,6 +4,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Grid,
     Paper,
     Table,
     TableBody,
@@ -19,33 +20,59 @@ import AdminService from "../../service/AdminService";
 export default function StoreManagement() {
     const [stores, setStores] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [storeName, setStoreName] = useState("");
-    const [storeAddress, setStoreAddress] = useState("");
-    const [storeCity, setStoreCity] = useState("");
-    const [storeState, setStoreState] = useState("");
-    const [storeZipCode, setStoreZipCode] = useState("");
-    const [storeCountry, setStoreCountry] = useState("");
-    const [storePhoneNumber, setStorePhoneNumber] = useState("");
-    const [storeEmail, setStoreEmail] = useState("");
+    const [form, setForm] = useState({
+        name: "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+        phoneNumber: "",
+        email: "",
+    });
 
     useEffect(() => {
-        AdminService.fetchStores(setStores);
+        const fetchData = async () => {
+            await fetchStores();
+        };
+        fetchData();
     }, []);
 
+    const fetchStores = async () => {
+        try {
+            const response = await AdminService.fetchStores();
+            console.log("Fetched stores:", response.data); // ✅ log the response
+            setStores(response || []);
+        } catch (error) {
+            console.error("Failed to fetch stores:", error);
+        }
+    };
+
     const addStore = async () => {
-        const storeData = {
-            name: storeName,
-            address: storeAddress,
-            city: storeCity,
-            state: storeState,
-            zipCode: storeZipCode,
-            country: storeCountry,
-            phoneNumber: storePhoneNumber,
-            email: storeEmail,
-        };
-        await AdminService.addStore(storeData);
-        AdminService.fetchStores(setStores);
-        handleDialogClose();
+        const {
+            name,
+            address,
+            city,
+            state,
+            zipCode,
+            country,
+            phoneNumber,
+            email,
+        } = form;
+
+        if (!name || !address) {
+            alert("Store name and address are required.");
+            return;
+        }
+
+        try {
+            await AdminService.addStore(form);
+            const res = await AdminService.fetchStores();
+            setStores(res.data || []);
+            handleDialogClose();
+        } catch (error) {
+            console.error("Failed to add store:", error);
+        }
     };
 
     const handleDialogOpen = () => {
@@ -54,99 +81,64 @@ export default function StoreManagement() {
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
-        setStoreName("");
-        setStoreAddress("");
-        setStoreCity("");
-        setStoreState("");
-        setStoreZipCode("");
-        setStoreCountry("");
-        setStorePhoneNumber("");
-        setStoreEmail("");
+        setForm({
+            name: "",
+            address: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "",
+            phoneNumber: "",
+            email: "",
+        });
+    };
+
+    const handleChange = (field) => (e) => {
+        setForm((prev) => ({ ...prev, [field]: e.target.value }));
     };
 
     return (
         <div>
-
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
                 <Typography variant="h6" sx={{ color: "white" }}>Admin Store</Typography>
-
                 <Button
                     variant="outlined"
-                    sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                    sx={{
+                        color: "white",
+                        borderColor: "white",
+                        "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' }
+                    }}
                     onClick={handleDialogOpen}
                 >
                     Create Store
                 </Button>
             </div>
 
-            {/* Dialog for creating a store */}
             <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
                 <DialogTitle>Create Store</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="Store Name"
-                        variant="outlined"
-                        fullWidth
-                        value={storeName}
-                        onChange={(e) => setStoreName(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="Address"
-                        variant="outlined"
-                        fullWidth
-                        value={storeAddress}
-                        onChange={(e) => setStoreAddress(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="City"
-                        variant="outlined"
-                        fullWidth
-                        value={storeCity}
-                        onChange={(e) => setStoreCity(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="State"
-                        variant="outlined"
-                        fullWidth
-                        value={storeState}
-                        onChange={(e) => setStoreState(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="Zip Code"
-                        variant="outlined"
-                        fullWidth
-                        value={storeZipCode}
-                        onChange={(e) => setStoreZipCode(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="Country"
-                        variant="outlined"
-                        fullWidth
-                        value={storeCountry}
-                        onChange={(e) => setStoreCountry(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="Phone Number"
-                        variant="outlined"
-                        fullWidth
-                        value={storePhoneNumber}
-                        onChange={(e) => setStorePhoneNumber(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
-                    <TextField
-                        label="Email"
-                        variant="outlined"
-                        fullWidth
-                        value={storeEmail}
-                        onChange={(e) => setStoreEmail(e.target.value)}
-                        style={{ marginBottom: "12px" }}
-                    />
+                    <Grid container spacing={2}>
+                        {[
+                            ["name", "Store Name"],
+                            ["address", "Address"],
+                            ["city", "City"],
+                            ["state", "State"],
+                            ["zipCode", "Zip Code"],
+                            ["country", "Country"],
+                            ["phoneNumber", "Phone Number"],
+                            ["email", "Email"],
+                        ].map(([key, label]) => (
+                            <Grid item xs={12} key={key}>
+                                <TextField
+                                    label={label}
+                                    variant="outlined"
+                                    fullWidth
+                                    value={form[key]}
+                                    onChange={handleChange(key)}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose} color="secondary">
@@ -158,7 +150,6 @@ export default function StoreManagement() {
                 </DialogActions>
             </Dialog>
 
-            {/* Table to display available stores */}
             <Paper style={{ padding: "16px", backgroundColor: "#333", marginTop: "16px" }}>
                 <Typography variant="h6" sx={{ color: "white", marginBottom: "12px" }}>Available Stores</Typography>
                 <Table>
@@ -175,8 +166,8 @@ export default function StoreManagement() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {stores.map((store) => (
-                            <TableRow key={store.id}>
+                        {stores.map((store, index) => (
+                            <TableRow key={store.id || index}>
                                 <TableCell style={{ color: "white" }}>{store.name}</TableCell>
                                 <TableCell style={{ color: "white" }}>{store.address}</TableCell>
                                 <TableCell style={{ color: "white" }}>{store.city}</TableCell>

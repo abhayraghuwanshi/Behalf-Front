@@ -15,8 +15,9 @@ import {
     TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import * as discountService from "../services/discountService";
-import * as productService from "../services/productService";
+import * as discountService from "./../../service/DiscountService";
+import * as productService from "./../../service/ProductService1";
+
 
 function DiscountPage() {
     const [discounts, setDiscounts] = useState([]);
@@ -71,7 +72,7 @@ function DiscountPage() {
     return (
         <div style={{ padding: 20 }}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <h2>Discounts</h2>
+                <h2 style={{ color: "white" }}>Discounts</h2>
                 <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
                     Create Discount
                 </Button>
@@ -80,28 +81,28 @@ function DiscountPage() {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Product</TableCell>
-                        <TableCell>Price</TableCell>
-                        <TableCell>Start</TableCell>
-                        <TableCell>End</TableCell>
-                        <TableCell>Description</TableCell>
+                        <TableCell style={{ color: "white" }}>Product</TableCell>
+                        <TableCell style={{ color: "white" }}>Price</TableCell>
+                        <TableCell style={{ color: "white" }}>Start</TableCell>
+                        <TableCell style={{ color: "white" }}>End</TableCell>
+                        <TableCell style={{ color: "white" }}>Description</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {discounts.map((d) => (
                         <TableRow key={d.id}>
-                            <TableCell>{d.product?.name || "-"}</TableCell>
-                            <TableCell>{d.discountPrice}</TableCell>
-                            <TableCell>{d.startDate}</TableCell>
-                            <TableCell>{d.endDate}</TableCell>
-                            <TableCell>{d.description}</TableCell>
+                            <TableCell style={{ color: "white" }}>{d.product?.name || "-"}</TableCell>
+                            <TableCell style={{ color: "white" }}>{d.discountPrice}</TableCell>
+                            <TableCell style={{ color: "white" }}>{d.startDate}</TableCell>
+                            <TableCell style={{ color: "white" }}>{d.endDate}</TableCell>
+                            <TableCell style={{ color: "white" }}>{d.description}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Create Discount</DialogTitle>
+                <DialogTitle style={{ color: "white" }}>Create Discount</DialogTitle>
                 <DialogContent>
                     <TextField
                         select

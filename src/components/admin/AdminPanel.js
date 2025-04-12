@@ -2,6 +2,7 @@ import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { useMenu } from "../../context/MenuContext";
 import { useAuth } from "../SignIn/AuthContext"; // Import authentication context
+import DiscountPage from "./DiscountManagement";
 import InventoryManagement from "./InventoryManagement";
 import ProductManagementPage from './ProductManagement';
 import StoreManagement from "./StoreManagement";
@@ -31,6 +32,8 @@ export default function AdminPanel() {
                 <Tab label="Admin Store" sx={{ color: "white" }} />
                 <Tab label="Add Users" sx={{ color: "white" }} />
                 <Tab label="Inventory Management" sx={{ color: "white" }} />
+                <Tab label="Product Management" sx={{ color: "white" }} />
+                <Tab label="Discount Management" sx={{ color: "white" }} />
             </Tabs>
 
             <Box hidden={adminTab !== 0}>
@@ -42,9 +45,11 @@ export default function AdminPanel() {
             <Box hidden={adminTab !== 2}>
                 <InventoryManagement />
             </Box>
-
             <Box hidden={adminTab !== 3}>
                 <ProductManagementPage />
+            </Box>
+            <Box hidden={adminTab !== 4}>
+                <DiscountPage />
             </Box>
         </div>
     );
