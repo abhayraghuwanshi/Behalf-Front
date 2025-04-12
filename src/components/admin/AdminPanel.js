@@ -1,16 +1,23 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { useMenu } from "../../context/MenuContext";
+import { useAuth } from "../SignIn/AuthContext"; // Import authentication context
 import InventoryManagement from "./InventoryManagement";
+import ProductManagementPage from './ProductManagement';
 import StoreManagement from "./StoreManagement";
 import UserManagement from "./UserManagement";
 
 export default function AdminPanel() {
     const { adminTab, setAdminTab } = useMenu();
+    const { user } = useAuth(); // Get authentication status
 
     const handleTabChange = (event, newValue) => {
         setAdminTab(newValue);
     };
+
+    if (!user?.id) {
+        return <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>Access Denied. Please log in.</div>;
+    }
 
     return (
         <div style={{ padding: "24px", backgroundColor: "black", color: "white", minHeight: "100vh" }}>
@@ -34,6 +41,10 @@ export default function AdminPanel() {
             </Box>
             <Box hidden={adminTab !== 2}>
                 <InventoryManagement />
+            </Box>
+
+            <Box hidden={adminTab !== 3}>
+                <ProductManagementPage />
             </Box>
         </div>
     );

@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useMenu } from '../../context/MenuContext';
 import './FloatingMenu.css';
 
-function FloatingMenu({ onMenuSelect, isAdmin }) {
-    const { selectedMenu, setSelectedMenu } = useMenu();
+function FloatingMenu({ onMenuSelect }) {
+    const { selectedMenu, setSelectedMenu, isAdminOrManager } = useMenu();
 
     const handleSelection = (menu) => {
         setSelectedMenu(menu);
@@ -34,7 +34,7 @@ function FloatingMenu({ onMenuSelect, isAdmin }) {
             >
                 My Orders
             </button>
-            {isAdmin && (
+            {isAdminOrManager && (
                 <button
                     className={selectedMenu === 'admin' ? 'active' : ''}
                     onClick={() => handleSelection('admin')}

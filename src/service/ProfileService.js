@@ -25,6 +25,15 @@ class ProfileService {
         return response; // Only return the relevant data
     }
 
+    async checkIfAdminOrManager(userId) {
+        const response = await axios.get(`${BACKEND_API_URL}/api/admin/users/${userId}/is-admin-or-manager`, {
+            withCredentials: true, // Important: needed for cookies
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        return response.data; // Return true or false
+    }
 
     async logout() {
         try {
@@ -40,9 +49,6 @@ class ProfileService {
         }
     }
 
-
 }
-
-
 
 export default new ProfileService();

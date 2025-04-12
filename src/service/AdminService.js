@@ -82,21 +82,6 @@ const AdminService = {
         }
     },
 
-    isAdminOrManager: async (userId) => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/admin/users/${userId}/is-admin-or-manager`, {
-                withCredentials: true,
-                headers: {
-                    "Accept": "application/json",
-                },
-            });
-            return response.data; // Assuming the API returns a boolean
-        } catch (error) {
-            console.error("Error checking if user is admin or manager:", error);
-            return false; // Default to false in case of error
-        }
-    },
-
     fetchInventory: async (setInventory) => {
         try {
             const response = await axios.get(`${API_BASE_URL}/inventory`, {
