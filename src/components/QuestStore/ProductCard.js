@@ -1,4 +1,4 @@
-import { Typography } from '@mui/joy';
+import { Avatar, Box, Button, Card, Typography } from '@mui/joy';
 import React, { useEffect, useState } from 'react';
 import imageService from '../../service/FileService';
 
@@ -23,14 +23,74 @@ const ProductCard = ({ product }) => {
     }, [product.imageUrls]);
 
     return (
-        <div style={{ backgroundColor: '#383838', padding: '10px', borderRadius: '5px', textAlign: 'center', height: '300px' }}>
-            {imageUrls.length > 0 && (
-                <img src={imageUrls[0]} alt={product.name} width="50" height="50" />
-            )}
-            <Typography sx={{ color: 'white' }}>{product.name}</Typography>
-            <Typography sx={{ color: 'white' }}>Price: {product.currency} {product.finalPrice}</Typography>
-            <Typography sx={{ color: 'white' }}>{product.storeName} ({product.storeLocation})</Typography>
-        </div>
+        <Card
+            sx={{
+                width: "300px",
+                padding: 2,
+                marginBottom: 2,
+                border: "1px solid #333",
+                borderRadius: "12px",
+                backgroundColor: "#1E1E1E", // Black background
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                cursor: "pointer",
+                color: "#ffffff", // White text
+                "&:hover": {
+                    transform: "translateY(-4px)",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)"
+                }
+            }}
+        >
+            {/* Image Section */}
+            <Box sx={{ textAlign: "center", marginBottom: 2 }}>
+                {imageUrls.length > 0 ? (
+                    <img
+                        src={imageUrls[0]}
+                        alt={product.name}
+                        style={{ width: '100%', height: '200px', borderRadius: '8px', objectFit: 'cover' }}
+                    />
+                ) : (
+                    <Avatar sx={{ bgcolor: '#333', color: '#ffffff', width: '100%', height: '200px', fontSize: "2rem" }}>
+                        {product.name[0]} {/* Default placeholder */}
+                    </Avatar>
+                )}
+            </Box>
+
+            {/* Content Section */}
+            <Box sx={{ textAlign: 'left' }}>
+                <Typography variant="h6" gutterBottom sx={{ color: "#ffffff", fontWeight: 'bold' }}>
+                    {product.name}
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#ffffff" }}>
+                    Price: {product.currency} {product.finalPrice}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#ffffff", marginTop: 1 }}>
+                    {product.storeName} ({product.storeLocation})
+                </Typography>
+            </Box>
+
+            {/* Action Buttons */}
+            <Box display="flex" justifyContent="space-between" mt={2}>
+                <Button
+                    sx={{
+                        color: "#ffffff",
+                        backgroundColor: "#333",
+                        "&:hover": { backgroundColor: "#555" },
+                    }}
+                >
+                    Add to Cart
+                </Button>
+                <Button
+                    sx={{
+                        color: "#ffffff",
+                        backgroundColor: "#333",
+                        "&:hover": { backgroundColor: "#555" },
+                    }}
+                >
+                    Details
+                </Button>
+            </Box>
+        </Card>
     );
 };
 
