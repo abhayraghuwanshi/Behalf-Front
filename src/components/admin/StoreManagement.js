@@ -16,10 +16,12 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AdminService from "../../service/AdminService";
+import { useCountry } from "../navbar/CountryProvider";
 
 export default function StoreManagement() {
     const [stores, setStores] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { selectedCountry } = useCountry();
     const [form, setForm] = useState({
         name: "",
         address: "",
@@ -36,11 +38,11 @@ export default function StoreManagement() {
             await fetchStores();
         };
         fetchData();
-    }, []);
+    }, [selectedCountry]);
 
     const fetchStores = async () => {
         try {
-            const response = await AdminService.fetchStores();
+            const response = await AdminService.fetchStores(selectedCountry);
             console.log("Fetched stores:", response.data); // ✅ log the response
             setStores(response || []);
         } catch (error) {

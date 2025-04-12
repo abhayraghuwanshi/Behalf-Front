@@ -19,6 +19,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminService from "../../service/AdminService";
 import * as ProductService from "../../service/ProductService1";
+import { useCountry } from "../navbar/CountryProvider";
 
 const BASE_URL = "http://localhost:8080/api";
 
@@ -28,6 +29,7 @@ export default function InventoryManagement() {
     const [inventory, setInventory] = useState([]);
     const [selectedStore, setSelectedStore] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { selectedCountry } = useCountry();
 
     const [form, setForm] = useState({
         storeId: "",
@@ -41,7 +43,7 @@ export default function InventoryManagement() {
 
     useEffect(() => {
         const initStores = async () => {
-            const data = await AdminService.fetchStores();
+            const data = await AdminService.fetchStores(selectedCountry);
             setStores(data || []);
             if (data?.length) {
                 setSelectedStore(data[0].id.toString());
@@ -236,7 +238,7 @@ export default function InventoryManagement() {
                             <TableRow key={item.id}>
                                 <TableCell style={{ color: "white" }}>{item.product?.name}</TableCell>
                                 <TableCell style={{ color: "white" }}>{item.quantity}</TableCell>
-                                <TableCell style={{ color: "white" }}>{item}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item.price}</TableCell> {/* Fix here */}
                                 <TableCell style={{ color: "white" }}>{item.reorderLevel}</TableCell>
                                 <TableCell style={{ color: "white" }}>{item.reorderQuantity}</TableCell>
                             </TableRow>
