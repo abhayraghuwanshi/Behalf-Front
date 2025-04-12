@@ -7,6 +7,7 @@ import PostService from '../../service/PostService';
 import ProductService from '../../service/ProductService';
 import { useCountry } from '../navbar/CountryProvider';
 import Post from '../post/PostCard';
+import ProductCard from '../QuestStore/ProductCard';
 import { useAuth } from '../SignIn/AuthContext';
 import img from './travelbyplane3.png';
 
@@ -53,17 +54,8 @@ function Home() {
         const response = await ProductService.getProducts(selectedCountry);
 
         // Map the API response to the required format
-        const filteredItems = response
-          .flatMap((store) =>
-            store.inventories.map((inventory) => ({
-              id: inventory.id,
-              name: `Item SKU: ${inventory.sku}`,
-              price: inventory.price,
-              image: "https://via.placeholder.com/50", // Placeholder image
-            }))
-          );
 
-        setPopularItems(filteredItems);
+        setPopularItems(response);
       } catch (error) {
         console.error("Error fetching popular items:", error);
       }
@@ -161,15 +153,10 @@ function Home() {
         <Grid xs={12} md={1.5}></Grid>
         {popularItems.slice(0, 3).map((item) => (
           <Grid key={item.id} xs={12} md={3}>
-            <div style={{ backgroundColor: '#383838', padding: '10px', borderRadius: '5px', textAlign: 'center', height: '300px' }}>
-              <img src={item.image} alt={item.itemName} width="50" height="50" />
-              <Typography sx={{ color: 'white' }}>{item.name}</Typography>
-              <Typography sx={{ color: 'white' }}>Price: {item.price}</Typography>
-            </div>
+            <ProductCard product={item} />
           </Grid>
         ))}
-        <Grid xs={12} md={1.5}>
-        </Grid>
+        <Grid xs={12} md={1.5}></Grid>
       </Grid>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>

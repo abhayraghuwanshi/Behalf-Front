@@ -3,7 +3,7 @@ import { BACKEND_API_URL } from '../env';
 
 const ProductService = {
     getProducts: async (country) => {
-        let url = `${BACKEND_API_URL}/api/stores/fetch?country=${country}`;
+        let url = `${BACKEND_API_URL}/api/product-view/by-country?country=${country}`;
         try {
             const response = await axios.get(url);
             return response.data;

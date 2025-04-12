@@ -40,7 +40,14 @@ export default function InventoryManagement() {
     });
 
     useEffect(() => {
-        fetchStores();
+        const initStores = async () => {
+            const data = await AdminService.fetchStores();
+            setStores(data || []);
+            if (data?.length) {
+                setSelectedStore(data[0].id.toString());
+            }
+        };
+        initStores();
         fetchProducts();
     }, []);
 
@@ -50,11 +57,6 @@ export default function InventoryManagement() {
         }
     }, [selectedStore]);
 
-    const fetchStores = async () => {
-        const response = await AdminService.fetchStores();
-        setStores(response.data || []);
-    };
-
     const fetchProducts = async () => {
         const data = await ProductService.getProducts();
         setProducts(data || []);
@@ -62,7 +64,12 @@ export default function InventoryManagement() {
 
     const fetchInventory = async (storeId) => {
         try {
-            const res = await axios.get(`${BASE_URL}/inventory/store/${storeId}`);
+            const res = await axios.get(`${BASE_URL}/inventory/store/${storeId}`, {
+                withCredentials: true,
+                headers: {
+                    "Accept": "application/json",
+                },
+            });
             setInventory(res.data || []);
         } catch (err) {
             console.error("Failed to fetch inventory:", err);
@@ -105,7 +112,7 @@ export default function InventoryManagement() {
     };
 
     return (
-        <div>
+        <div style={{ backgroundColor: "black", color: "white", minHeight: "100vh", padding: "16px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "16px 0" }}>
                 <Typography variant="h6" sx={{ color: "white" }}>
                     Inventory Management
@@ -121,7 +128,7 @@ export default function InventoryManagement() {
                         </MenuItem>
                     ))}
                 </Select>
-                <Button variant="outlined" onClick={() => setIsDialogOpen(true)}>
+                <Button variant="outlined" onClick={() => setIsDialogOpen(true)} sx={{ color: "white", borderColor: "white" }}>
                     Add Inventory Item
                 </Button>
             </div>
@@ -204,7 +211,9 @@ export default function InventoryManagement() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDialogClose}>Cancel</Button>
+                    <Button onClick={handleDialogClose} sx={{ color: "black" }}>
+                        Cancel
+                    </Button>
                     <Button onClick={handleAddInventory} variant="contained" color="primary">
                         Save
                     </Button>
@@ -227,7 +236,7 @@ export default function InventoryManagement() {
                             <TableRow key={item.id}>
                                 <TableCell style={{ color: "white" }}>{item.product?.name}</TableCell>
                                 <TableCell style={{ color: "white" }}>{item.quantity}</TableCell>
-                                <TableCell style={{ color: "white" }}>{item.price}</TableCell>
+                                <TableCell style={{ color: "white" }}>{item}</TableCell>
                                 <TableCell style={{ color: "white" }}>{item.reorderLevel}</TableCell>
                                 <TableCell style={{ color: "white" }}>{item.reorderQuantity}</TableCell>
                             </TableRow>

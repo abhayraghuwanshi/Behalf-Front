@@ -21,13 +21,17 @@ function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
             // Map the API response to the required format
             const formattedProducts = response
                 .flatMap((store) =>
-                    store.inventories.map((inventory) => ({
-                        id: inventory.id,
-                        name: `Item SKU: ${inventory.sku}`,
-                        price: inventory.price,
-                        inStock: inventory.quantity > 0,
-                        imageUrl: "https://via.placeholder.com/150", // Placeholder image
-                    }))
+                    store.inventories.map((inventory) => {
+                        const imageParts = inventory.imageUrl.split('/');
+                        const formattedImageUrl = imageParts.length > 1 ? `${imageParts[0]}/${imageParts[1]}` : inventory.imageUrl;
+                        return {
+                            id: inventory.id,
+                            name: `Item SKU: ${inventory.sku}`,
+                            price: inventory.price,
+                            inStock: inventory.quantity > 0,
+                            imageUrl: formattedImageUrl,
+                        };
+                    })
                 );
 
             setProducts(formattedProducts);
