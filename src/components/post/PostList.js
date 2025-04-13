@@ -100,7 +100,7 @@ const PostList = () => {
           <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
           <Grid item xs={12} md={9}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-              <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
+              <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Requests</Typography>
               <Button
                 variant="outlined"
                 sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}

@@ -21,7 +21,7 @@ export default function AdminPanel() {
     }
 
     return (
-        <div style={{ padding: "24px", backgroundColor: "black", color: "white", minHeight: "100vh" }}>
+        <div style={{ color: "white", minHeight: "100vh" }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                 <Grid item xs={12} md={9}>
@@ -29,7 +29,7 @@ export default function AdminPanel() {
                         value={adminTab}
                         onChange={handleTabChange}
                         textColor="inherit"
-                        indicatorColor="primary"
+                        indicatorColor="secondary"
                         sx={{ color: "white" }}
                     >
                         <Tab label="Admin Store" sx={{ color: "white" }} />

@@ -66,7 +66,7 @@ export default function UserManagement() {
     return (
         <Grid container justifyContent="center">
             <Grid item xs={12} md={10} lg={9}>
-                <div style={{ backgroundColor: "black", padding: "16px", minHeight: "100vh" }}>
+                <div style={{ padding: "16px", minHeight: "100vh" }}>
 
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
                         <Typography variant="h6" sx={{ color: "white" }}>Manage Users</Typography>
