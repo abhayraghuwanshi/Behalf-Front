@@ -27,12 +27,15 @@ const ProductService = {
             return response.data;
         } catch (err) {
             console.error('Failed to fetch orders:', err);
+            return [];
         }
+
     },
 
-    placeOrder: async (order) => {
+    placeOrder: async (payload) => {
         try {
-            const response = await axios.post(`${BACKEND_API_URL}/api/store/orders`, order, {
+            const response = await axios.post(`${BACKEND_API_URL}/api/orders/place-from-cart`, null, {
+                params: payload,
                 withCredentials: true,
                 headers: {
                     'Accept': 'application/json',
@@ -42,22 +45,6 @@ const ProductService = {
             return response.data;
         } catch (err) {
             console.error('Failed to place order:', err);
-        }
-    },
-
-    checkoutOrder: async (order) => {
-        try {
-            const response = await axios.post(`${BACKEND_API_URL}/api/store/checkout`, order, {
-                withCredentials: true,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-
-            });
-            return response.data;
-        } catch (err) {
-            console.error('Checkout failed:', err);
         }
     },
 

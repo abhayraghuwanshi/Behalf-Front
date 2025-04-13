@@ -87,7 +87,7 @@ function QuestStore() {
             case 'store':
                 return <ProductList cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} selectedCountry={selectedCountry} />;
             case 'orderlist':
-                return <CartCheckout cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
+                return <CartCheckout cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} selectedCountry={selectedCountry} />;
             case 'myorders':
                 return <MyOrders />;
             case 'admin':

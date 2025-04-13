@@ -13,13 +13,13 @@ import React, { useState } from 'react';
 import ProductService from '../../service/ProductService'; // Import the new ProductService
 import { useAuth } from '../SignIn/AuthContext';
 
-function CartCheckout({ cart, onAddOrUpdateCart }) {
+const CartCheckout = ({ cart, onAddOrUpdateCart, selectedCountry }) => {
     const { user } = useAuth();
     const [address, setAddress] = useState('');
     const [responseOrder, setResponseOrder] = useState(null);
 
     // Calculate total price from the cart
-    const totalPrice = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + item.discountPrice * item.quantity, 0);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,12 +35,17 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
         const checkoutData = {
             userId: user.id,
             address,
-            totalPrice,
-            items: cart.map(item => ({ id: item.id, quantity: item.quantity }))
+            country: selectedCountry, // Include the selected country
         };
 
-        const data = await ProductService.checkoutOrder(checkoutData);
-        setResponseOrder(data);
+        try {
+            const data = await ProductService.placeOrder(checkoutData); // Call the Place Order API
+            setResponseOrder(data);
+            alert(`Order placed successfully! Order ID: ${data.id}`);
+        } catch (error) {
+            console.error("Error placing order:", error);
+            alert("Failed to place the order. Please try again.");
+        }
     };
 
     const handleDelete = (item) => {
@@ -94,8 +99,20 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                             {cart.map((item, index) => (
                                 <ListItem key={index} divider>
                                     <ListItemText
-                                        primary={item.productName} // Use productName for display
-                                        secondary={`$${Number(item.price || item.finalPrice).toFixed(2)} x ${item.quantity}`} // Use price or finalPrice
+                                        primary={item.productName}
+                                        secondary={
+                                            <>
+                                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                                    Original Price: {item.currencyCode} {item.originalPrice.toFixed(2)}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                                    Discount: {item.discountPercent}% (-{item.currencyCode} {item.discountAmount.toFixed(2)})
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: 'white' }}>
+                                                    Final Price: {item.currencyCode} {item.discountPrice.toFixed(2)} x {item.quantity}
+                                                </Typography>
+                                            </>
+                                        }
                                         sx={{ color: 'white' }}
                                     />
                                     <Box sx={{ display: 'flex', gap: 1 }}>
@@ -103,7 +120,7 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                                         <Button
                                             variant="outlined"
                                             color="primary"
-                                            onClick={() => onAddOrUpdateCart(item, item.quantity > 1 ? item.quantity - 1 : 0)} // Decrease quantity or delete
+                                            onClick={() => onAddOrUpdateCart(item, item.quantity > 1 ? item.quantity - 1 : 0)}
                                             sx={{ color: 'white', borderColor: 'white' }}
                                         >
                                             -
@@ -112,7 +129,7 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                                         <Button
                                             variant="outlined"
                                             color="primary"
-                                            onClick={() => onAddOrUpdateCart(item, item.quantity + 1)} // Increase quantity
+                                            onClick={() => onAddOrUpdateCart(item, item.quantity + 1)}
                                             sx={{ color: 'white', borderColor: 'white' }}
                                         >
                                             +
@@ -124,7 +141,7 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                             <Typography variant="h6">Total:</Typography>
                             <Typography variant="h6">
-                                ${cart.reduce((sum, item) => sum + Number(item.price || item.finalPrice) * item.quantity, 0).toFixed(2)} {/* Calculate total */}
+                                {cart.length > 0 ? `${cart[0].currencyCode} ${totalPrice.toFixed(2)}` : '0.00'}
                             </Typography>
                         </Box>
                     </Paper>
@@ -132,6 +149,6 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
             </Grid>
         </Box>
     );
-}
+};
 
 export default CartCheckout;
