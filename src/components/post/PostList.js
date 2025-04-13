@@ -124,7 +124,7 @@ const PostList = () => {
             filteredPosts.map((post) =>
               post ? (
                 <PostCard
-                  key={post.id}
+                  key={post.productId}
                   postData={post}
                   onAccept={handleAccept}
                   user={user}

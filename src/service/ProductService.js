@@ -9,6 +9,7 @@ const ProductService = {
             return response.data;
         } catch (error) {
             console.log('Failed to fetch products');
+            return []
         }
     },
 

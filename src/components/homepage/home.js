@@ -41,10 +41,12 @@ function Home() {
   ];
 
   const handleSeeMoreQuests = () => {
+    window.scrollTo(0, 0); // Scroll to the top of the page
     navigate("/post");
   };
 
   const handleSeeMoreItems = () => {
+    window.scrollTo(0, 0); // Scroll to the top of the page
     navigate("/store");
   };
 
@@ -139,7 +141,7 @@ function Home() {
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           style={{ color: 'white', padding: '5px 10px', backgroundColor: 'transparent', border: '1px solid white' }}
-          onReleased={handleSeeMoreQuests}
+          onClick={handleSeeMoreQuests}
         >
           <Typography style={{ color: 'white' }}>See More Quests</Typography>
         </button>
@@ -152,7 +154,7 @@ function Home() {
       <Grid container spacing={2}>
         <Grid xs={12} md={1.5}></Grid>
         {popularItems.slice(0, 3).map((item) => (
-          <Grid key={item.id} xs={12} md={3}>
+          <Grid key={item.productId} xs={12} md={3}>
             <ProductCard product={item} />
           </Grid>
         ))}
