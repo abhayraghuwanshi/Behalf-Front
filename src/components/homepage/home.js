@@ -89,8 +89,8 @@ function Home() {
     <div style={{ color: 'white' }}>
       {/* Introduction */}
       <Grid container spacing={2} sx={{ flexGrow: 1, minHeight: '50vh', alignItems: 'center', mt: 2 }}>
-        <Grid xs={12} md={2} />
-        <Grid xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+        <Grid xs={12} md={1.5} />
+        <Grid xs={12} md={4.5} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
           <Typography level="h2" sx={{ mb: 2, color: 'white' }}>Deliver & Earn</Typography>
           <Typography sx={{ mt: 1, color: 'white' }}>
             Connect with people who need items delivered. Complete quests, earn rewards.
@@ -104,12 +104,12 @@ function Home() {
             }
           </Typography>
         </Grid>
-        <Grid xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid xs={12} md={4.5} sx={{ display: 'flex', justifyContent: 'center' }}>
           <div className="transparent-container">
             <img src={img} alt="Helping" className="transparent-container-image" />
           </div>
         </Grid>
-        <Grid xs={12} md={2} />
+        <Grid xs={12} md={1.5} />
       </Grid>
 
       {/* How It Works */}
@@ -129,7 +129,7 @@ function Home() {
 
       {/* Quest Recommendations */}
       <h2 style={{ textAlign: 'center', marginTop: '60px' }}>Delivery Quest for you</h2>
-      <Grid container spacing={2}>
+      <Grid container spacing={1.5}>
         <Grid xs={12} md={1.5}></Grid>
         {questRecommendations.slice(0, 3).map((quest) => (
           <Grid key={quest.id} xs={12} md={3}>
@@ -138,6 +138,7 @@ function Home() {
         ))}
         <Grid xs={12} md={1.5}></Grid>
       </Grid>
+
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           style={{ color: 'white', padding: '5px 10px', backgroundColor: 'transparent', border: '1px solid white' }}
@@ -161,7 +162,7 @@ function Home() {
         <Grid xs={12} md={1.5}></Grid>
       </Grid>
 
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+      <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
         <button
           style={{ color: 'white', padding: '5px 10px', backgroundColor: 'transparent', border: '1px solid white' }}
           onClick={handleSeeMoreItems}
