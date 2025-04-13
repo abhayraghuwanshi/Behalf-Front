@@ -54,12 +54,13 @@ const CartCheckout = ({ cart, onAddOrUpdateCart, selectedCountry }) => {
 
     return (
         <Box sx={{ flexGrow: 1, p: 3, minHeight: '100vh', backgroundColor: '#000', color: 'white' }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                Checkout
-            </Typography>
+
             <Grid container spacing={3}>
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                 <Grid item xs={12} md={9}>
+                    <Typography variant="h5" gutterBottom>
+                        Checkout
+                    </Typography>
                     <Grid container spacing={3}>
                         {/* Delivery Address Form */}
                         <Grid item xs={12} md={6}>

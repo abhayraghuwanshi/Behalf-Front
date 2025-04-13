@@ -38,12 +38,13 @@ function MyOrders() {
 
     return (
         <Box sx={{ p: 3, backgroundColor: '#000', minHeight: '100vh', color: 'white' }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                My Orders
-            </Typography>
+
             <Grid container spacing={3}>
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                 <Grid item xs={12} md={9}>
+                    <Typography variant="h5" gutterBottom>
+                        My Orders
+                    </Typography>
                     <Grid container spacing={3}>
                         {myOrders.map((order) => (
                             <Grid item xs={12} md={4} key={order.orderId}>

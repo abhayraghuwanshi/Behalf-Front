@@ -15,7 +15,6 @@
 .inbox {
     flex: 1;
     padding: 16px;
-    overflow-y: auto;
     border-radius: 8px;
     margin: 8px;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);

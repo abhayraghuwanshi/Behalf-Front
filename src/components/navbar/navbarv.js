@@ -71,25 +71,58 @@ function Navbar() {
           </Box>
 
           {/* Right Side - Actions */}
-          <Box sx={{ position: 'absolute', right: '0', display: 'flex', gap: '10px', alignItems: 'center' }}>
-
-
+          <Box sx={{ position: 'absolute', right: '0', display: 'flex', gap: '10px', alignItems: 'center', height: '40px' }}>
             <CountrySelector
               selectedCountry={selectedCountry}
               handleCountryChange={handleCountryChange}
-              inputStyles={inputStyles}
+              inputStyles={{
+                ...inputStyles,
+                '& .MuiSelect-select': {
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: '40px', // Match height
+                  fontSize: '20px', // Adjust font size
+
+                },
+                '& .MuiSvgIcon-root': {
+                  fontSize: '20px', // Adjust flag icon size
+                },
+              }}
+              sx={{
+                height: '40px', // Match height
+                display: 'flex',
+                alignItems: 'center',
+              }}
             />
             {user ? (
               <>
                 {/* My-Quest with Message Icon */}
-                <IconButton onClick={() => navigate('/viewQuest')}>
+                <IconButton
+                  onClick={() => navigate('/viewQuest')}
+                  sx={{
+                    height: '40px', // Consistent height
+                    width: '40px', // Consistent width
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Badge color="error" variant="dot">
-                    <MailIcon sx={{ color: 'white' }} />
+                    <MailIcon sx={{ color: 'white', fontSize: '30px' }} /> {/* Adjust icon size */}
                   </Badge>
                 </IconButton>
 
                 {/* Profile with Avatar */}
-                <IconButton onClick={() => navigate('/profile')}>
+                <IconButton
+                  onClick={() => navigate('/profile')}
+                  sx={{
+                    height: '40px', // Consistent height
+                    width: '40px', // Consistent width
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Avatar src={user?.profileImage || ''} alt={user?.name || 'User'} sx={{ width: 32, height: 32 }} />
                 </IconButton>
               </>
@@ -100,6 +133,8 @@ function Navbar() {
                   color: 'white',
                   borderRadius: '4px',
                   backgroundColor: '#1976d2',
+                  height: '40px', // Consistent height
+                  padding: '6px 12px', // Consistent padding
                   '&:hover': { backgroundColor: '#1565c0' },
                 }}
               >

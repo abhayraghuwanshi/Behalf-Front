@@ -175,8 +175,13 @@ const MyQuestPage = () => {
         fetchData();
     }, [user]);
 
+
     // Render content based on login state
     const renderContent = () => {
+
+
+        window.scrollTo(0, 0);
+
         // If loading, show loading state
         if (loading) {
             return <div style={{ color: "white", textAlign: "center", marginTop: "200px" }}>Loading...</div>;
@@ -200,7 +205,7 @@ const MyQuestPage = () => {
 
         // If logged in, render the full quest page
         return (
-            <div className="my-quest-page" style={{ marginTop: "100px", marginBottom: "50px" }}>
+            <div className="my-quest-page">
                 <div className="quests">
                     <h2 style={{ color: '#90caf9' }}> Quests</h2>
                     <div className="filters" style={{ display: "flex", gap: "20px", marginBottom: "20px", width: "100%", }}>
@@ -229,7 +234,7 @@ const MyQuestPage = () => {
                         {filteredQuests.map((quest) => (
                             <li
                                 style={{
-                                    padding: "10px",
+
                                     marginBottom: "15px",
                                     borderRadius: "8px",
                                     cursor: "pointer",
@@ -368,7 +373,7 @@ const MyQuestPage = () => {
     };
 
     return (
-        <div>
+        <div style={{ marginTop: "64px" }}>
             {renderContent()}
         </div>
     );
