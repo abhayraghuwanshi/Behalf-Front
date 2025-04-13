@@ -48,7 +48,7 @@ function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
             <div className="products-grid">
                 {products.map(product => (
                     <Grid key={product.id} xs={12} md={3}>
-                        <ProductCard product={product} />
+                        <ProductCard product={product} onAddOrUpdateCart={onAddOrUpdateCart} />
                     </Grid>
                 ))}
             </div>

@@ -43,6 +43,10 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
         setResponseOrder(data);
     };
 
+    const handleDelete = (item) => {
+        onAddOrUpdateCart({ id: item.productId, storeId: item.storeId }, 0); // Set quantity to 0 to delete
+    };
+
     return (
         <Box sx={{ flexGrow: 1, p: 3, minHeight: '100vh', backgroundColor: '#000', color: 'white' }}>
             <Typography variant="h4" align="center" gutterBottom>
@@ -90,23 +94,25 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                             {cart.map((item, index) => (
                                 <ListItem key={index} divider>
                                     <ListItemText
-                                        primary={item.name}
-                                        secondary={`$${Number(item.price).toFixed(2)} x ${item.quantity}`}
+                                        primary={item.productName} // Use productName for display
+                                        secondary={`$${Number(item.price || item.finalPrice).toFixed(2)} x ${item.quantity}`} // Use price or finalPrice
                                         sx={{ color: 'white' }}
                                     />
                                     <Box sx={{ display: 'flex', gap: 1 }}>
+                                        {/* Decrease Quantity Button */}
                                         <Button
                                             variant="outlined"
                                             color="primary"
-                                            onClick={() => onAddOrUpdateCart(item, item.quantity > 1 ? item.quantity - 1 : 0)}
+                                            onClick={() => onAddOrUpdateCart(item, item.quantity > 1 ? item.quantity - 1 : 0)} // Decrease quantity or delete
                                             sx={{ color: 'white', borderColor: 'white' }}
                                         >
                                             -
                                         </Button>
+                                        {/* Increase Quantity Button */}
                                         <Button
                                             variant="outlined"
                                             color="primary"
-                                            onClick={() => onAddOrUpdateCart(item, item.quantity + 1)}
+                                            onClick={() => onAddOrUpdateCart(item, item.quantity + 1)} // Increase quantity
                                             sx={{ color: 'white', borderColor: 'white' }}
                                         >
                                             +
@@ -117,7 +123,9 @@ function CartCheckout({ cart, onAddOrUpdateCart }) {
                         </List>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                             <Typography variant="h6">Total:</Typography>
-                            <Typography variant="h6">${totalPrice.toFixed(2)}</Typography>
+                            <Typography variant="h6">
+                                ${cart.reduce((sum, item) => sum + Number(item.price || item.finalPrice) * item.quantity, 0).toFixed(2)} {/* Calculate total */}
+                            </Typography>
                         </Box>
                     </Paper>
                 </Grid>

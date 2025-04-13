@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Card, Typography } from '@mui/joy';
 import React, { useEffect, useState } from 'react';
 import imageService from '../../service/FileService';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onAddOrUpdateCart }) => {
     const [imageUrls, setImageUrls] = useState([]);
 
     useEffect(() => {
@@ -77,6 +77,7 @@ const ProductCard = ({ product }) => {
                         backgroundColor: "#333",
                         "&:hover": { backgroundColor: "#555" },
                     }}
+                    onClick={() => onAddOrUpdateCart(product, 1)} // Add product to cart with quantity 1
                 >
                     Add to Cart
                 </Button>

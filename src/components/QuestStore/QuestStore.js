@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import AdminService from '../../service/AdminService';
+import CartService from '../../service/CartService';
 import AdminPanel from '../admin/AdminPanel';
 import { useCountry } from '../navbar/CountryProvider';
-import { useAuth } from '../SignIn/AuthContext'; // Assuming AuthContext provides userId
+import { useAuth } from '../SignIn/AuthContext';
 import CartCheckout from './CartCheckout';
 import FloatingMenu from './FloatingMenu';
 import MyOrders from './MyOrders';
@@ -10,17 +12,20 @@ import ProductList from './ProductList';
 
 function QuestStore() {
     const [selected, setSelected] = useState('store');
-    const { selectedCountry, setSelectedCountry } = useCountry();
-    const { userId } = useAuth(); // Get userId from AuthContext
+    const { selectedCountry } = useCountry();
+    const { userId } = useAuth();
     const [isAdmin, setIsAdmin] = useState(false);
+    const [cart, setCart] = useState([]);
 
-    // Initialize cart from local storage (if available)
-    const [cart, setCart] = useState(() => {
-        const savedCart = localStorage.getItem('cart');
-        return savedCart ? JSON.parse(savedCart) : [];
+    // Session ID fallback for guest users
+    const [sessionId] = useState(() => {
+        const existing = localStorage.getItem('sessionId');
+        if (existing) return existing;
+        const newSessionId = uuidv4();
+        localStorage.setItem('sessionId', newSessionId);
+        return newSessionId;
     });
 
-    // Check if the user is an admin or manager when the component mounts
     useEffect(() => {
         const checkAdminStatus = async () => {
             if (userId) {
@@ -33,23 +38,47 @@ function QuestStore() {
             }
         };
         checkAdminStatus();
-    }, [isAdmin, userId]);
+    }, [userId]);
 
-    // Update local storage whenever the cart changes
+    // Load cart from backend
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }, [cart]);
+        const loadCart = async () => {
+            try {
+                const cartData = await CartService.getCart(sessionId);
+                setCart(cartData.items || []);
+            } catch (error) {
+                console.error("Failed to load cart:", error);
+            }
+        };
+        loadCart();
+    }, [sessionId]);
 
-    // Function to add or update product in the cart
-    const handleAddOrUpdateCart = (product, quantity) => {
-        const existing = cart.find(item => item.id === product.id);
-        if (existing) {
-            const updatedCart = cart
-                .map(item => item.id === product.id ? { ...item, quantity } : item)
-                .filter(item => item.quantity > 0);
-            setCart(updatedCart);
-        } else {
-            setCart([...cart, { ...product, quantity }]);
+    // Add or update cart item using backend
+    const handleAddOrUpdateCart = async (product, quantity) => {
+        try {
+            const payload = {
+                sessionId,
+                productId: product.productId, // Ensure productId is correctly mapped
+                storeId: product.storeId,     // Ensure storeId is correctly mapped
+                quantity                      // Ensure quantity is passed correctly
+            };
+
+            if (quantity <= 0) {
+                await CartService.removeItem(payload.sessionId, payload.productId);
+            } else {
+                const existing = cart.find(item => item.productId === product.productId);
+                if (existing) {
+                    await CartService.updateItem(payload.sessionId, payload.productId, payload.storeId, payload.quantity);
+                } else {
+                    await CartService.addItem(payload.sessionId, payload.productId, payload.storeId, payload.quantity);
+                }
+            }
+
+            // Reload cart after change
+            const updatedCart = await CartService.getCart(sessionId);
+            setCart(updatedCart.items || []);
+        } catch (error) {
+            console.error("Error modifying cart:", error);
         }
     };
 
@@ -62,7 +91,7 @@ function QuestStore() {
             case 'myorders':
                 return <MyOrders />;
             case 'admin':
-                return <AdminPanel />; // Placeholder for admin panel
+                return <AdminPanel />;
             default:
                 return <ProductList cart={cart} onAddOrUpdateCart={handleAddOrUpdateCart} />;
         }
@@ -71,7 +100,7 @@ function QuestStore() {
     return (
         <div style={{ marginTop: '60px' }}>
             <div>{renderContent()}</div>
-            <FloatingMenu selected={selected} onMenuSelect={setSelected} isAdmin={true} />
+            <FloatingMenu selected={selected} onMenuSelect={setSelected} isAdmin={isAdmin} />
         </div>
     );
 }
