@@ -45,14 +45,20 @@ function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
                 />
                 <button onClick={handleFilter}>Filter</button>
             </div>
-            <div className="products-grid">
-                {products.map(product => (
-                    <Grid key={product.productId} item xs={12} md={3}>
-                        <ProductCard key={product.productId} product={product} onAddOrUpdateCart={onAddOrUpdateCart} />
+            <Grid container spacing={2} sx={{ marginTop: '20px' }}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <Grid container spacing={2}>
+                        {products.map(product => (
+                            <Grid item xs={12} md={4} key={product.productId}>
+                                <ProductCard product={product} onAddOrUpdateCart={onAddOrUpdateCart} />
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </div>
-        </div >
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
+        </div>
     );
 }
 

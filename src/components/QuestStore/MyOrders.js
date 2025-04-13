@@ -42,34 +42,40 @@ function MyOrders() {
                 My Orders
             </Typography>
             <Grid container spacing={3}>
-                {myOrders.map((order) => (
-                    <Grid item xs={12} sm={6} md={4} key={order.orderId}>
-                        <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white' }}>
-                            <CardContent>
-                                <Typography variant="h6" color="white">
-                                    Order #{order.orderId}
-                                </Typography>
-                                <Typography variant="body2" sx={{ mt: 1 }}>
-                                    Status: {order.status}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Address: {order.address}, {order.country}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Total Price: {order.discountPrice.toFixed(2)} {order.items[0]?.currencyCode || 'INR'}
-                                </Typography>
-                                <Typography variant="body2">
-                                    Created At: {new Date(order.createdAt).toLocaleString()}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small" variant="outlined" color="primary" onClick={() => handleViewDetails(order)}>
-                                    View Details
-                                </Button>
-                            </CardActions>
-                        </Card>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <Grid container spacing={3}>
+                        {myOrders.map((order) => (
+                            <Grid item xs={12} md={4} key={order.orderId}>
+                                <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white' }}>
+                                    <CardContent>
+                                        <Typography variant="h6" color="white">
+                                            Order #{order.orderId}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mt: 1 }}>
+                                            Status: {order.status}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Address: {order.address}, {order.country}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Total Price: {order.discountPrice.toFixed(2)} {order.items[0]?.currencyCode || 'INR'}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Created At: {new Date(order.createdAt).toLocaleString()}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small" variant="outlined" color="primary" onClick={() => handleViewDetails(order)}>
+                                            Details
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
             </Grid>
 
             <Dialog open={!!selectedOrder} onClose={handleCloseDialog} fullWidth maxWidth="sm">

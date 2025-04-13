@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { useMenu } from "../../context/MenuContext";
 import { useAuth } from "../SignIn/AuthContext"; // Import authentication context
@@ -22,19 +22,25 @@ export default function AdminPanel() {
 
     return (
         <div style={{ padding: "24px", backgroundColor: "black", color: "white", minHeight: "100vh" }}>
-            <Tabs
-                value={adminTab}
-                onChange={handleTabChange}
-                textColor="inherit"
-                indicatorColor="primary"
-                sx={{ color: "white" }}
-            >
-                <Tab label="Admin Store" sx={{ color: "white" }} />
-                <Tab label="Add Users" sx={{ color: "white" }} />
-                <Tab label="Inventory Management" sx={{ color: "white" }} />
-                <Tab label="Product Management" sx={{ color: "white" }} />
-                <Tab label="Discount Management" sx={{ color: "white" }} />
-            </Tabs>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <Tabs
+                        value={adminTab}
+                        onChange={handleTabChange}
+                        textColor="inherit"
+                        indicatorColor="primary"
+                        sx={{ color: "white" }}
+                    >
+                        <Tab label="Admin Store" sx={{ color: "white" }} />
+                        <Tab label="Add Users" sx={{ color: "white" }} />
+                        <Tab label="Inventory Management" sx={{ color: "white" }} />
+                        <Tab label="Product Management" sx={{ color: "white" }} />
+                        <Tab label="Discount Management" sx={{ color: "white" }} />
+                    </Tabs>
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
 
             <Box hidden={adminTab !== 0}>
                 <StoreManagement />

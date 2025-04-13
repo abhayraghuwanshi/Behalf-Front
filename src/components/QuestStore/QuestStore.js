@@ -5,10 +5,10 @@ import CartService from '../../service/CartService';
 import AdminPanel from '../admin/AdminPanel';
 import { useCountry } from '../navbar/CountryProvider';
 import { useAuth } from '../SignIn/AuthContext';
-import CartCheckout from './CartCheckout';
 import FloatingMenu from './FloatingMenu';
 import MyOrders from './MyOrders';
-import ProductList from './ProductList';
+import CartCheckout from './StoreCartCheckout';
+import ProductList from './StoreProductList';
 
 function QuestStore() {
     const [selected, setSelected] = useState('store');

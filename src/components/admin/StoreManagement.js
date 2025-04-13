@@ -101,20 +101,26 @@ export default function StoreManagement() {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
-                <Typography variant="h6" sx={{ color: "white" }}>Admin Store</Typography>
-                <Button
-                    variant="outlined"
-                    sx={{
-                        color: "white",
-                        borderColor: "white",
-                        "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' }
-                    }}
-                    onClick={handleDialogOpen}
-                >
-                    Create Store
-                </Button>
-            </div>
+            <Grid container spacing={2} sx={{ marginTop: "16px", marginBottom: "16px" }}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography variant="h6" sx={{ color: "white" }}>Admin Store</Typography>
+                        <Button
+                            variant="outlined"
+                            sx={{
+                                color: "white",
+                                borderColor: "white",
+                                "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' }
+                            }}
+                            onClick={handleDialogOpen}
+                        >
+                            Create Store
+                        </Button>
+                    </div>
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
 
             <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
                 <DialogTitle>Create Store</DialogTitle>
@@ -152,37 +158,43 @@ export default function StoreManagement() {
                 </DialogActions>
             </Dialog>
 
-            <Paper style={{ padding: "16px", backgroundColor: "#333", marginTop: "16px" }}>
-                <Typography variant="h6" sx={{ color: "white", marginBottom: "12px" }}>Available Stores</Typography>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell style={{ color: "white" }}>Name</TableCell>
-                            <TableCell style={{ color: "white" }}>Address</TableCell>
-                            <TableCell style={{ color: "white" }}>City</TableCell>
-                            <TableCell style={{ color: "white" }}>State</TableCell>
-                            <TableCell style={{ color: "white" }}>Zip Code</TableCell>
-                            <TableCell style={{ color: "white" }}>Country</TableCell>
-                            <TableCell style={{ color: "white" }}>Phone</TableCell>
-                            <TableCell style={{ color: "white" }}>Email</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {stores.map((store, index) => (
-                            <TableRow key={store.id || index}>
-                                <TableCell style={{ color: "white" }}>{store.name}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.address}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.city}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.state}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.zipCode}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.country}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.phoneNumber}</TableCell>
-                                <TableCell style={{ color: "white" }}>{store.email}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Paper>
+            <Grid container spacing={2} sx={{ marginTop: "16px" }}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <Paper style={{ padding: "16px", backgroundColor: "#333" }}>
+                        <Typography variant="h6" sx={{ color: "white", marginBottom: "12px" }}>Available Stores</Typography>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell style={{ color: "white" }}>Name</TableCell>
+                                    <TableCell style={{ color: "white" }}>Address</TableCell>
+                                    <TableCell style={{ color: "white" }}>City</TableCell>
+                                    <TableCell style={{ color: "white" }}>State</TableCell>
+                                    <TableCell style={{ color: "white" }}>Zip Code</TableCell>
+                                    <TableCell style={{ color: "white" }}>Country</TableCell>
+                                    <TableCell style={{ color: "white" }}>Phone</TableCell>
+                                    <TableCell style={{ color: "white" }}>Email</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {stores.map((store, index) => (
+                                    <TableRow key={store.id || index}>
+                                        <TableCell style={{ color: "white" }}>{store.name}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.address}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.city}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.state}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.zipCode}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.country}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.phoneNumber}</TableCell>
+                                        <TableCell style={{ color: "white" }}>{store.email}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
         </div>
     );
 }
