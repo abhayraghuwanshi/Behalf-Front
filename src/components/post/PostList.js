@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  Grid,
   Pagination,
   Typography,
 } from "@mui/material";
@@ -93,52 +94,71 @@ const PostList = () => {
   }, [posts, filters, searchTerm]);
 
   return (
-    <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20px', color: 'white', marginBottom: '40px' }}>
+    <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20</Grid>px', color: 'white', marginBottom: '40px' }}>
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "20px" }}>
-          <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
-          <Button
-            variant="outlined"
-            sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-            onClick={() => setIsCreatingPost(true)}
-          >
-            Create Request
-          </Button>
-        </Box>
+        <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+          <Grid item xs={12} md={9}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+              <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Quests</Typography>
+              <Button
+                variant="outlined"
+                sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                onClick={() => setIsCreatingPost(true)}
+              >
+                Create Request
+              </Button>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+        </Grid>
 
         {/* Filter Controls */}
-        <FilterControls
-          minPrice={filters.minPrice}
-          maxPrice={filters.maxPrice}
-          dateFilter={filters.dateFilter}
-          searchTerm={searchTerm}
-          setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
-          setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
-          setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
-          setSearchTerm={setSearchTerm}
-        />
+        <Grid container spacing={2} sx={{ marginTop: '20px' }}>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+          <Grid item xs={12} md={9}>
+            <FilterControls
+              minPrice={filters.minPrice}
+              maxPrice={filters.maxPrice}
+              dateFilter={filters.dateFilter}
+              searchTerm={searchTerm}
+              setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
+              setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
+              setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
+              setSearchTerm={setSearchTerm}
+            />
+          </Grid>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+        </Grid>
 
         {/* Posts Grid */}
-        <div className="post-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px', marginTop: '30px' }}>
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) =>
-              post ? (
-                <PostCard
-                  key={post.productId}
-                  postData={post}
-                  onAccept={handleAccept}
-                  user={user}
-                  postSession={{
-                    questCreatorId: post.questCreatorId,
-                    questId: post.id,
-                  }}
-                />
-              ) : null
-            )
-          ) : (
-            <p>No posts found.</p>
-          )}
-        </div>
+        <Grid container spacing={2} sx={{ marginTop: '30px' }}>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+          <Grid item xs={12} md={9}>
+            <Grid container spacing={2}>
+              {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) =>
+                  post ? (
+                    <Grid item xs={12} md={4} key={post.productId}>
+                      <PostCard
+                        postData={post}
+                        onAccept={handleAccept}
+                        user={user}
+                        postSession={{
+                          questCreatorId: post.questCreatorId,
+                          questId: post.id,
+                        }}
+                      />
+                    </Grid>
+                  ) : null
+                )
+              ) : (
+                <Typography sx={{ color: 'white', textAlign: 'center', width: '100%' }}>No posts found.</Typography>
+              )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+        </Grid>
 
         {/* Pagination */}
         <Box mt={4}>
