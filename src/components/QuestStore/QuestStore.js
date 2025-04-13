@@ -50,8 +50,11 @@ function QuestStore() {
                 console.error("Failed to load cart:", error);
             }
         };
-        loadCart();
-    }, [sessionId]);
+
+        if (sessionId) {
+            loadCart(); // Ensure this runs only when sessionId is available
+        }
+    }, [sessionId]); // Dependency array ensures this runs only when sessionId changes
 
     // Add or update cart item using backend
     const handleAddOrUpdateCart = async (product, quantity) => {

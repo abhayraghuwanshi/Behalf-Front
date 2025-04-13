@@ -50,7 +50,7 @@ const ProductService = {
 
     getMyOrders: async (userId) => {
         try {
-            const response = await axios.get(`${BACKEND_API_URL}/api/store/myorders?userId=${userId}`, {
+            const response = await axios.get(`${BACKEND_API_URL}/api/orders/user/${userId}`, {
                 withCredentials: true,
                 headers: {
                     'Accept': 'application/json',

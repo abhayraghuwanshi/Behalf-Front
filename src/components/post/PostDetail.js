@@ -1,105 +1,107 @@
 import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import imageService from "../../service/FileService";
 import PostService from "../../service/PostService";
-import PostCard from "./PostCard";
 
 const PostDetail = () => {
     const { postId } = useParams();
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
-    const [creator, setCreator] = useState(null);
-    const [similarPosts, setSimilarPosts] = useState([]);
+    const [imageUrl, setImageUrl] = useState("");
 
     useEffect(() => {
         const fetchPostDetails = async () => {
             try {
                 const response = await PostService.getPostById(postId);
                 setPost(response);
-                setCreator(response.userInformation);
 
-                const similarPostsResponse = await PostService.getSimilarPosts(response.id);
-                setSimilarPosts(similarPostsResponse);
+                // Fetch the image
+                if (response.imageUrl) {
+                    const [bucketName, imageId] = response.imageUrl.split('/');
+                    const fetchedImageUrl = await imageService.fetchImage(`${bucketName}/file/${imageId}`);
+                    setImageUrl(fetchedImageUrl);
+                }
             } catch (error) {
                 console.error("Error fetching post details:", error);
             }
         };
 
         fetchPostDetails();
-    }, []);
+    }, [postId]);
 
-    if (!post || !creator) {
+    if (!post) {
         return <Typography color="white" sx={{ textAlign: "center", marginTop: "100px" }}>Loading...</Typography>;
     }
 
     return (
-        <Box sx={{ padding: 3, color: "white", marginTop: '100px', maxWidth: "1200px", margin: "auto" }}>
-            <Button onClick={() => navigate(-1)} sx={{ marginBottom: 2, color: "white" }}>Back</Button>
+        <Box sx={{ padding: 3, color: "white", marginTop: '20px', maxWidth: "1200px", margin: "auto" }}>
+            <Button
+                onClick={() => navigate(-1)}
+                sx={{
+                    color: "white",
+                    marginBottom: 2,
+                    marginTop: 8,
+                    backgroundColor: "#333",
+                    "&:hover": { backgroundColor: "#555" },
+                }}
+            >
+                Back
+            </Button>
 
             {/* Quest Details */}
-            <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3 }}>
+            <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}>
                 <Typography variant="h4" gutterBottom sx={{ color: "#90caf9", fontWeight: "bold" }}>
                     {post.questInstructions}
                 </Typography>
+                <Box sx={{ textAlign: "center", marginBottom: 2 }}>
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt="Quest"
+                            style={{ width: '100%', height: '300px', borderRadius: '8px', objectFit: 'cover', boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}
+                        />
+                    ) : (
+                        <Typography variant="body2" sx={{ color: "#cccccc" }}>No image available</Typography>
+                    )}
+                </Box>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
-                    Reward: {post.questReward} {post.questCurrency}
+                    <strong>Reward:</strong> {post.questReward} {post.questCurrency}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
-                    Valid Until: {new Date(post.questValidity).toLocaleDateString()}
+                    <strong>Valid Until:</strong> {new Date(post.questValidity).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
-                    Created: {new Date(post.creationTimestamp).toLocaleDateString()}
+                    <strong>Created:</strong> {new Date(post.creationTimestamp).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
-                    From: {post.locationFrom}
+                    <strong>From:</strong> {post.locationFrom}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
-                    To: {post.locationTo}
+                    <strong>To:</strong> {post.locationTo}
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc" }}>
-                    Status: {post.questStatus || 'PENDING'}
+                    <strong>Status:</strong> {post.questStatus || 'PENDING'}
                 </Typography>
             </Card>
 
             {/* Creator Details */}
-            <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3 }}>
+            <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}>
                 <Typography variant="h5" sx={{ color: "#90caf9", fontWeight: "bold", marginBottom: 2 }}>
                     Creator Details
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Avatar src={creator.picture} alt={creator.firstName} sx={{ width: 64, height: 64 }} />
+                    <Avatar src={post.userInformation.picture} alt={post.userInformation.firstName} sx={{ width: 64, height: 64, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }} />
                     <Box>
                         <Typography variant="body1" sx={{ color: "#ffffff", fontWeight: "bold" }}>
-                            {creator.firstName} {creator.lastName}
+                            {post.userInformation.firstName} {post.userInformation.lastName}
                         </Typography>
                         <Typography variant="body2" sx={{ color: "#cccccc" }}>
-                            Email: {creator.email}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: "#cccccc" }}>
-                            Quests Done: {creator.questsDone || 'N/A'}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: "#cccccc" }}>
-                            Review: {creator.review || 'No reviews available'}
+                            <strong>Email:</strong> {post.userInformation.email}
                         </Typography>
                     </Box>
                 </Box>
             </Card>
-
-            {/* Similar Posts */}
-            <Box>
-                <Typography variant="h5" sx={{ color: "#90caf9", fontWeight: "bold", marginBottom: 2 }}>
-                    Similar Quests
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                    {similarPosts.length > 0 ? (
-                        similarPosts.map((similarPost) => (
-                            <PostCard key={similarPost.id} postData={similarPost} />
-                        ))
-                    ) : (
-                        <Typography sx={{ color: "#cccccc" }}>No similar posts found.</Typography>
-                    )}
-                </Box>
-            </Box>
         </Box>
     );
 };

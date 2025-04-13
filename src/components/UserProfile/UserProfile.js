@@ -123,7 +123,7 @@ const UserProfile = () => {
 
             </Box>
             <Box sx={{ p: 3, backgroundColor: '#000', minHeight: '100vh', color: 'white' }}>
-                <Tabs value={selectedTab} onChange={handleTabChange} centered style={{ color: "white", marginBottom: 10 }}>
+                <Tabs value={selectedTab} onChange={handleTabChange} style={{ color: "white", marginBottom: 10 }}>
                     <Tab style={{ color: "white" }} label="Travel Requests" />
                     <Tab style={{ color: "white" }} label="My Quests" />
                     <Tab style={{ color: "white" }} label="My Store Orders" />
