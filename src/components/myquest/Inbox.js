@@ -2,7 +2,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 
-const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, newMessage, setNewMessage, handleSendMessage, getChatRecipientName }) => {
+const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, newMessage, setNewMessage, handleSendMessage, getChatRecipientName, handleUpdateStatus }) => {
     const chatEndRef = useRef(null);
 
     // Auto-scroll to the latest message
@@ -10,12 +10,67 @@ const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, n
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
+    const labels = ["PENDING", "REJECTED", "SUCCESS"];
+    const [selectedStatus, setSelectedStatus] = React.useState("PENDING");
+
+    const handleChange = (e) => {
+        setSelectedStatus(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        if (selectedSession) {
+            handleUpdateStatus(selectedSession, selectedStatus);
+        }
+    };
+
     return (
         <div className="inbox">
             {/* Header */}
             <h2 style={{ color: '#90caf9' }}>
                 Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}
             </h2>
+
+            {/* Status Dropdown and Submit Button */}
+            {selectedQuest && user.id === selectedQuest.questCreatorId && (
+                <div style={{ marginBottom: "16px", display: "flex", alignItems: "center" }}>
+                    <select
+                        value={selectedStatus}
+                        onChange={handleChange}
+                        style={{
+                            marginRight: "10px",
+                            padding: "5px",
+                            borderRadius: "4px",
+                            background: "#222",
+                            color: "white",
+                            border: "1px solid white",
+                        }}
+                    >
+                        {labels.map((label) => (
+                            <option key={label} value={label}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                        style={{
+                            padding: "8px 12px",
+                            borderRadius: "6px",
+                            background: "#444",
+                            color: "white",
+                            border: "1px solid #90caf9",
+                            cursor: "pointer",
+                            transition: "background 0.3s ease",
+                        }}
+                        onMouseOver={(e) => (e.target.style.background = "#555")}
+                        onMouseOut={(e) => (e.target.style.background = "#444")}
+                    >
+                        Submit
+                    </button>
+                </div>
+            )}
 
             {/* Messages */}
             <div style={{ overflowY: 'auto', maxHeight: '60vh', padding: '10px' }}>

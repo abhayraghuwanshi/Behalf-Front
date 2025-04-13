@@ -4,7 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Footer from './components/Footer/Footer.js';
 import Home from './components/homepage/home.js';
-import MyQuestPage from './components/myquest/viewMyQuest.js';
+import MyQuestPage from './components/myquest/MyQuest.js';
 import ResponsiveAppBar from './components/navbar/navbarv.js';
 import PostDetail from './components/post/PostDetail.js';
 import PostList from './components/post/PostList.js';
