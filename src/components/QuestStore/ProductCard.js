@@ -2,8 +2,9 @@ import { Avatar, Box, Button, Card, Typography } from '@mui/joy';
 import React, { useEffect, useState } from 'react';
 import imageService from '../../service/FileService';
 
-const ProductCard = ({ product, onAddOrUpdateCart }) => {
+const ProductCard = ({ product, onAddOrUpdateCart, cart }) => {
     const [imageUrls, setImageUrls] = useState([]);
+    const [quantity, setQuantity] = useState(0);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -21,6 +22,24 @@ const ProductCard = ({ product, onAddOrUpdateCart }) => {
 
         fetchImages();
     }, [product.imageUrls]);
+
+    useEffect(() => {
+        // Update the quantity from the cart if the product is already in it
+        const cartItem = cart.find(item => item.productId === product.productId);
+        setQuantity(cartItem ? cartItem.quantity : 0);
+    }, [cart, product.productId]);
+
+    const handleAddToCart = () => {
+        const newQuantity = quantity + 1;
+        setQuantity(newQuantity);
+        onAddOrUpdateCart(product, newQuantity);
+    };
+
+    const handleRemoveFromCart = () => {
+        const newQuantity = quantity - 1;
+        setQuantity(newQuantity);
+        onAddOrUpdateCart(product, newQuantity);
+    };
 
     return (
         <Card
@@ -71,16 +90,42 @@ const ProductCard = ({ product, onAddOrUpdateCart }) => {
 
             {/* Action Buttons */}
             <Box display="flex" justifyContent="space-between" mt={2}>
-                <Button
-                    sx={{
-                        color: "#ffffff",
-                        backgroundColor: "#333",
-                        "&:hover": { backgroundColor: "#555" },
-                    }}
-                    onClick={() => onAddOrUpdateCart(product, 1)} // Add product to cart with quantity 1
-                >
-                    Add to Cart
-                </Button>
+                {quantity > 0 ? (
+                    <Box display="flex" alignItems="center">
+                        <Button
+                            sx={{
+                                color: "#ffffff",
+                                backgroundColor: "#333",
+                                "&:hover": { backgroundColor: "#555" },
+                            }}
+                            onClick={handleRemoveFromCart}
+                        >
+                            -
+                        </Button>
+                        <Typography sx={{ margin: '0 10px', color: "#ffffff" }}>{quantity}</Typography>
+                        <Button
+                            sx={{
+                                color: "#ffffff",
+                                backgroundColor: "#333",
+                                "&:hover": { backgroundColor: "#555" },
+                            }}
+                            onClick={handleAddToCart}
+                        >
+                            +
+                        </Button>
+                    </Box>
+                ) : (
+                    <Button
+                        sx={{
+                            color: "#ffffff",
+                            backgroundColor: "#333",
+                            "&:hover": { backgroundColor: "#555" },
+                        }}
+                        onClick={handleAddToCart}
+                    >
+                        Add to Cart
+                    </Button>
+                )}
                 <Button
                     sx={{
                         color: "#ffffff",

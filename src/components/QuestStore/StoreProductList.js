@@ -30,28 +30,44 @@ function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
 
     return (
         <div className="product-list-container">
-            <div className="filter-container">
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={filterName}
-                    onChange={e => setFilterName(e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Max Price"
-                    value={filterPrice}
-                    onChange={e => setFilterPrice(e.target.value)}
-                />
-                <button onClick={handleFilter}>Filter</button>
-            </div>
+            {/* Add the copywriting text */}
+
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <div style={{ textAlign: 'center', marginBottom: '20px', color: 'white' }}>
+                        <h1>Discover What’s Hot in Your City!</h1>
+                        <p style={{ fontSize: '20px', color: '#ccc', lineHeight: '1.5' }}>
+                            See the trending items everyone’s raving about near you. From exclusive gadgets to must-have fashion,
+                            create a delivery quest or grab them instantly with our skip-the-queue option—score the best deals without the wait!
+                        </p>
+                    </div>
+                    <div className="filter-container">
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={filterName}
+                            onChange={e => setFilterName(e.target.value)}
+                        />
+                        <input
+                            type="number"
+                            placeholder="Max Price"
+                            value={filterPrice}
+                            onChange={e => setFilterPrice(e.target.value)}
+                        />
+                        <button onClick={handleFilter}>Filter</button>
+                    </div>
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
+
             <Grid container spacing={2} sx={{ marginTop: '20px' }}>
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                 <Grid item xs={12} md={9}>
                     <Grid container spacing={2}>
                         {products.map(product => (
                             <Grid item xs={12} md={4} key={product.productId}>
-                                <ProductCard product={product} onAddOrUpdateCart={onAddOrUpdateCart} />
+                                <ProductCard product={product} onAddOrUpdateCart={onAddOrUpdateCart} cart={cart} />
                             </Grid>
                         ))}
                     </Grid>
