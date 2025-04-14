@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { CountryProvider } from './components/navbar/CountryProvider';
 import { AuthProvider } from './components/SignIn/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { MenuProvider } from './context/MenuContext';
 import './index.css';
 
@@ -13,7 +14,9 @@ root.render(
   <CountryProvider>
     <AuthProvider>
       <MenuProvider>
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </MenuProvider>
     </AuthProvider>
   </CountryProvider>

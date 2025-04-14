@@ -1,10 +1,12 @@
 import { Avatar, Box, Button, Card, Typography } from '@mui/joy';
 import React, { useEffect, useState } from 'react';
+import { useCart } from '../../context/CartContext';
 import imageService from '../../service/FileService';
 
-const ProductCard = ({ product, onAddOrUpdateCart, cart }) => {
-    const [imageUrls, setImageUrls] = useState([]);
+const ProductCard = ({ product }) => {
+    const { cart, addOrUpdateCart } = useCart();
     const [quantity, setQuantity] = useState(0);
+    const [imageUrls, setImageUrls] = useState([]);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -24,7 +26,6 @@ const ProductCard = ({ product, onAddOrUpdateCart, cart }) => {
     }, [product.imageUrls]);
 
     useEffect(() => {
-        // Update the quantity from the cart if the product is already in it
         const cartItem = cart.find(item => item.productId === product.productId);
         setQuantity(cartItem ? cartItem.quantity : 0);
     }, [cart, product.productId]);
@@ -32,13 +33,13 @@ const ProductCard = ({ product, onAddOrUpdateCart, cart }) => {
     const handleAddToCart = () => {
         const newQuantity = quantity + 1;
         setQuantity(newQuantity);
-        onAddOrUpdateCart(product, newQuantity);
+        addOrUpdateCart(product, newQuantity);
     };
 
     const handleRemoveFromCart = () => {
         const newQuantity = quantity - 1;
         setQuantity(newQuantity);
-        onAddOrUpdateCart(product, newQuantity);
+        addOrUpdateCart(product, newQuantity);
     };
 
     return (
