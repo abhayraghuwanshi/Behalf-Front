@@ -68,8 +68,8 @@ const PostDetail = () => {
 
             {/* Quest Details */}
             <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}>
-                <Typography variant="h4" gutterBottom sx={{ color: "#90caf9", fontWeight: "bold" }}>
-                    {post.questInstructions}
+                <Typography variant="h5" sx={{ color: "#90caf9", fontWeight: "bold", marginBottom: 2 }}>
+                    Quest Details
                 </Typography>
                 <Box sx={{ textAlign: "center", marginBottom: 2 }}>
                     {imageUrl ? (
@@ -82,6 +82,9 @@ const PostDetail = () => {
                         <Typography variant="body2" sx={{ color: "#cccccc" }}>No image available</Typography>
                     )}
                 </Box>
+                <Typography variant="body1" gutterBottom sx={{ color: "#90caf9", fontWeight: "bold" }}>
+                    {post.questInstructions}
+                </Typography>
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
                     <strong>Reward:</strong> {post.questReward} {post.questCurrency}
                 </Typography>
