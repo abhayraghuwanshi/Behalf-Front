@@ -103,7 +103,7 @@ function QuestStore() {
     return (
         <div style={{ marginTop: '60px' }}>
             <div>{renderContent()}</div>
-            <FloatingMenu selected={selected} onMenuSelect={setSelected} isAdmin={isAdmin} />
+            <FloatingMenu selected={selected} onMenuSelect={setSelected} isAdmin={isAdmin} cart={cart} />
         </div>
     );
 }

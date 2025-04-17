@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import { useMenu } from '../../context/MenuContext';
 import './FloatingMenu.css';
 
-function FloatingMenu({ onMenuSelect }) {
+function FloatingMenu({ onMenuSelect, cart }) {
     const { selectedMenu, setSelectedMenu, isAdminOrManager } = useMenu();
 
     const handleSelection = (menu) => {
         setSelectedMenu(menu);
         onMenuSelect(menu);
     };
+
+    const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
     useEffect(() => {
         onMenuSelect(selectedMenu);
@@ -26,7 +28,7 @@ function FloatingMenu({ onMenuSelect }) {
                 className={selectedMenu === 'orderlist' ? 'active' : ''}
                 onClick={() => handleSelection('orderlist')}
             >
-                Cart
+                Cart {cartItemCount > 0 && `(${cartItemCount})`}
             </button>
             <button
                 className={selectedMenu === 'myorders' ? 'active' : ''}
