@@ -9,7 +9,7 @@ import { useCountry } from '../navbar/CountryProvider';
 import Post from '../post/PostCard';
 import ProductCard from '../QuestStore/ProductCard';
 import { useAuth } from '../SignIn/AuthContext';
-import img from './travelbyplane3.png';
+import img from './main-6.png';
 
 function Home() {
   const navigate = useNavigate();

@@ -2,6 +2,7 @@ import { Google } from "@mui/icons-material";
 import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { BACKEND_API_URL } from "../../env";
+import logo from "./main-7.png"; // Adjust the path as necessary
 
 const LoginPage = ({ onLogin }) => {
     const [username, setUsername] = useState("");
@@ -48,7 +49,7 @@ const LoginPage = ({ onLogin }) => {
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                 <Grid item xs={12} md={4.5} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <img
-                        src="/assets/login-image.png" // Replace with the actual image path
+                        src={logo} // Replace with the actual image path
                         alt="Login Illustration"
                         style={{ maxWidth: "100%", borderRadius: "8px" }}
                     />
