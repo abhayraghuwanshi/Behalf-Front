@@ -68,8 +68,8 @@ const UserProfile = () => {
     }
 
     return (
-        <Grid container justifyContent="center" style={{ backgroundColor: "#000", color: "white", minHeight: "100vh" }}>
-            <Grid item xs={9} style={{ padding: "0 12px" }}>
+        <Grid container style={{ backgroundColor: "#000", color: "white", minHeight: "100vh" }}>
+            <Grid item xs={12} md={12} style={{ padding: "0 12px" }}>
                 <div>
                     <Box
                         sx={{
@@ -125,39 +125,68 @@ const UserProfile = () => {
 
                     </Box>
                     <Box sx={{ p: 3, backgroundColor: '#000', minHeight: '100vh', color: 'white' }}>
-                        <Tabs value={selectedTab} onChange={handleTabChange} style={{ color: "white", marginBottom: 10 }}>
-                            <Tab style={{ color: "white" }} label="Travel Requests" />
-                            <Tab style={{ color: "white" }} label="My Quests" />
-                            <Tab style={{ color: "white" }} label="My Store Orders" />
-                        </Tabs>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                            <Grid item xs={12} md={9}>
+                                <Tabs value={selectedTab} onChange={handleTabChange} style={{ color: "white", marginBottom: 10 }}>
+                                    <Tab style={{ color: "white" }} label="Travel Requests" />
+                                    <Tab style={{ color: "white" }} label="My Quests" />
+                                    <Tab style={{ color: "white" }} label="My Store Orders" />
+
+                                </Tabs>
+                            </Grid>
+                            <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+                        </Grid>
 
                         <div sx={{ marginTop: 2 }}>
-                            {selectedTab === 0 && <TravelRequestPage />}
+                            {selectedTab === 0 && (
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                                    <Grid item xs={12} md={9}> <TravelRequestPage /> </Grid>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+                                </Grid>
+
+                            )}
+
+
                             {selectedTab === 1 && (
-                                <div>
-                                    {loading ? (
-                                        <Typography color="white">Loading...</Typography>
-                                    ) : (
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                                            {filteredQuests.map((quest) => (
-                                                <Box key={quest.id} sx={{ width: '30%', padding: 2, borderRadius: '8px', background: '#303030', color: 'white' }}>
-                                                    <Typography variant="h6" gutterBottom>
-                                                        {quest.questInstructions}
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        Reward: ${quest.questReward}
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        Created: {new Date(quest.creationTimestamp).toLocaleDateString()}
-                                                    </Typography>
-                                                    <Typography variant="body2">
-                                                        Quest Progress: {quest.questStatus == null ? 'PENDING' : quest.questStatus}
-                                                    </Typography>
-                                                </Box>
-                                            ))}
-                                        </Box>
-                                    )}
-                                </div>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                                    <Grid item xs={12} md={9}>
+                                        {loading ? (
+                                            <Typography color="white">Loading...</Typography>
+                                        ) : (
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                                                {filteredQuests.map((quest) => (
+                                                    <Box key={quest.id} sx={{ width: '30%', padding: 2, borderRadius: '8px', background: '#303030', color: 'white' }}>
+                                                        <Typography variant="h6" gutterBottom>
+                                                            {quest.questInstructions}
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            Reward: {quest.questReward} {quest.questCurrency}
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            From: {quest.locationFrom} ({quest.locationFromDetail})
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            To: {quest.locationTo} ({quest.locationToDetail})
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            Valid Until: {new Date(quest.questValidity).toLocaleDateString()}
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            Created: {new Date(quest.creationTimestamp).toLocaleDateString()}
+                                                        </Typography>
+                                                        <Typography variant="body2">
+                                                            Quest Progress: {quest.questStatus || 'PENDING'}
+                                                        </Typography>
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                        )}
+                                    </Grid>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+                                </Grid>
                             )}
                             {selectedTab === 2 && <MyOrders />}
                         </div>

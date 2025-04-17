@@ -1,5 +1,6 @@
 import { Avatar, Box, Button, Card, Typography } from '@mui/joy';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import imageService from '../../service/FileService';
 
@@ -7,6 +8,7 @@ const ProductCard = ({ product }) => {
     const { cart, addOrUpdateCart } = useCart();
     const [quantity, setQuantity] = useState(0);
     const [imageUrls, setImageUrls] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -40,6 +42,10 @@ const ProductCard = ({ product }) => {
         const newQuantity = quantity - 1;
         setQuantity(newQuantity);
         addOrUpdateCart(product, newQuantity);
+    };
+
+    const handleViewDetails = () => {
+        navigate(`/product/${product.productId}`);
     };
 
     return (
@@ -133,6 +139,7 @@ const ProductCard = ({ product }) => {
                         backgroundColor: "#333",
                         "&:hover": { backgroundColor: "#555" },
                     }}
+                    onClick={handleViewDetails}
                 >
                     Details
                 </Button>

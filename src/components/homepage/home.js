@@ -18,9 +18,6 @@ function Home() {
   const [questRecommendations, setQuestRecommendations] = useState([]);
   const { selectedCountry } = useCountry(); // Get the selected country from CountryProvider
 
-  const handleClick = () => {
-    navigate("/login");
-  }
 
   const howItWorks = [
     {

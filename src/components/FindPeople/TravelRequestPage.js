@@ -2,7 +2,6 @@ import { Box, Button, Dialog, DialogContent, List, ListItem, TextField, Typograp
 import React, { useEffect, useState } from "react";
 import TravelRequestService from "../../service/TravelRequestService";
 import { useAuth } from "../SignIn/AuthContext";
-import ConnectGmailButton from "../UserProfile/FetchEmail";
 import TravelRequestForm from "./TravelRequestForm";
 
 const TravelRequestPage = () => {
@@ -46,6 +45,10 @@ const TravelRequestPage = () => {
             alert("Error creating travel request. Please try again.");
         }
     };
+    const connectGmail = () => {
+        // Just redirect the browser to the backend endpoint
+        window.location.href = 'http://localhost:8080/gmail/oauth2/authorize';
+    };
 
     const filteredRequests = Array.isArray(requests)
         ? requests.filter((request) =>
@@ -69,11 +72,11 @@ const TravelRequestPage = () => {
                     <Button
                         variant="outlined"
                         sx={{ color: "white", borderColor: "white", marginLeft: "auto", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                        onClick={() => setIsCreatingPeopleQuest(true)}
+                        onClick={() => connectGmail()}
                     >
                         Auto Import (Gmail)
                     </Button>
-                    <ConnectGmailButton />
+
                 </Box>
                 {/* Filters */}
                 <Box sx={{ display: "flex", gap: 2, marginBottom: "20px" }}>

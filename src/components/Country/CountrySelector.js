@@ -5,29 +5,36 @@ import { useCountries } from 'use-react-countries';
 const CountrySelector = ({ selectedCountry, handleCountryChange, inputStyles, label }) => {
     const { countries } = useCountries();
 
-    // Limit to specific countries
-    const allowedCountries = ['India', 'Vietnam', "United States"];
+    const allowedCountries = ['India', 'Vietnam', 'United States'];
     const filteredCountries = countries.filter((country) => allowedCountries.includes(country.name));
 
     return (
         <TextField
-            style={{ marginTop: '0px', backgroundColor: 'transparent', height: '40px' }} // Adjust height and margin
             select
             value={selectedCountry}
             onChange={handleCountryChange}
             label={label}
+            size="small" // Ensures compact consistent height
             sx={{
-                ...inputStyles,
+                minWidth: '140px',
+                height: '40px',
+                '& .MuiInputBase-root': {
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: 'transparent',
+                    color: 'white',
+                },
                 '& .MuiSelect-select': {
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px', // Add spacing between flag and text
-                    height: '40px', // Match height with other elements
-                    padding: '0 12px', // Consistent padding
+                    padding: '0 12px',
+                    height: '40px',
                 },
                 '& .MuiSvgIcon-root': {
-                    fontSize: '20px', // Adjust flag icon size
+                    fontSize: '20px',
                 },
+                ...inputStyles,
             }}
             SelectProps={{
                 MenuProps: {
@@ -47,7 +54,7 @@ const CountrySelector = ({ selectedCountry, handleCountryChange, inputStyles, la
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px', // Add spacing between flag and text
+                        gap: '8px',
                     }}
                 >
                     <img

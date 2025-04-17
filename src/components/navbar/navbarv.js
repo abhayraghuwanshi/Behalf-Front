@@ -31,20 +31,29 @@ function Navbar() {
   const handleCountryChange = (e) => setSelectedCountry(e.target.value);
 
   const filteredPages = user ? [...pages] : pages;
+
   const inputStyles = {
     '& .MuiInputLabel-root': { color: 'white' },
     '& .MuiOutlinedInput-input': { color: 'white' },
   };
+
   return (
     <AppBar position="fixed" sx={{ backgroundColor: 'black', borderRadius: '8px' }}>
       <Container>
-        <Toolbar disableGutters sx={{ minHeight: '40px' }}>
+        <Toolbar disableGutters sx={{ minHeight: '60px', display: 'flex', justifyContent: 'space-between' }}>
+
           {/* Left Side - Logo & Pages */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <img
+            <Box
+              component="img"
               src={logo}
               alt="Logo"
-              style={{ width: '200px', height: '40px', cursor: 'pointer' }}
+              sx={{
+                width: '120px',
+                height: '40px',
+                objectFit: 'contain',
+                cursor: 'pointer',
+              }}
               onClick={() => navigate('/')}
             />
             <Box sx={{ display: 'flex', gap: 2, marginLeft: '20px' }}>
@@ -59,9 +68,10 @@ function Navbar() {
                     padding: '6px 12px',
                     borderRadius: '4px',
                     textDecoration: location.pathname === page.path ? 'underline' : 'none',
-                    textDecorationColor: location.pathname === page.path ? 'orange' : 'none',
-                    textDecorationThickness: '2px',
+                    textDecorationColor: location.pathname === page.path ? 'purple' : 'none',
+                    textDecorationThickness: '4px',
                     textUnderlineOffset: '10px',
+                    height: '40px',
                   }}
                 >
                   {page.name}
@@ -71,7 +81,7 @@ function Navbar() {
           </Box>
 
           {/* Right Side - Actions */}
-          <Box sx={{ position: 'absolute', right: '0', display: 'flex', gap: '10px', alignItems: 'center', height: '40px' }}>
+          <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             <CountrySelector
               selectedCountry={selectedCountry}
               handleCountryChange={handleCountryChange}
@@ -80,44 +90,43 @@ function Navbar() {
                 '& .MuiSelect-select': {
                   display: 'flex',
                   alignItems: 'center',
-                  height: '40px', // Match height
-                  fontSize: '20px', // Adjust font size
-
+                  justifyContent: 'center',
                 },
                 '& .MuiSvgIcon-root': {
-                  fontSize: '20px', // Adjust flag icon size
+                  fontSize: '20px',
                 },
               }}
               sx={{
-                height: '40px', // Match height
                 display: 'flex',
                 alignItems: 'center',
+                height: '40px',
               }}
             />
+
             {user ? (
               <>
-                {/* My-Quest with Message Icon */}
+                {/* Notification Icon */}
                 <IconButton
-                  onClick={() => navigate('/viewQuest')}
+                  onClick={() => navigate('/notification')}
                   sx={{
-                    height: '40px', // Consistent height
-                    width: '40px', // Consistent width
+                    height: '40px',
+                    width: '40px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
                   <Badge color="error" variant="dot">
-                    <MailIcon sx={{ color: 'white', fontSize: '30px' }} /> {/* Adjust icon size */}
+                    <MailIcon sx={{ color: 'white', fontSize: '24px' }} />
                   </Badge>
                 </IconButton>
 
-                {/* Profile with Avatar */}
+                {/* Profile Avatar */}
                 <IconButton
                   onClick={() => navigate('/profile')}
                   sx={{
-                    height: '40px', // Consistent height
-                    width: '40px', // Consistent width
+                    height: '40px',
+                    width: '40px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -133,8 +142,8 @@ function Navbar() {
                   color: 'white',
                   borderRadius: '4px',
                   backgroundColor: '#1976d2',
-                  height: '40px', // Consistent height
-                  padding: '6px 12px', // Consistent padding
+                  height: '40px',
+                  padding: '6px 12px',
                   '&:hover': { backgroundColor: '#1565c0' },
                 }}
               >

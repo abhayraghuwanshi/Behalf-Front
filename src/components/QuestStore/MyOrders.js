@@ -45,10 +45,10 @@ function MyOrders() {
                     <Typography variant="h5" gutterBottom>
                         My Orders
                     </Typography>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3} sx={{ marginTop: 2 }}> {/* Add spacing between orders */}
                         {myOrders.map((order) => (
                             <Grid item xs={12} md={4} key={order.orderId}>
-                                <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white' }}>
+                                <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white', marginBottom: 2 }}> {/* Add marginBottom for extra spacing */}
                                     <CardContent>
                                         <Typography variant="h6" color="white">
                                             Order #{order.orderId}
