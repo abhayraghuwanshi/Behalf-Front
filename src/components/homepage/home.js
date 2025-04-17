@@ -23,17 +23,21 @@ function Home() {
     {
       "step": 1,
       "title": "Create Delivery Quest",
-      "description": "Users can create quests for items they need delivered."
+      "description": "Users can create quests for items they need delivered.",
+      "src": require('./main-1.png') // Use require to load the image
     },
     {
       "step": 2,
       "title": "Choose from Applied Users",
-      "description": "Select a suitable user from those who have applied to complete the quest."
+      "description": "Select a suitable user from those who have applied to complete the quest.",
+      "src": require('./main-2.png') // Use require to load the image
     },
     {
       "step": 3,
       "title": "Share Details and Accept Delivery",
-      "description": "Share necessary details with the chosen user and confirm the delivery."
+      "description": "Share necessary details with the chosen user and confirm the delivery.",
+      "src": require('./main-3.png') // Use require to load the image
+
     }
   ];
 
@@ -110,15 +114,16 @@ function Home() {
       </Grid>
 
       {/* How It Works */}
-      <h2 style={{ textAlign: 'center' }}>How it works</h2>
+      <h1 style={{ textAlign: 'center' }}>How it works</h1>
       <Grid container spacing={2} sx={{ mt: 2, mb: 4 }}>
         <Grid xs={12} md={1.5}> </Grid>
         {howItWorks.map((step) => (
           <Grid key={step.step} xs={12} md={3}>
-            <div style={{ backgroundColor: '#2b2b2b', padding: '10px', borderRadius: '5px', height: '300px', textAlign: 'center' }}>
+            <img src={step.src} alt={step.title} style={{ width: '100%', height: 'auto', borderRadius: '5px' }} />
+            {/* <div style={{ backgroundColor: '#2b2b2b', padding: '10px', borderRadius: '5px', height: '300px', textAlign: 'center' }}>
               <Typography level="body1" sx={{ color: 'white' }}>{step.title}</Typography>
               <Typography level="body2" sx={{ color: 'white', marginTop: '10px' }}>{step.description}</Typography>
-            </div>
+            </div> */}
           </Grid>
         ))}
         <Grid xs={12} md={1.5}></Grid>

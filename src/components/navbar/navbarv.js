@@ -141,7 +141,7 @@ function Navbar() {
                 sx={{
                   color: 'white',
                   borderRadius: '4px',
-                  backgroundColor: '#1976d2',
+                  backgroundColor: 'purple',
                   height: '40px',
                   padding: '6px 12px',
                   '&:hover': { backgroundColor: '#1565c0' },
