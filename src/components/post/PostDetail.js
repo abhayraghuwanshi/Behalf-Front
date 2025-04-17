@@ -1,4 +1,6 @@
-import { Avatar, Box, Button, Card, Typography } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import { Avatar, Box, Button, Card, Dialog, DialogActions, DialogContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import imageService from "../../service/FileService";
@@ -9,6 +11,8 @@ const PostDetail = () => {
     const navigate = useNavigate();
     const [post, setPost] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false); // Added for dialog
+    const [questMessage, setQuestMessage] = useState(""); // Added for message input
 
     useEffect(() => {
         const fetchPostDetails = async () => {
@@ -30,6 +34,18 @@ const PostDetail = () => {
         fetchPostDetails();
     }, [postId]);
 
+    const openInterestedDialog = () => setIsPopUpOpen(true); // Open dialog
+    const closeInterestedDialog = () => { setIsPopUpOpen(false); setQuestMessage(""); }; // Close dialog
+
+    const handleAccept = () => {
+        if (!questMessage) {
+            alert("Error: Missing required quest message");
+            return;
+        }
+        alert(`Interested with message: ${questMessage}`); // Replace with actual functionality
+        closeInterestedDialog();
+    };
+
     if (!post) {
         return <Typography color="white" sx={{ textAlign: "center", marginTop: "100px" }}>Loading...</Typography>;
     }
@@ -48,6 +64,7 @@ const PostDetail = () => {
             >
                 Back
             </Button>
+
 
             {/* Quest Details */}
             <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}>
@@ -80,10 +97,85 @@ const PostDetail = () => {
                 <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 1 }}>
                     <strong>To:</strong> {post.locationTo}
                 </Typography>
-                <Typography variant="body1" sx={{ color: "#cccccc" }}>
+                <Typography variant="body1" sx={{ color: "#cccccc", marginBottom: 2 }}>
                     <strong>Status:</strong> {post.questStatus || 'PENDING'}
                 </Typography>
+
+                {/* Buttons Inline */}
+                <Box sx={{ display: "flex", gap: 2 }}>
+                    <Button
+                        sx={{
+                            color: "#ffffff",
+                            backgroundColor: "#333",
+                            "&:hover": { backgroundColor: "#555" },
+                        }}
+                        onClick={() => {
+                            const shareUrl = `${window.location.origin}/post/${postId}`;
+                            navigator.clipboard.writeText(shareUrl).then(() => {
+                                alert("Share link copied to clipboard!");
+                            });
+                        }}
+                    >
+                        Share
+                        <ShareIcon sx={{ marginLeft: '5px' }} />
+                    </Button>
+
+                    <Button
+                        sx={{
+                            color: "#ffffff",
+                            backgroundColor: "#333",
+                            "&:hover": { backgroundColor: "#555" },
+                        }}
+                        onClick={openInterestedDialog} // Open dialog on click
+                    >
+                        <FavoriteIcon sx={{ marginRight: '5px' }} />
+                        Interested
+                    </Button>
+                </Box>
             </Card>
+
+            {/* Interested Dialog */}
+            <Dialog
+                open={isPopUpOpen}
+                onClose={closeInterestedDialog}
+                fullWidth
+                maxWidth="sm"
+                sx={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    "& .MuiPaper-root": {
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        overflowY: "hidden",
+                    }
+                }}
+            >
+                <DialogContent>
+                    <Typography variant="h5" sx={{ color: "white", marginBottom: 2 }}>
+                        {post.questInstructions}
+                    </Typography>
+                    <input
+                        type="text"
+                        value={questMessage}
+                        onChange={(e) => setQuestMessage(e.target.value)}
+                        placeholder="Enter Message"
+                        required
+                        style={{
+                            backgroundColor: "black",
+                            color: "white",
+                            border: "1px solid white",
+                            padding: "8px",
+                            width: "100%",
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button size="small" onClick={handleAccept} sx={{ color: "white" }}>
+                        Send
+                    </Button>
+                    <Button onClick={closeInterestedDialog} sx={{ color: "white" }}>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             {/* Creator Details */}
             <Card sx={{ backgroundColor: "#1E1E1E", padding: 3, borderRadius: "12px", marginBottom: 3, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)" }}>

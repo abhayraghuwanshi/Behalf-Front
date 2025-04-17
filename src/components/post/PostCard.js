@@ -1,6 +1,5 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Avatar, Box, Card, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -10,11 +9,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Stack from '@mui/material/Stack';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom"; // Added import for navigation
 import imageService from "../../service/FileService";
 import './PostList.css';
 
-
 const Post = ({ postSession, onAccept, user, postData }) => {
+  const navigate = useNavigate(); // Initialize navigate
   const [isReferExpanded, setIsReferExpanded] = useState(false);
   const [questMessage, setQuestMessage] = useState("");
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
@@ -102,23 +102,29 @@ const Post = ({ postSession, onAccept, user, postData }) => {
   };
 
   return (
-    <Card sx={{
-      width: "300px",
-      padding: 2,
-      marginBottom: 2,
-      border: "1px solid #333",
-      borderRadius: "12px",
-      backgroundColor: "#1E1E1E", // Black background
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
-      transition: "transform 0.2s, box-shadow 0.2s",
-      cursor: "pointer",
-      color: "#ffffff", // White text
-      "&:hover": {
-        transform: "translateY(-4px)",
-        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)"
-      }
-    }}>
-
+    <Card
+      onClick={() => navigate(`/post/${postData.id}`)} // Redirect on click
+      sx={{
+        width: "300px",
+        padding: 2,
+        marginBottom: 2,
+        border: "1px solid #333",
+        borderRadius: "12px",
+        backgroundColor: "#1E1E1E",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        cursor: "pointer",
+        color: "#ffffff",
+        position: "relative",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.7)",
+          "& .interested-button": { // Show button on hover
+            display: "block",
+          },
+        },
+      }}
+    >
       <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', marginBottom: '10px' }}>
         <Chip label={postData.locationTo} color="primary" />
         <ArrowForwardIcon />
@@ -142,51 +148,33 @@ const Post = ({ postSession, onAccept, user, postData }) => {
       </Box>
 
       {/* Content Section */}
-      <Box sx={{ textAlign: 'left' }}>
-        <Typography variant="h6" gutterBottom sx={{ color: "#ffffff", fontWeight: 'bold' }}>
+      <Box sx={{ textAlign: 'left', marginBottom: "50px" }}> {/* Added margin to avoid overlap */}
+        <Typography variant="body1" gutterBottom sx={{ color: "#ffffff" }}>
           {postData.questInstructions}
         </Typography>
-
-
-        <Typography variant="h6" sx={{ color: "#ffffff", fontWeight: 'bold', marginTop: 1 }}>
-          Reward: {postData.questReward} {postData.questCurrency}
+        <Typography variant="body1" sx={{ color: "#ffffff", marginTop: 1 }}>
+          {postData.questReward} {postData.questCurrency}
         </Typography>
       </Box>
 
-      {/* Action Buttons */}
-      <Box display="flex" justifyContent="space-between" mt={2}>
-        <Button
-          sx={{
-            color: "#ffffff",
-            backgroundColor: "#333",
-            "&:hover": { backgroundColor: "#555" },
-          }}
-          onClick={openInterestedDialog}
-        >
-          <FavoriteIcon sx={{ paddingRight: "5px" }} />
-          Interested
-        </Button>
-        <Button
-          sx={{
-            color: "#ffffff",
-            backgroundColor: "#333",
-            "&:hover": { backgroundColor: "#555" },
-          }}
-          onClick={handleShare}
-        >
-          Share
-          <ShareIcon sx={{ marginLeft: '5px' }} />
-        </Button>
-
-        <Button onClick={() => window.location.href = `/post/${postData.id}`}
-          sx={{
-            color: "white",
-            backgroundColor: "#4d4d4d",
-            "&:hover": { borderColor: "gray" },
-          }}>
-          Details
-        </Button>
-      </Box>
+      {/* Interested Button (Hidden by default, shown on hover) */}
+      <Button
+        className="interested-button"
+        sx={{
+          display: "none", // Hidden by default
+          position: "absolute",
+          bottom: "10px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          color: "#ffffff",
+          backgroundColor: "#333",
+          "&:hover": { backgroundColor: "#555" },
+        }}
+        onClick={openInterestedDialog}
+      >
+        <FavoriteIcon sx={{ paddingRight: "5px" }} />
+        Interested
+      </Button>
 
       {/* Dialogs (Popups) */}
       <Dialog
