@@ -1,20 +1,27 @@
-import { Box, Button, Card, CardActions, CardContent, Dialog, DialogContent, DialogTitle, Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { BACKEND_API_URL } from './../../env.js';
+import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon
+import { Box, Button, Card, CardActions, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import UserStoreService from '../../service/UserStoreService'; // Import the new ProductService
+import { useAuth } from '../SignIn/AuthContext'; // Import the AuthContext
 
 function MyOrders() {
     const [myOrders, setMyOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const userId = 1; // Replace with the actual user id from authentication
+    const { user } = useAuth();
 
     useEffect(() => {
-        fetchMyOrders();
-    }, []);
+        if (user?.id) {
+            fetchMyOrders();
+        }
+    }, [user?.id]); // Ensure the hook runs when user.id changes
 
     const fetchMyOrders = async () => {
-        const response = await fetch(`${BACKEND_API_URL}/api/store/myorders?userId=${userId}`);
-        const data = await response.json();
-        setMyOrders(data);
+        try {
+            const data = await UserStoreService.getMyOrders(user.id);
+            setMyOrders(data || []);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        }
     };
 
     const handleViewDetails = (order) => {
@@ -25,42 +32,77 @@ function MyOrders() {
         setSelectedOrder(null);
     };
 
+    if (!user?.id) {
+        return <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>Access Denied. Please log in.</div>;
+    }
+
     return (
         <Box sx={{ p: 3, backgroundColor: '#000', minHeight: '100vh', color: 'white' }}>
-            <Typography variant="h4" align="center" gutterBottom>
-                My Orders
-            </Typography>
+
             <Grid container spacing={3}>
-                {myOrders.map((order) => (
-                    <Grid item xs={12} sm={6} md={4} key={order.id}>
-                        <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white' }}>
-                            <CardContent>
-                                <Typography variant="h6" color="white">
-                                    Order #{order.id}
-                                </Typography>
-                                <Typography variant="body1" sx={{ mt: 1 }}>
-                                    Status: {order.status}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small" variant="outlined" color="primary" onClick={() => handleViewDetails(order)}>
-                                    View Details
-                                </Button>
-                            </CardActions>
-                        </Card>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={9}>
+                    <Typography variant="h5" gutterBottom>
+                        My Orders
+                    </Typography>
+                    <Grid container spacing={3} sx={{ marginTop: 2 }}> {/* Add spacing between orders */}
+                        {myOrders.map((order) => (
+                            <Grid item xs={12} md={4} key={order.orderId}>
+                                <Card sx={{ minWidth: 275, backgroundColor: '#1e1e1e', color: 'white', marginBottom: 2 }}> {/* Add marginBottom for extra spacing */}
+                                    <CardContent>
+                                        <Typography variant="h6" color="white">
+                                            Order #{order.orderId}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mt: 1 }}>
+                                            Status: {order.status}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Address: {order.address}, {order.country}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Total Price: {order.discountPrice.toFixed(2)} {order.items[0]?.currencyCode || 'INR'}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Created At: {new Date(order.createdAt).toLocaleString()}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small" variant="outlined" color="primary" onClick={() => handleViewDetails(order)}>
+                                            Details
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
             </Grid>
 
             <Dialog open={!!selectedOrder} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-                <DialogTitle sx={{ backgroundColor: '#1e1e1e', color: 'white' }}>Order Details</DialogTitle>
+                <DialogTitle sx={{ backgroundColor: '#1e1e1e', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    Order Details
+                    <IconButton onClick={handleCloseDialog} sx={{ color: 'white' }}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
                 <DialogContent sx={{ backgroundColor: '#1e1e1e', color: 'white' }}>
                     {selectedOrder && (
                         <Box>
-                            <Typography variant="body1">Order ID: {selectedOrder.id}</Typography>
-                            <Typography variant="body1">Address: {selectedOrder.address}</Typography>
+                            <Typography variant="body1">Order ID: {selectedOrder.orderId}</Typography>
+                            <Typography variant="body1">Address: {selectedOrder.address}, {selectedOrder.country}</Typography>
                             <Typography variant="body1">Status: {selectedOrder.status}</Typography>
-                            {/* Add more details as needed */}
+                            <Typography variant="body1">Total Price: {selectedOrder.discountPrice.toFixed(2)} {selectedOrder.items[0]?.currencyCode || 'INR'}</Typography>
+                            <Typography variant="body1">Created At: {new Date(selectedOrder.createdAt).toLocaleString()}</Typography>
+                            <Typography variant="h6" sx={{ mt: 2 }}>Items:</Typography>
+                            {selectedOrder.items.map((item, index) => (
+                                <Box key={index} sx={{ mt: 1, p: 1, border: '1px solid #555', borderRadius: '8px' }}>
+                                    <Typography variant="body2">Product Name: {item.productName}</Typography>
+                                    <Typography variant="body2">Quantity: {item.quantity}</Typography>
+                                    <Typography variant="body2">Price Per Unit: {item.pricePerUnit.toFixed(2)} {selectedOrder.items[0]?.currencyCode || 'INR'}</Typography>
+                                    <Typography variant="body2">Total Price: {item.totalPrice.toFixed(2)} {selectedOrder.items[0]?.currencyCode || 'INR'}</Typography>
+                                </Box>
+                            ))}
                         </Box>
                     )}
                 </DialogContent>

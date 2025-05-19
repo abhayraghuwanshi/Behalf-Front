@@ -1,7 +1,8 @@
 import { Google } from "@mui/icons-material";
-import { Button, Container, Paper } from "@mui/material";
+import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { BACKEND_API_URL } from "../../env";
+import logo from "./main-7.png"; // Adjust the path as necessary
 
 const LoginPage = ({ onLogin }) => {
     const [username, setUsername] = useState("");
@@ -43,45 +44,47 @@ const LoginPage = ({ onLogin }) => {
     };
 
     return (
-        <Container maxWidth="xs" sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
-            <Paper elevation={3} sx={{ padding: 4, borderRadius: 2, backgroundColor: "transparent", backdropFilter: "blur(10px)" }}>
-                {/* <Typography variant="h4" align="center" sx={{ color: "white", mb: 2 }}>
-                    Login
-                </Typography>
-                {error && <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>{error}</Typography>}
-                <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    <TextField
-                        label="Username"
-                        variant="outlined"
-                        fullWidth
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        InputProps={{ style: { color: "white" } }}
-                        InputLabelProps={{ style: { color: "white" } }}
-                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "#ddd" } } }}
+        <Container maxWidth="lg" sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                <Grid item xs={12} md={4.5} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <img
+                        src={logo} // Replace with the actual image path
+                        alt="Login Illustration"
+                        style={{ maxWidth: "100%", borderRadius: "8px" }}
                     />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        variant="outlined"
-                        fullWidth
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        InputProps={{ style: { color: "white" } }}
-                        InputLabelProps={{ style: { color: "white" } }}
-                        sx={{ "& .MuiOutlinedInput-root": { "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "#ddd" } } }}
-                    />
-                    <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
-                        {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Login"}
-                    </Button> */}
-                <Button variant="contained" fullWidth onClick={handleLoginGoogle}>
-                    <Google /> Login with Google
-                </Button>
-                {/* </form> */}
-            </Paper>
-        </Container >
+                </Grid>
+                <Grid item xs={12} md={4.5}>
+                    <Paper
+                        elevation={3}
+                        sx={{
+                            padding: 4,
+                            borderRadius: 2,
+                            backgroundColor: "#1E1E1E", // Black background
+                            color: "white",
+                            textAlign: "center",
+                        }}
+                    >
+                        <Typography variant="h4" align="center" sx={{ color: "white", mb: 2 }}>
+                            Login
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            onClick={handleLoginGoogle}
+                            sx={{
+                                backgroundColor: "#333", // Button color for black background
+                                color: "white",
+                                "&:hover": { backgroundColor: "#555" },
+                            }}
+                        >
+                            <Google sx={{ marginRight: "8px" }} /> Login with Google
+                        </Button>
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+            </Grid>
+        </Container>
     );
 };
 
