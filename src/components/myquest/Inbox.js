@@ -1,76 +1,195 @@
 import SendIcon from '@mui/icons-material/Send';
-import { IconButton, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { IconButton, InputAdornment, Paper, Step, StepLabel, Stepper, TextField, Typography } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 
-const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, newMessage, setNewMessage, handleSendMessage, getChatRecipientName, handleUpdateStatus }) => {
+// Define smart state transitions by role
+const statusTransitions = {
+    PENDING: [{ to: 'IN_PROGRESS', role: 'creator' }],
+    IN_PROGRESS: [{ to: 'DELIVERED', role: 'acceptor' }],
+    DELIVERED: [{ to: 'COMPLETED', role: 'creator' }],
+    COMPLETED: [],
+};
+
+const stepLabels = ["PENDING", "IN_PROGRESS", "DELIVERED", "COMPLETED"];
+
+const getStepIndex = (status) => {
+    switch (status) {
+        case "PENDING": return 0;
+        case "IN_PROGRESS": return 1;
+        case "DELIVERED": return 2;
+        case "COMPLETED": return 3;
+        default: return 0;
+    }
+};
+
+const getAllowedTransitions = (currentStatus, role) => {
+    return (statusTransitions[currentStatus] || [])
+        .filter(t => t.role === role)
+        .map(t => t.to);
+};
+
+const Inbox = ({
+    messages,
+    user,
+    selectedSession,
+    selectedQuest,
+    chatSessions,
+    newMessage,
+    setNewMessage,
+    handleSendMessage,
+    getChatRecipientName,
+    handleUpdateStatus
+}) => {
     const chatEndRef = useRef(null);
 
-    // Auto-scroll to the latest message
+    // Auto-scroll to latest message
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const labels = ["PENDING", "REJECTED", "SUCCESS"];
-    const [selectedStatus, setSelectedStatus] = React.useState("PENDING");
+    const [selectedStatus, setSelectedStatus] = React.useState("");
+    const [showProgress, setShowProgress] = React.useState(true);
 
-    const handleChange = (e) => {
-        setSelectedStatus(e.target.value);
-    };
+    // Determine user role
+    const userRole = selectedQuest && selectedQuest.questCreatorId
+        ? (user.id === selectedQuest.questCreatorId ? 'creator' : 'acceptor')
+        : null;
+
+
+    const currentStatus = selectedQuest && selectedQuest.questStatus
+        ? selectedQuest.questStatus.toUpperCase()
+        : null;
+
+    const allowedStatusOptions = currentStatus && userRole
+        ? getAllowedTransitions(currentStatus, userRole)
+        : [];
+
+
+
+    // DEBUG LOGS
+    useEffect(() => {
+        console.log("Inbox Debug:");
+        console.log("User role:", userRole);
+        console.log("Current quest status:", selectedQuest?.questStatus);
+        console.log("Allowed status options:", allowedStatusOptions);
+    }, [userRole, selectedQuest, allowedStatusOptions]);
 
     const handleSubmit = () => {
-        if (selectedSession) {
-            handleUpdateStatus(selectedSession, selectedStatus);
+        if (!selectedSession || !selectedQuest) return;
+
+        if (!allowedStatusOptions.includes(selectedStatus)) {
+            alert("Invalid status transition.");
+            return;
         }
+
+        handleUpdateStatus(selectedSession, selectedStatus);
+        setSelectedStatus("");  // reset select after submit
     };
 
     return (
-        <div className="inbox">
+        <div className="inbox" style={{ marginTop: "20px" }}>
             {/* Header */}
-            <h2 style={{ color: '#90caf9' }}>
-                Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ color: '#90caf9', margin: 0 }}>
+                    Inbox - {selectedSession ? getChatRecipientName(chatSessions[selectedQuest.id]?.find(session => session.id === selectedSession)) : "Unknown"}
+                </h2>
+                <IconButton
+                    size="small"
+                    onClick={() => setShowProgress((prev) => !prev)}
+                    sx={{ color: '#90caf9', ml: 1 }}
+                    aria-label={showProgress ? 'Hide Progress Bar' : 'Show Progress Bar'}
+                >
+                    {showProgress ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+            </div>
 
-            {/* Status Dropdown and Submit Button */}
-            {selectedQuest && user.id === selectedQuest.questCreatorId && (
-                <div style={{ marginBottom: "16px", display: "flex", alignItems: "center" }}>
-                    <select
-                        value={selectedStatus}
-                        onChange={handleChange}
-                        style={{
-                            marginRight: "10px",
-                            padding: "5px",
-                            borderRadius: "4px",
-                            background: "#222",
-                            color: "white",
-                            border: "1px solid white",
-                        }}
-                    >
-                        {labels.map((label) => (
-                            <option key={label} value={label}>
-                                {label}
-                            </option>
+            {/* Stepper Progress Bar */}
+            {showProgress && selectedQuest && selectedSession && (
+                <div style={{ background: "#1e1e1e", padding: "20px", borderRadius: "8px", marginBottom: "20px" }}>
+                    <Typography variant="h6" style={{ color: "White ", marginBottom: "12px" }}>
+                        Delivery Progress
+                    </Typography>
+                    <Stepper activeStep={getStepIndex(selectedQuest.questStatus)} alternativeLabel>
+                        {stepLabels.map((label) => (
+                            <Step key={label}>
+                                <StepLabel sx={{ color: "white", '& .MuiStepLabel-label': { color: 'white' } }}>{label}</StepLabel>
+                            </Step>
                         ))}
-                    </select>
+                    </Stepper>
 
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        style={{
-                            padding: "8px 12px",
-                            borderRadius: "6px",
-                            background: "#444",
-                            color: "white",
-                            border: "1px solid #90caf9",
-                            cursor: "pointer",
-                            transition: "background 0.3s ease",
-                        }}
-                        onMouseOver={(e) => (e.target.style.background = "#555")}
-                        onMouseOut={(e) => (e.target.style.background = "#444")}
-                    >
-                        Submit
-                    </button>
+                    {selectedQuest && allowedStatusOptions.length > 0 && (
+                        <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
+                            <select
+                                value={selectedStatus}
+                                onChange={(e) => setSelectedStatus(e.target.value)}
+                                style={{
+                                    marginRight: "10px",
+                                    padding: "5px",
+                                    borderRadius: "4px",
+                                    background: "#222",
+                                    color: "white",
+                                    border: "1px solid white",
+                                }}
+                            >
+                                <option value="">Select Status</option>
+                                {allowedStatusOptions.map((label) => (
+                                    <option key={label} value={label} style={{ color: "white" }}>
+                                        {label}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <button
+                                type="submit"
+                                onClick={handleSubmit}
+                                style={{
+                                    padding: "8px 12px",
+                                    borderRadius: "6px",
+                                    background: "#444",
+                                    color: "white",
+                                    border: "1px solid #90caf9",
+                                    cursor: "pointer",
+                                    transition: "background 0.3s ease",
+                                }}
+                                onMouseOver={(e) => (e.target.style.background = "#555")}
+                                onMouseOut={(e) => (e.target.style.background = "#444")}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    )}
+
                 </div>
-            )}
+            )
+            }
+
+            {/* Status Update Controls */}
+
+            {/* Acceptors quick delivered button */}
+            {
+                selectedQuest &&
+                user.id === selectedQuest.questAcceptorId &&
+                selectedQuest.questStatus === "IN_PROGRESS" && (
+                    <button
+                        onClick={() => handleUpdateStatus(selectedSession, "DELIVERED")}
+                        style={{
+                            marginBottom: "10px",
+                            padding: "10px 16px",
+                            background: "#128c7e",
+                            color: "white",
+                            borderRadius: "6px",
+                            border: "none",
+                            cursor: "pointer",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        Mark as Delivered
+                    </button>
+                )
+            }
+
 
             {/* Messages */}
             <div style={{ overflowY: 'auto', maxHeight: '60vh', padding: '10px' }}>
@@ -84,9 +203,9 @@ const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, n
                                 padding: '8px 12px',
                                 borderRadius: '12px',
                                 marginBottom: '8px',
-                                backgroundColor: msg.sender === user.id.toString() ? '#128c7e' : '#303030', // Green for "You", Dark Gray for Others
+                                backgroundColor: msg.sender === user.id.toString() ? '#128c7e' : '#303030',
                                 alignSelf: msg.sender === user.id.toString() ? 'flex-end' : 'flex-start',
-                                color: 'white', // Ensure white text for visibility
+                                color: 'white',
                             }}
                             style={{
                                 textAlign: msg.sender === user.id.toString() ? 'right' : 'left',
@@ -133,11 +252,11 @@ const Inbox = ({ messages, user, selectedSession, selectedQuest, chatSessions, n
                         },
                     }}
                     InputLabelProps={{
-                        style: { color: '#90caf9' }, // Placeholder and label color
+                        style: { color: '#90caf9' },
                     }}
                 />
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -1,5 +1,5 @@
 import { Chip, MenuItem, Select, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PostService from '../../service/PostService';
 import ProfileService from "../../service/ProfileService";
 import QuestSessionService from "../../service/QuestSessionService";
@@ -19,7 +19,7 @@ const MyQuestPage = () => {
     const [userMap, setUserMap] = useState({});
     const [questFilter, setQuestFilter] = useState("ALL");
     const [loading, setLoading] = useState(true);
-    const labels = ["PENDING", "REJECTED", "SUCCESS"];
+    const labels = ["PENDING", "IN PROGRESS", "REJECTED", "DELIVERED", "COMPLETED"];
     const [selectedStatus, setSelectedStatus] = useState('PENDING');
     const [filterLabel, setFilterLabel] = useState("ALL");
     const [filterDate, setFilterDate] = useState("");

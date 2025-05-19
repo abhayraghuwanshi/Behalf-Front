@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, Grid, Tab, Tabs, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileService from "../../service/ProfileService";
 import QuestSessionService from "../../service/QuestSessionService";
 import TravelRequestPage from '../FindPeople/TravelRequestPage';
 import MyOrders from "../QuestStore/MyOrders";
+import RatingView from "../rating/RatingView";
 
 const UserProfile = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -129,6 +130,7 @@ const UserProfile = () => {
                             <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                             <Grid item xs={12} md={9}>
                                 <Tabs value={selectedTab} onChange={handleTabChange} style={{ color: "white", marginBottom: 10 }}>
+                                    <Tab style={{ color: "white" }} label="User Rating" />
                                     <Tab style={{ color: "white" }} label="Travel Requests" />
                                     <Tab style={{ color: "white" }} label="My Quests" />
                                     <Tab style={{ color: "white" }} label="My Store Orders" />
@@ -138,8 +140,24 @@ const UserProfile = () => {
                             <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
                         </Grid>
 
-                        <div sx={{ marginTop: 2 }}>
+                        <div>
                             {selectedTab === 0 && (
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+                                    <Grid item xs={12} md={9}>
+                                        <Typography variant="h6" gutterBottom>
+                                            User Ratings
+                                        </Typography>
+                                        <RatingView userId={userInfo.id} userType={userInfo.userType} />
+                                        {/* Add your rating component here */}
+                                    </Grid>
+                                    <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+                                </Grid>
+                            )}
+                        </div>
+
+                        <div sx={{ marginTop: 2 }}>
+                            {selectedTab === 1 && (
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                                     <Grid item xs={12} md={9}> <TravelRequestPage /> </Grid>
@@ -149,7 +167,7 @@ const UserProfile = () => {
                             )}
 
 
-                            {selectedTab === 1 && (
+                            {selectedTab === 2 && (
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
                                     <Grid item xs={12} md={9}>
@@ -188,7 +206,7 @@ const UserProfile = () => {
                                     <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
                                 </Grid>
                             )}
-                            {selectedTab === 2 && <MyOrders />}
+                            {selectedTab === 3 && <MyOrders />}
                         </div>
                     </Box>
 
