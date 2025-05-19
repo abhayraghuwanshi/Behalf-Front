@@ -14,7 +14,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminService from "../../service/AdminService";
 import { useCountry } from "../navbar/CountryProvider";
 
@@ -100,101 +100,92 @@ export default function StoreManagement() {
     };
 
     return (
-        <div>
-            <Grid container spacing={2} sx={{ marginTop: "16px", marginBottom: "16px" }}>
-                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
-                <Grid item xs={12} md={9}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Grid container justifyContent="center">
+            <Grid item xs={12} md={10} lg={9}>
+                <div style={{ padding: "16px", minHeight: "100vh" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", marginBottom: "16px" }}>
                         <Typography variant="h6" sx={{ color: "white" }}>Admin Store</Typography>
                         <Button
                             variant="outlined"
-                            sx={{
-                                color: "white",
-                                borderColor: "white",
-                                "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' }
-                            }}
+                            sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
                             onClick={handleDialogOpen}
                         >
                             Create Store
                         </Button>
                     </div>
-                </Grid>
-                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
-            </Grid>
 
-            <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm">
-                <DialogTitle>Create Store</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2}>
-                        {[
-                            ["name", "Store Name"],
-                            ["address", "Address"],
-                            ["city", "City"],
-                            ["state", "State"],
-                            ["zipCode", "Zip Code"],
-                            ["country", "Country"],
-                            ["phoneNumber", "Phone Number"],
-                            ["email", "Email"],
-                        ].map(([key, label]) => (
-                            <Grid item xs={12} key={key}>
-                                <TextField
-                                    label={label}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={form[key]}
-                                    onChange={handleChange(key)}
-                                />
+                    <Dialog open={isDialogOpen} onClose={handleDialogClose} fullWidth maxWidth="sm"
+                        PaperProps={{ style: { backgroundColor: "#111", color: "white" } }}>
+                        <DialogTitle sx={{ color: "white" }}>Create Store</DialogTitle>
+                        <DialogContent>
+                            <Grid container spacing={2}>
+                                {[
+                                    ["name", "Store Name"],
+                                    ["address", "Address"],
+                                    ["city", "City"],
+                                    ["state", "State"],
+                                    ["zipCode", "Zip Code"],
+                                    ["country", "Country"],
+                                    ["phoneNumber", "Phone Number"],
+                                    ["email", "Email"],
+                                ].map(([key, label]) => (
+                                    <Grid item xs={12} key={key}>
+                                        <TextField
+                                            label={label}
+                                            variant="outlined"
+                                            fullWidth
+                                            value={form[key]}
+                                            onChange={handleChange(key)}
+                                            InputProps={{ style: { color: "white", border: "1px solid white", borderRadius: "4px" } }}
+                                            InputLabelProps={{ style: { color: "white" } }}
+                                        />
+                                    </Grid>
+                                ))}
                             </Grid>
-                        ))}
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} color="secondary">
-                        Close
-                    </Button>
-                    <Button onClick={addStore} color="primary" variant="contained">
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleDialogClose} color="secondary">
+                                Close
+                            </Button>
+                            <Button onClick={addStore} color="primary" variant="contained">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
 
-            <Grid container spacing={2} sx={{ marginTop: "16px" }}>
-                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
-                <Grid item xs={12} md={9}>
-                    <Paper style={{ padding: "16px", backgroundColor: "#333" }}>
+                    <Paper style={{ padding: "16px", backgroundColor: "#111" }}>
                         <Typography variant="h6" sx={{ color: "white", marginBottom: "12px" }}>Available Stores</Typography>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell style={{ color: "white" }}>Name</TableCell>
-                                    <TableCell style={{ color: "white" }}>Address</TableCell>
-                                    <TableCell style={{ color: "white" }}>City</TableCell>
-                                    <TableCell style={{ color: "white" }}>State</TableCell>
-                                    <TableCell style={{ color: "white" }}>Zip Code</TableCell>
-                                    <TableCell style={{ color: "white" }}>Country</TableCell>
-                                    <TableCell style={{ color: "white" }}>Phone</TableCell>
-                                    <TableCell style={{ color: "white" }}>Email</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Name</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Address</TableCell>
+                                    <TableCell sx={{ color: "white" }}>City</TableCell>
+                                    <TableCell sx={{ color: "white" }}>State</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Zip Code</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Country</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Phone</TableCell>
+                                    <TableCell sx={{ color: "white" }}>Email</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {stores.map((store, index) => (
                                     <TableRow key={store.id || index}>
-                                        <TableCell style={{ color: "white" }}>{store.name}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.address}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.city}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.state}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.zipCode}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.country}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.phoneNumber}</TableCell>
-                                        <TableCell style={{ color: "white" }}>{store.email}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.name}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.address}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.city}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.state}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.zipCode}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.country}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.phoneNumber}</TableCell>
+                                        <TableCell sx={{ color: "white" }}>{store.email}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </Paper>
-                </Grid>
-                <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
+                </div>
             </Grid>
-        </div>
+        </Grid>
     );
 }

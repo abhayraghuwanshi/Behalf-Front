@@ -9,8 +9,8 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import React, { useState } from 'react';
-import ProductService from '../../service/ProductService'; // Import the new ProductService
+import { useState } from 'react';
+import UserStoreService from '../../service/UserStoreService'; // Import the new ProductService
 import { useAuth } from '../SignIn/AuthContext';
 
 const CartCheckout = ({ cart, onAddOrUpdateCart, selectedCountry }) => {
@@ -39,7 +39,7 @@ const CartCheckout = ({ cart, onAddOrUpdateCart, selectedCountry }) => {
         };
 
         try {
-            const data = await ProductService.placeOrder(checkoutData); // Call the Place Order API
+            const data = await UserStoreService.placeOrder(checkoutData); // Call the Place Order API
             setResponseOrder(data);
             alert(`Order placed successfully! Order ID: ${data.id}`);
         } catch (error) {

@@ -14,9 +14,9 @@ import {
     TableRow,
     TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import * as productService from "../../service/ProductService1";
+import * as productService from "../../service/AdminProductService";
 
 function ProductManagementPage() {
     const [products, setProducts] = useState([]);

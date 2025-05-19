@@ -13,9 +13,9 @@ import {
     TableRow,
     TextField
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import * as productService from "./../../service/AdminProductService";
 import * as discountService from "./../../service/DiscountService";
-import * as productService from "./../../service/ProductService1";
 
 
 function DiscountPage() {

@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon
 import { Box, Button, Card, CardActions, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import ProductService from '../../service/ProductService'; // Import the new ProductService
+import { useEffect, useState } from 'react';
+import UserStoreService from '../../service/UserStoreService'; // Import the new ProductService
 import { useAuth } from '../SignIn/AuthContext'; // Import the AuthContext
 
 function MyOrders() {
@@ -17,7 +17,7 @@ function MyOrders() {
 
     const fetchMyOrders = async () => {
         try {
-            const data = await ProductService.getMyOrders(user.id);
+            const data = await UserStoreService.getMyOrders(user.id);
             setMyOrders(data || []);
         } catch (error) {
             console.error("Error fetching orders:", error);

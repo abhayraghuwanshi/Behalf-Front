@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material'; // Import Grid from MUI for layout
-import React, { useEffect, useState } from 'react';
-import ProductService from '../../service/ProductService'; // Import the new ProductService
+import { useEffect, useState } from 'react';
+import UserStoreService from '../../service/UserStoreService'; // Import the new ProductService
 import ProductCard from './ProductCard'; // Import ProductCard
 import './ProductList.css'; // Ensure this file contains your desired styles
 
@@ -17,7 +17,7 @@ function ProductList({ onAddOrUpdateCart, cart, selectedCountry }) {
 
     const fetchProducts = async (selectedCountry) => {
         try {
-            const response = await ProductService.getProducts(selectedCountry);
+            const response = await UserStoreService.getProducts(selectedCountry);
             setProducts(response);
         } catch (error) {
             console.error("Error fetching products:", error);

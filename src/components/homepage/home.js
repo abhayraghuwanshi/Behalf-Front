@@ -1,10 +1,10 @@
 import { Typography } from '@mui/joy';
 import Grid from '@mui/joy/Grid';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import PostService from '../../service/PostService';
-import ProductService from '../../service/ProductService';
+import UserStoreService from '../../service/UserStoreService';
 import { useCountry } from '../navbar/CountryProvider';
 import Post from '../post/PostCard';
 import ProductCard from '../QuestStore/ProductCard';
@@ -54,7 +54,7 @@ function Home() {
   useEffect(() => {
     const fetchPopularItems = async (selectedCountry) => {
       try {
-        const response = await ProductService.getProducts(selectedCountry);
+        const response = await UserStoreService.getProducts(selectedCountry);
 
         // Map the API response to the required format
 

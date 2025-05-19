@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BACKEND_API_URL } from '../env';
 
-const ProductService = {
+const UserStoreService = {
     getProducts: async (country) => {
         let url = `${BACKEND_API_URL}/api/product-view/by-country?country=${country}`;
         try {
@@ -63,6 +63,23 @@ const ProductService = {
             console.error('Failed to fetch user orders:', err);
         }
     },
+
+    getProductById: async (id) => {
+        try {
+            const response = await axios.get(`${BACKEND_API_URL}/api/product-view?id=${id}`, {
+                withCredentials: true,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Failed to fetch product by id:', error);
+            return [];
+        }
+    },
 };
 
-export default ProductService;
+export default UserStoreService;

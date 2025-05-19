@@ -1,7 +1,8 @@
 // services/productService.js
 import axios from "axios";
+import { BACKEND_API_URL } from '../env';
 
-const BASE_URL = "http://localhost:8080/api/products";
+const BASE_URL = `${BACKEND_API_URL}/api/products`;
 
 export const getProducts = async () => {
     try {
