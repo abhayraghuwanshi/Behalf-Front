@@ -1,9 +1,9 @@
-import { Box, Grid, Tab, Tabs } from "@mui/material";
-import React from "react";
+import { Grid, Tab, Tabs } from "@mui/material";
 import { useMenu } from "../../context/MenuContext";
 import { useAuth } from "../SignIn/AuthContext"; // Import authentication context
 import DiscountPage from "./DiscountManagement";
 import InventoryManagement from "./InventoryManagement";
+import PriceManagement from "./PriceManagement";
 import ProductManagementPage from './ProductManagement';
 import StoreManagement from "./StoreManagement";
 import UserManagement from "./UserManagement";
@@ -37,26 +37,18 @@ export default function AdminPanel() {
                         <Tab label="Inventory Management" sx={{ color: "white" }} />
                         <Tab label="Product Management" sx={{ color: "white" }} />
                         <Tab label="Discount Management" sx={{ color: "white" }} />
+                        <Tab label="Price Management" sx={{ color: "white" }} />
                     </Tabs>
                 </Grid>
                 <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
             </Grid>
 
-            <Box hidden={adminTab !== 0}>
-                <StoreManagement />
-            </Box>
-            <Box hidden={adminTab !== 1}>
-                <UserManagement />
-            </Box>
-            <Box hidden={adminTab !== 2}>
-                <InventoryManagement />
-            </Box>
-            <Box hidden={adminTab !== 3}>
-                <ProductManagementPage />
-            </Box>
-            <Box hidden={adminTab !== 4}>
-                <DiscountPage />
-            </Box>
+            {adminTab === 0 && <StoreManagement />}
+            {adminTab === 1 && <UserManagement />}
+            {adminTab === 2 && <InventoryManagement />}
+            {adminTab === 3 && <ProductManagementPage />}
+            {adminTab === 4 && <DiscountPage />}
+            {adminTab === 5 && <PriceManagement />}
         </div>
     );
 }

@@ -136,6 +136,7 @@ export default function InventoryManagement() {
                                     height: 40,
                                     border: "1px solid white",
                                     borderRadius: "4px",
+                                    '.MuiSelect-icon': { color: 'white' }
                                 }}
                                 MenuProps={{
                                     PaperProps: {

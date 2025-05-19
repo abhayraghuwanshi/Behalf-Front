@@ -1,5 +1,4 @@
 import { MenuItem, TextField } from '@mui/material';
-import React from 'react';
 import { useCountries } from 'use-react-countries';
 
 const CountrySelector = ({ selectedCountry, handleCountryChange, inputStyles, label }) => {
@@ -34,6 +33,7 @@ const CountrySelector = ({ selectedCountry, handleCountryChange, inputStyles, la
                 '& .MuiSvgIcon-root': {
                     fontSize: '20px',
                 },
+                '.MuiSelect-icon': { color: 'white' },
                 ...inputStyles,
             }}
             SelectProps={{

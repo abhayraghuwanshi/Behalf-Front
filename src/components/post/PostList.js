@@ -1,3 +1,4 @@
+import FilterListIcon from "@mui/icons-material/FilterList";
 import {
   Box,
   Button,
@@ -5,9 +6,11 @@ import {
   DialogContent,
   Grid,
   Pagination,
+  ToggleButton,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useState } from "react";
 import PostService from "../../service/PostService";
 import { useCountry } from "../navbar/CountryProvider";
 import CreatePost from "../postcreation/CreatePost";
@@ -27,6 +30,7 @@ const PostList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   const [filters, setFilters] = useState({
     minPrice: 0,
@@ -94,42 +98,71 @@ const PostList = () => {
   }, [posts, filters, searchTerm]);
 
   return (
-    <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20</Grid>px', color: 'white', marginBottom: '40px' }}>
+    <div style={{ marginTop: '100px', display: "flex", justifyContent: "center", alignItems: "center", padding: '20px', color: 'white', marginBottom: '40px' }}>
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
         <Grid container spacing={2} sx={{ marginBottom: "20px" }}>
           <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
           <Grid item xs={12} md={9}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
               <Typography variant="h4" sx={{ textAlign: "left", color: 'white' }}>📦 Delivery Requests</Typography>
-              <Button
-                variant="outlined"
-                sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
-                onClick={() => setIsCreatingPost(true)}
-              >
-                Create Request
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button
+                  variant="outlined"
+                  sx={{ color: "white", borderColor: "white", "&:hover": { borderColor: "gray", backgroundColor: 'gray', color: 'white' } }}
+                  onClick={() => setIsCreatingPost(true)}
+                >
+                  Create Request
+                </Button>
+                <Tooltip title={showFilters ? "Hide Filters" : "Show Filters"}>
+                  <ToggleButton
+                    value="filters"
+                    selected={showFilters}
+                    onChange={() => setShowFilters((prev) => !prev)}
+                    sx={{
+                      color: showFilters ? "black" : "white",
+                      backgroundColor: showFilters ? "#fff" : "transparent",
+                      borderColor: "white",
+                      ml: 1,
+                      minWidth: 48,
+                      fontWeight: 600,
+                      '&.Mui-selected': {
+                        backgroundColor: '#eee',
+                        color: 'black',
+                      },
+                      '&:hover': {
+                        backgroundColor: showFilters ? '#eee' : 'gray',
+                        color: showFilters ? 'black' : 'white',
+                      },
+                    }}
+                  >
+                    <FilterListIcon />
+                  </ToggleButton>
+                </Tooltip>
+              </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
         </Grid>
 
         {/* Filter Controls */}
-        <Grid container spacing={2} sx={{ marginTop: '20px' }}>
-          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
-          <Grid item xs={12} md={9}>
-            <FilterControls
-              minPrice={filters.minPrice}
-              maxPrice={filters.maxPrice}
-              dateFilter={filters.dateFilter}
-              searchTerm={searchTerm}
-              setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
-              setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
-              setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
-              setSearchTerm={setSearchTerm}
-            />
+        {showFilters && (
+          <Grid container spacing={2} sx={{ marginTop: '20px' }}>
+            <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the left */}
+            <Grid item xs={12} md={9}>
+              <FilterControls
+                minPrice={filters.minPrice}
+                maxPrice={filters.maxPrice}
+                dateFilter={filters.dateFilter}
+                searchTerm={searchTerm}
+                setMinPrice={(value) => setFilters({ ...filters, minPrice: value })}
+                setMaxPrice={(value) => setFilters({ ...filters, maxPrice: value })}
+                setDateFilter={(value) => setFilters({ ...filters, dateFilter: value })}
+                setSearchTerm={setSearchTerm}
+              />
+            </Grid>
+            <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
           </Grid>
-          <Grid item xs={12} md={1.5}></Grid> {/* Empty space on the right */}
-        </Grid>
+        )}
 
         {/* Posts Grid */}
         <Grid container spacing={2} sx={{ marginTop: '30px' }}>
