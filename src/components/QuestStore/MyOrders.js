@@ -17,7 +17,7 @@ function MyOrders() {
 
     const fetchMyOrders = async () => {
         try {
-            const data = await UserStoreService.getMyOrders(user.id);
+            const data = await UserStoreService.getMyOrders();
             setMyOrders(data || []);
         } catch (error) {
             console.error("Error fetching orders:", error);

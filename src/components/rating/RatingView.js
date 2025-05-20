@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const API_BASE_URL = "http://localhost:8080/api/ratings"; // update your backend URL
+const API_BASE_URL = "http://localhost:8080/public/api/ratings"; // update your backend URL
 
 const RatingView = ({ userId }) => {
     const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ const RatingView = ({ userId }) => {
         const fetchRatings = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`${API_BASE_URL}/${userId}`); // include userType
+                const res = await axios.get(`${API_BASE_URL}`); // include userType
                 setRatingData(res.data);
             } catch (err) {
                 setError(err.response?.data || err.message);

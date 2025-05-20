@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BACKEND_API_URL } from '../env'; // Uncomment this line if you are using env.js
 
-const API_BASE = BACKEND_API_URL + '/api/cart';
+const API_BASE = BACKEND_API_URL + 'public/api/store-cart';
 
 const CartService = {
     getCart: async (sessionId) => {

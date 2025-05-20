@@ -5,7 +5,7 @@ const API_URL = `${BACKEND_API_URL}/api/quests`;
 
 class PostService {
   async getPosts(params = {}) {
-    return axios.get(`${API_URL}/fetch`, {
+    return axios.get(`${BACKEND_API_URL}/public/api/quests/fetch`, {
       params, // Include country or other parameters
       withCredentials: true,
       headers: {
@@ -28,7 +28,7 @@ class PostService {
 
 
   async agreePost(postAgreement) {
-    return await axios.post(API_URL + "/agreement", postAgreement, {
+    return await axios.post(`${BACKEND_API_URL}/api/quests/agreement`, postAgreement, {
       withCredentials: true,
       headers: {
         'Accept': 'application/json'
@@ -38,7 +38,7 @@ class PostService {
 
   async updatePost(postAgreement) {
     console.log(postAgreement);
-    return await axios.post(API_URL + "/update/" + postAgreement?.questId, postAgreement, {
+    return await axios.post(`${BACKEND_API_URL}/api/quests/update/` + postAgreement?.questId, postAgreement, {
       withCredentials: true,
       headers: {
         'Accept': 'application/json'
@@ -48,7 +48,7 @@ class PostService {
 
   async getPostById(postId) {
     try {
-      const response = await axios.get(`${API_URL}/detail?postId=${postId}`, { withCredentials: true });
+      const response = await axios.get(`${BACKEND_API_URL}/public/api/quests/detail?postId=${postId}`, { withCredentials: true });
       return response.data;
 
     } catch (error) {
@@ -59,7 +59,7 @@ class PostService {
   async getSimilarPosts(postId) {
 
     try {
-      const response = await axios.get(`${API_URL}/recommend?questId=${postId}`,
+      const response = await axios.get(`${BACKEND_API_URL}/public/api/quests/recommend?questId=${postId}`,
         { withCredentials: true });
       return response.data;
 

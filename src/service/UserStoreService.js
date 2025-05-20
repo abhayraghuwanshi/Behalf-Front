@@ -3,7 +3,7 @@ import { BACKEND_API_URL } from '../env';
 
 const UserStoreService = {
     getProducts: async (country) => {
-        let url = `${BACKEND_API_URL}/api/product-view/by-country?country=${country}`;
+        let url = `${BACKEND_API_URL}/public/api/product-view/by-country?country=${country}`;
         try {
             const response = await axios.get(url);
             return response.data;
@@ -35,7 +35,7 @@ const UserStoreService = {
 
     placeOrder: async (payload) => {
         try {
-            const response = await axios.post(`${BACKEND_API_URL}/api/orders/place-from-cart`, null, {
+            const response = await axios.post(`${BACKEND_API_URL}/api/store-orders/place-from-cart`, null, {
                 params: payload,
                 withCredentials: true,
                 headers: {
@@ -51,7 +51,7 @@ const UserStoreService = {
 
     getMyOrders: async (userId) => {
         try {
-            const response = await axios.get(`${BACKEND_API_URL}/api/orders/user/${userId}`, {
+            const response = await axios.get(`${BACKEND_API_URL}/api/store-orders`, {
                 withCredentials: true,
                 headers: {
                     'Accept': 'application/json',
@@ -66,7 +66,7 @@ const UserStoreService = {
 
     getProductById: async (id) => {
         try {
-            const response = await axios.get(`${BACKEND_API_URL}/api/product-view?id=${id}`, {
+            const response = await axios.get(`${BACKEND_API_URL}/public/api/product-view?id=${id}`, {
                 withCredentials: true,
                 headers: {
                     'Accept': 'application/json',
