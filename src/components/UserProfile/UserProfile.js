@@ -32,7 +32,7 @@ const UserProfile = () => {
 
             try {
                 setLoading(true);
-                const response = await QuestSessionService.fetchChats(userId);
+                const response = await QuestSessionService.fetchChats();
                 const { questMetadataList } = response.data;
 
                 setQuests(questMetadataList);

@@ -33,8 +33,8 @@ class QuestSession {
         });
     }
 
-    async fetchChats(userID) {
-        return await axios.get(API_URL + "/" + userID, {
+    async fetchChats() {
+        return await axios.get(API_URL, {
             withCredentials: true,
             headers: {
                 'Accept': 'application/json'

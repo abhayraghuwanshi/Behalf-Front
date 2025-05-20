@@ -53,7 +53,7 @@ const MyQuestPage = () => {
 
         try {
             console.log("Fetching quest data for user ID:", user.id);
-            const response = await QuestSessionService.fetchChats(user.id);
+            const response = await QuestSessionService.fetchChats();
             console.log("Quest data response:", response.data);
             const { questMetadataList, chatSessionDTOList } = response.data;
 
